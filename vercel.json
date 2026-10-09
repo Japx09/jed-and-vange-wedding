@@ -1,10 +1,10 @@
 {
   "cleanUrls": true,
-  "rewrites": [
-    { "source": "/demo", "destination": "/index.html" },
-    { "source": "/demo/kevin-wedding/hero.webp", "destination": "/cover.webp" },
-    { "source": "/demo/kevin-wedding/venue.webp", "destination": "/venue.webp" },
-    { "source": "/demo/kevin-wedding/footer.webp", "destination": "/footer.webp" },
-    { "source": "/templates/kevin-wedding/venue.webp", "destination": "/venue.webp" }
+  "redirects": [
+    {
+      "source": "/demo",
+      "destination": "/",
+      "permanent": true
+    }
   ]
 }
