@@ -1,10 +1,9 @@
 {
   "cleanUrls": true,
-  "redirects": [
+  "rewrites": [
     {
-      "source": "/demo",
-      "destination": "/",
-      "permanent": true
+      "source": "/(.*)",
+      "destination": "/index.js"
     }
   ]
 }

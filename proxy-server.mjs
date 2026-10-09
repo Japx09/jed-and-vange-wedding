@@ -14,9 +14,17 @@ const COLLAGE_DIR = path.join(__dirname, 'collage');
 const app = express();
 const PORT = 3333;
 
-// When opening root, route directly to the /demo page
-app.get('/', (req, res) => {
-  res.redirect('/demo');
+// Serve wedding website directly at root '/' and '/demo' without redirects
+app.get(['/', '/demo'], (req, res, next) => {
+  const candidate1 = path.join(__dirname, 'public', 'index.html');
+  const candidate2 = path.join(process.cwd(), 'public', 'index.html');
+  const candidate3 = path.join(process.cwd(), 'index.html');
+  const target = fs.existsSync(candidate1) ? candidate1 : (fs.existsSync(candidate2) ? candidate2 : (fs.existsSync(candidate3) ? candidate3 : null));
+  if (target) {
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    return fs.createReadStream(target).pipe(res);
+  }
+  next();
 });
 
 // Helper to serve local images with fallback for serverless environment
