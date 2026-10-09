@@ -1,9 +1,10 @@
 {
-  "version": 2,
+  "cleanUrls": true,
   "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/api/index.js"
-    }
+    { "source": "/demo", "destination": "/index.html" },
+    { "source": "/demo/kevin-wedding/hero.webp", "destination": "/cover.webp" },
+    { "source": "/demo/kevin-wedding/venue.webp", "destination": "/venue.webp" },
+    { "source": "/demo/kevin-wedding/footer.webp", "destination": "/footer.webp" },
+    { "source": "/templates/kevin-wedding/venue.webp", "destination": "/venue.webp" }
   ]
 }
