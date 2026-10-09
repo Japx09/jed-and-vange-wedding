@@ -19,13 +19,18 @@ app.get('/', (req, res) => {
   res.redirect('/demo');
 });
 
-// Helper to serve local images
+// Helper to serve local images with fallback for serverless environment
 const serveFile = (filePath, res) => {
   if (!fs.existsSync(filePath)) {
-    return res.status(404).send('Not found');
+    const base = path.basename(filePath);
+    const candidate1 = path.join(process.cwd(), base);
+    const candidate2 = path.join(process.cwd(), 'public', base);
+    if (fs.existsSync(candidate1)) filePath = candidate1;
+    else if (fs.existsSync(candidate2)) filePath = candidate2;
+    else return res.status(404).send('Not found');
   }
   res.setHeader('Content-Type', 'image/webp');
-  res.setHeader('Cache-Control', 'no-cache, must-revalidate');
+  res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
   fs.createReadStream(filePath).pipe(res);
 };
 
@@ -52,12 +57,6 @@ const collageImageMap = {
   'hero-thunderbay.webp': path.join(COLLAGE_DIR, 'hero-thunderbay.webp'),
   'hero-shoes.webp': path.join(COLLAGE_DIR, 'hero-shoes.webp')
 };
-
-// Route root '/' to '/demo' so the wedding website serves as the homepage
-app.get('/', (req, res, next) => {
-  req.url = '/demo';
-  next();
-});
 
 // Intercept cover, footer, and venue image requests
 app.get('/demo/kevin-wedding/hero.webp', (req, res) => serveFile(COVER_PATH, res));
@@ -306,6 +305,10 @@ app.use(createProxyMiddleware({
     proxyReq: (proxyReq, req, res) => {
       proxyReq.setHeader('Host', 'www.cordially.io');
       proxyReq.setHeader('Accept-Encoding', 'identity');
+      try {
+        proxyReq.removeHeader('x-forwarded-host');
+        proxyReq.removeHeader('x-vercel-id');
+      } catch (e) {}
     },
     proxyRes: responseInterceptor(async (responseBuffer, proxyRes, req, res) => {
       delete proxyRes.headers['content-security-policy'];
@@ -322,10 +325,14 @@ app.use(createProxyMiddleware({
         text = replaceInfo(text);
 
         if (contentType.includes('text/html')) {
-          const entouragePath = path.join(__dirname, 'entourage-section.html');
+          const entouragePath = fs.existsSync(path.join(__dirname, 'entourage-section.html'))
+            ? path.join(__dirname, 'entourage-section.html')
+            : path.join(process.cwd(), 'entourage-section.html');
           const entourageHtml = fs.existsSync(entouragePath) ? fs.readFileSync(entouragePath, 'utf8') : '';
 
-          const dressCodePath = path.join(__dirname, 'dress-code-section.html');
+          const dressCodePath = fs.existsSync(path.join(__dirname, 'dress-code-section.html'))
+            ? path.join(__dirname, 'dress-code-section.html')
+            : path.join(process.cwd(), 'dress-code-section.html');
           const dressCodeHtml = fs.existsSync(dressCodePath) ? fs.readFileSync(dressCodePath, 'utf8') : '';
 
           // 1. Server-side initial render injection
