@@ -1,35 +1,16 @@
-# Jed & Vange - Wedding Invitation Website 💍
+# React + Vite
 
-A bespoke wedding website and interactive digital invitation for **Jed & Vange**, celebrating their wedding on **December 28, 2026** at **Zaycoland Resort and Hotel**, Kabankalan City, Negros Occidental.
+This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
 
-## Features
+Currently, two official plugins are available:
 
-- **Hero Cover**: Custom high-resolution couple hero image.
-- **Story Chapters**: 3 narrative chapters with gallery and polaroids.
-- **Venue & Map**: Zaycoland Resort and Hotel integration with Google Maps.
-- **Entourage Section**: Balanced, centered layout honoring Principal Sponsors, Secondary Sponsors, Bridesmaids, Groomsmen, Bearers, and Flower Girls.
-- **Dress Code Lookbook**: Interactive category switcher (All, Guests, Principal Sponsors, Secondary Sponsors, Bridesmaids, Groomsmen, Bearers, Flower Girls) with visual inspiration cards.
-- **Complete FAQs**: 9 curated questions and answers covering attire, gifts, timeline, RSVPs, parking, and dietary needs.
-- **White-glove Aesthetics**: Neutral Mocha palette styling, fluid animations, clean typography, zero platform badges.
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
 
-## Local Development
+## React Compiler
 
-```bash
-# Install dependencies
-npm install
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-# Start local server
-node proxy-server.mjs
-```
+## Expanding the Oxlint configuration
 
-Open [http://localhost:3333](http://localhost:3333) in your browser.
-
-## Deployment on Vercel
-
-This repository is pre-configured with `vercel.json` and `api/index.mjs` for seamless deployment:
-
-1. Push this repository to GitHub.
-2. Go to [vercel.com](https://vercel.com) and click **"Add New..." > "Project"**.
-3. Import this GitHub repository.
-4. Keep the default settings and click **Deploy**.
-5. Your wedding website is live! You can also connect a custom domain (e.g. `jedandvange.com`) in the Vercel project settings.
+If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
