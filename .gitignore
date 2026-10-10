@@ -1,8 +1,8 @@
 node_modules/
 *.log
 .DS_Store
-centercover.png
-location.png
+/centercover.png
+/location.png
 cover.jpg
 cover.backup.webp
 demo.html
