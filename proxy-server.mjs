@@ -368,25 +368,30 @@ const newVisionText = "In His time, grace upon grace. What began as two separate
 // Clean token replacements for information only
 const replacements = [
   // Names & Monogram
-  ['Jim \\\\u0026 Pam', 'Jed \\\\u0026 Vange'],
-  ['Jim \\u0026 Pam', 'Jed \\u0026 Vange'],
-  ['Jim &amp; Pam', 'Jed &amp; Vange'],
-  ['Jim & Pam', 'Jed & Vange'],
-  ['Jim and Pam', 'Jed and Vange'],
-  ['Jim or Pam', 'Jed or Vange'],
+  ['Jim \\\\u0026 Pam', 'Jed \\\\u0026 Vanj'],
+  ['Jim \\u0026 Pam', 'Jed \\u0026 Vanj'],
+  ['Jim &amp; Pam', 'Jed &amp; Vanj'],
+  ['Jim & Pam', 'Jed & Vanj'],
+  ['Jim and Pam', 'Jed and Vanj'],
+  ['Jim or Pam', 'Jed or Vanj'],
   ['J&amp;P', 'J&amp;V'],
   ['J\\\\u0026P', 'J\\\\u0026V'],
   ['J\\u0026P', 'J\\u0026V'],
   ['J&P', 'J&V'],
-  ['Demo Wedding Website | Cordially', 'Jed & Vange — Wedding Website'],
+  ['Demo Wedding Website | Cordially', 'Jed & Vanj — Wedding Website'],
+  ['Jed &amp; Vange', 'Jed &amp; Vanj'],
+  ['Jed & Vange', 'Jed & Vanj'],
+  ['Jed and Vange', 'Jed and Vanj'],
 
   // Date & Event Kicker
   ['june 18, 2027', 'December 8, 2026'],
   ['June 18, 2027', 'December 8, 2026'],
   ['2027-06-18', '2026-12-08'],
   ['december 8, 2026', 'December 8, 2026'],
-  ['so please join us...', 'So please join us'],
-  ['so please join us', 'So please join us'],
+  ['so please join us...', 'We would love for you to join us'],
+  ['so please join us', 'We would love for you to join us'],
+  ['So please join us...', 'We would love for you to join us'],
+  ['So please join us', 'We would love for you to join us'],
 
   // RSVP deadline
   ['august 20, 2027', 'october 30, 2026'],
@@ -824,6 +829,7 @@ app.use(createProxyMiddleware({
   }
 }));
 
+export { replaceInfo };
 export default app;
 
 if (!process.env.VERCEL) {

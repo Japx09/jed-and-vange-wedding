@@ -114,7 +114,7 @@ export const rsvpHtml = `<!-- RSVP Section -->
             id="rsvp-message" 
             name="message" 
             rows="3" 
-            placeholder="Share your prayers, love, or warm wishes for Jed & Vange..." 
+            placeholder="Share your prayers, love, or warm wishes for Jed & Vanj..." 
             class="w-full px-4 py-3.5 rounded-xl text-sm transition-all duration-200 outline-none resize-y" 
             style="background-color: #ffffff; border: 1px solid rgba(47, 36, 27, 0.16); color: #2f241b;"
             onfocus="this.style.borderColor='#8a5a2b'; this.style.boxShadow='0 0 0 3px rgba(138, 90, 43, 0.14)';"
