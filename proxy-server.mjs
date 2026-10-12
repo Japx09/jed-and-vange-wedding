@@ -427,8 +427,8 @@ app.use(createProxyMiddleware({
 
     var cards = document.querySelectorAll('#dc-grid .dc-card-item');
     cards.forEach(function(card) {
-      var cardCat = card.getAttribute('data-category');
-      if (category === 'all' || cardCat === category) {
+      var cardCat = (card.getAttribute('data-category') || '').trim().split(/\s+/);
+      if (category === 'all' || cardCat.indexOf(category) !== -1) {
         card.classList.remove('dc-hidden');
       } else {
         card.classList.add('dc-hidden');

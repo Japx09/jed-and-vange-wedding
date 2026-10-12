@@ -1,59 +1,65 @@
-<section id="dress-code-section" class="relative z-20 w-full px-4 py-16 md:py-28 text-center" style="color: var(--template-text, #2f241b); background-color: var(--template-page-background, #fcf7ed);">
+<section id="dress-code-section" class="relative z-20 w-full px-4 py-16 md:py-24 text-center" style="color: var(--template-text, #2f241b); background-color: var(--template-page-background, #fcf7ed);">
   <style>
     .dc-filter-btn {
       transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
       cursor: pointer;
       user-select: none;
       color: #2f241b;
+      white-space: nowrap;
     }
     .dc-filter-btn.active {
       background-color: #8a5a2b !important;
       color: #fff9f1 !important;
       box-shadow: 0 4px 14px rgba(138, 90, 43, 0.28);
     }
+    .dc-filter-scroll {
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .dc-filter-scroll::-webkit-scrollbar {
+      display: none;
+    }
     .dc-card-item {
       transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease, opacity 0.3s ease;
-      background: rgba(255, 255, 255, 0.6);
-      border: 1px solid rgba(47, 36, 27, 0.09);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border-radius: 24px;
+      background: #ffffff;
+      border: 1px solid rgba(47, 36, 27, 0.08);
+      border-radius: 20px;
       overflow: hidden;
       display: flex;
       flex-direction: column;
+      box-shadow: 0 4px 20px rgba(47, 36, 27, 0.03);
     }
     .dc-card-item:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 18px 36px rgba(47, 36, 27, 0.09);
-      border-color: rgba(138, 90, 43, 0.3);
+      transform: translateY(-4px);
+      box-shadow: 0 16px 32px rgba(47, 36, 27, 0.08);
+      border-color: rgba(138, 90, 43, 0.25);
     }
     .dc-img-container {
       position: relative;
       width: 100%;
-      height: 290px;
+      aspect-ratio: 3 / 4;
       overflow: hidden;
-      background-color: rgba(47, 36, 27, 0.04);
+      background-color: #f7f4ef;
     }
     .dc-img-container img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       object-position: center top;
-      transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      display: block;
     }
     .dc-card-item:hover .dc-img-container img {
-      transform: scale(1.04);
-    }
-    .dc-badge-pill {
-      font-size: 0.68rem;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      font-weight: 600;
-      padding: 4px 10px;
-      border-radius: 9999px;
+      transform: scale(1.03);
     }
     .dc-hidden {
       display: none !important;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .dc-card-item, .dc-filter-btn, .dc-img-container img {
+        transition: none !important;
+        transform: none !important;
+      }
     }
   </style>
 
@@ -62,271 +68,331 @@
     <!-- Section Header -->
     <div class="mb-10 md:mb-14">
       <span class="block text-xs uppercase tracking-[0.25em] opacity-60 font-medium mb-3">Attire &amp; Inspiration Lookbook</span>
-      <h2 class="text-4xl sm:text-5xl md:text-6xl not-italic font-normal tracking-tight" style="font-family: var(--template-font-display-stack, serif);">Dress Code &amp; Style Guide</h2>
+      <h2 class="text-4xl sm:text-5xl md:text-6xl not-italic font-normal tracking-tight" style="font-family: var(--template-font-display-stack, 'Playfair Display', Georgia, serif);">Dress Code &amp; Style Guide</h2>
       <p class="text-xs sm:text-sm md:text-base opacity-75 max-w-2xl mx-auto mt-4 font-light leading-relaxed">
-        To help us create a timeless and harmonious celebration, please explore the official attire guide and visual inspirations below for our beloved guests and entourage.
+        To help us create an elegant, cohesive celebration, explore the official attire guide and curated lookbook inspirations below for our entourage and cherished guests.
       </p>
 
       <!-- Palette Swatch Banner -->
       <div class="mt-6 flex flex-col items-center justify-center gap-2">
         <span class="text-[0.68rem] uppercase tracking-widest opacity-60 font-medium">Guest Color Palette</span>
-        <div class="inline-flex items-center gap-3 px-3 py-2 rounded-2xl bg-white/70 border border-[rgba(47,36,27,0.1)] shadow-sm">
-          <img src="/dress-code/inspo-9.webp" alt="Official Mocha Palette Swatches" class="h-10 w-auto rounded-lg object-contain">
-          <span class="text-xs font-serif italic opacity-80 pr-2">Shades of Mocha, Sand &amp; Warm Earth Tones</span>
+        <div class="inline-flex items-center gap-3 px-4 py-2 rounded-2xl bg-white/80 border border-[rgba(47,36,27,0.09)] shadow-sm">
+          <img src="/dress-code/inspo-9.webp" alt="Official Mocha Palette Swatches" class="h-9 w-auto rounded-md object-contain" width="160" height="36">
+          <span class="text-xs font-serif italic opacity-85 pr-2">Shades of Mocha, Sand &amp; Warm Earth Tones</span>
         </div>
       </div>
 
       <div class="mx-auto mt-6 h-[1px] w-24 opacity-25" style="background-color: var(--template-text, #2f241b);"></div>
     </div>
 
-    <!-- Floating Navigation Bar Switcher (Matching Top Nav Pill) -->
+    <!-- Category Filter Bar (Horizontally scrollable on mobile, centered pill on desktop) -->
     <div class="sticky top-20 z-30 mb-10 flex justify-center px-2">
-      <div class="inline-flex flex-wrap items-center justify-center gap-1.5 p-1.5 rounded-full border border-[rgba(47,36,27,0.12)] bg-[rgba(255,250,241,0.92)] backdrop-blur-md shadow-md max-w-full">
-        <button type="button" class="dc-filter-btn active rounded-full px-4 py-1.5 text-xs sm:text-sm font-medium" onclick="filterDressCode('all', this)">
+      <div class="dc-filter-scroll inline-flex items-center gap-1.5 p-1.5 rounded-full border border-[rgba(47,36,27,0.12)] bg-[rgba(255,250,241,0.95)] backdrop-blur-md shadow-md max-w-full overflow-x-auto">
+        <button type="button" class="dc-filter-btn active rounded-full px-4 py-1.5 text-xs sm:text-sm font-medium" onclick="filterDressCode('all', this)" aria-label="Show all dress code categories">
           All
         </button>
-        <button type="button" class="dc-filter-btn rounded-full px-4 py-1.5 text-xs sm:text-sm font-medium opacity-80 hover:opacity-100" onclick="filterDressCode('guests', this)">
+        <button type="button" class="dc-filter-btn rounded-full px-4 py-1.5 text-xs sm:text-sm font-medium opacity-80 hover:opacity-100" onclick="filterDressCode('guests', this)" aria-label="Show wedding guests attire">
           Guests
         </button>
-        <button type="button" class="dc-filter-btn rounded-full px-4 py-1.5 text-xs sm:text-sm font-medium opacity-80 hover:opacity-100" onclick="filterDressCode('principal', this)">
+        <button type="button" class="dc-filter-btn rounded-full px-4 py-1.5 text-xs sm:text-sm font-medium opacity-80 hover:opacity-100" onclick="filterDressCode('principal', this)" aria-label="Show principal sponsors attire">
           Principal Sponsors
         </button>
-        <button type="button" class="dc-filter-btn rounded-full px-4 py-1.5 text-xs sm:text-sm font-medium opacity-80 hover:opacity-100" onclick="filterDressCode('secondary', this)">
+        <button type="button" class="dc-filter-btn rounded-full px-4 py-1.5 text-xs sm:text-sm font-medium opacity-80 hover:opacity-100" onclick="filterDressCode('secondary', this)" aria-label="Show secondary sponsors attire">
           Secondary Sponsors
         </button>
-        <button type="button" class="dc-filter-btn rounded-full px-4 py-1.5 text-xs sm:text-sm font-medium opacity-80 hover:opacity-100" onclick="filterDressCode('bridesmaids', this)">
+        <button type="button" class="dc-filter-btn rounded-full px-4 py-1.5 text-xs sm:text-sm font-medium opacity-80 hover:opacity-100" onclick="filterDressCode('bridesmaids', this)" aria-label="Show bridesmaids attire">
           Bridesmaids
         </button>
-        <button type="button" class="dc-filter-btn rounded-full px-4 py-1.5 text-xs sm:text-sm font-medium opacity-80 hover:opacity-100" onclick="filterDressCode('groomsmen', this)">
+        <button type="button" class="dc-filter-btn rounded-full px-4 py-1.5 text-xs sm:text-sm font-medium opacity-80 hover:opacity-100" onclick="filterDressCode('groomsmen', this)" aria-label="Show groomsmen and bearers attire">
           Groomsmen &amp; Bearers
         </button>
       </div>
     </div>
 
-    <!-- Card Lookbook Grid -->
-    <div id="dc-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 text-left">
+    <!-- Card Lookbook Grid (3-col desktop, 2-col tablet, 1-col mobile) -->
+    <div id="dc-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7 text-left">
       
-      <!-- Card 1: Guests (Ladies) -->
-      <div class="dc-card-item" data-category="guests">
-        <div class="dc-img-container">
-          <img src="/dress-code/inspo-10.webp" alt="Guest Ladies Attire Inspiration" loading="lazy">
-          <div class="absolute bottom-3 left-3 flex gap-1.5">
-            <span class="dc-badge-pill bg-[#4A3324] text-white/90 shadow-sm">Mocha</span>
-            <span class="dc-badge-pill bg-[#CDBCAC] text-[#2f241b] shadow-sm">Warm Sand</span>
-          </div>
-        </div>
-        <div class="p-6 flex flex-col justify-between flex-1">
-          <div>
-            <div class="flex items-center justify-between mb-2">
-              <span class="text-[0.65rem] uppercase tracking-wider font-semibold opacity-60">Guests · Ladies</span>
-              <span class="text-xs px-2.5 py-0.5 rounded-full border border-[#8a5a2b]/30 bg-[#8a5a2b]/10 text-[#8a5a2b] font-medium">Formal / Semi-Formal</span>
-            </div>
-            <h3 class="text-xl sm:text-2xl font-normal mb-2" style="font-family: var(--template-font-display-stack, serif);">Ladies Attire</h3>
-            <p class="text-xs sm:text-sm opacity-80 leading-relaxed font-light mb-3">
-              Long dresses, midi dresses, elegant jumpsuits, or formal garden attire in shades of Mocha &amp; warm neutrals.
-            </p>
-          </div>
-          <div class="pt-3 border-t border-[rgba(47,36,27,0.08)]">
-            <p class="text-[0.7rem] opacity-60 italic font-light">
-              Tip: Ceremony is outdoors on garden grounds; block heels or dressy flats recommended.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Card 2: Guests (Gentlemen) -->
-      <div class="dc-card-item" data-category="guests">
-        <div class="dc-img-container">
-          <img src="/dress-code/inspo-11.webp" alt="Guest Gentlemen Attire Inspiration" loading="lazy">
-          <div class="absolute bottom-3 left-3 flex gap-1.5">
-            <span class="dc-badge-pill bg-[#79614E] text-white/90 shadow-sm">Earthy Tones</span>
-            <span class="dc-badge-pill bg-[#2f241b] text-white/90 shadow-sm">Classic Black</span>
-          </div>
-        </div>
-        <div class="p-6 flex flex-col justify-between flex-1">
-          <div>
-            <div class="flex items-center justify-between mb-2">
-              <span class="text-[0.65rem] uppercase tracking-wider font-semibold opacity-60">Guests · Gentlemen</span>
-              <span class="text-xs px-2.5 py-0.5 rounded-full border border-[#8a5a2b]/30 bg-[#8a5a2b]/10 text-[#8a5a2b] font-medium">Suits &amp; Polo</span>
-            </div>
-            <h3 class="text-xl sm:text-2xl font-normal mb-2" style="font-family: var(--template-font-display-stack, serif);">Gentlemen Attire</h3>
-            <p class="text-xs sm:text-sm opacity-80 leading-relaxed font-light mb-3">
-              Formal suits, blazers, or crisp long-sleeved polo paired with tailored trousers in neutral earth tones.
-            </p>
-          </div>
-          <div class="pt-3 border-t border-[rgba(47,36,27,0.08)]">
-            <p class="text-[0.7rem] opacity-60 font-light text-red-900/80">
-              * Kindly avoid denim jeans, shorts, and casual footwear (rubber slippers, sneakers).
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Card 3: Principal Sponsors -->
+      <!-- 1. Principal Sponsors — Female (Ninang) -->
       <div class="dc-card-item" data-category="principal">
         <div class="dc-img-container">
-          <img src="/dress-code/inspo-2.webp" alt="Principal Sponsors Attire Inspiration" loading="lazy">
-          <div class="absolute bottom-3 left-3 flex gap-1.5">
-            <span class="dc-badge-pill bg-[#857B74] text-white/90 shadow-sm">Gray Taupe</span>
-            <span class="dc-badge-pill bg-[#F7F3E8] text-[#2f241b] shadow-sm">Formal Barong</span>
-          </div>
+          <img src="/dress-code/principal-sponsor-female.webp" alt="Ninang Principal Sponsor Female Gray Taupe Gown" width="1086" height="1448" loading="lazy">
         </div>
-        <div class="p-6 flex flex-col justify-between flex-1">
+        <div class="p-5 sm:p-6 flex flex-col justify-between flex-1">
           <div>
             <div class="flex items-center justify-between mb-2">
-              <span class="text-[0.65rem] uppercase tracking-wider font-semibold opacity-60">Ninongs &amp; Ninangs</span>
-              <span class="text-xs px-2.5 py-0.5 rounded-full border border-[rgba(47,36,27,0.15)] bg-[rgba(47,36,27,0.05)] font-medium">Assigned Palette</span>
+              <span class="text-[0.68rem] uppercase tracking-[0.16em] font-semibold text-[#8a5a2b]">Principal Sponsors</span>
+              <span class="text-[0.7rem] px-2.5 py-0.5 rounded-full border border-[rgba(47,36,27,0.12)] bg-[rgba(47,36,27,0.04)] font-medium opacity-75">Female</span>
             </div>
-            <h3 class="text-xl sm:text-2xl font-normal mb-2" style="font-family: var(--template-font-display-stack, serif);">Principal Sponsors</h3>
-            <div class="text-xs sm:text-sm opacity-80 leading-relaxed font-light space-y-1 mb-3">
-              <p><strong class="font-medium opacity-90">Female:</strong> Gray taupe long dress</p>
-              <p><strong class="font-medium opacity-90">Male:</strong> Formal Barong Tagalog, black trousers, black shoes</p>
+            <h3 class="text-xl sm:text-2xl font-normal mb-2" style="font-family: var(--template-font-display-stack, 'Playfair Display', Georgia, serif);">Ninang</h3>
+            <p class="text-xs sm:text-sm opacity-80 leading-relaxed font-light mb-3">
+              Floor-length formal gown in elegant taupe gray.
+            </p>
+            <div class="flex items-center gap-2 mt-1">
+              <span class="inline-block w-3 h-3 rounded-full border border-black/10 shadow-xs" style="background-color: #857b74;"></span>
+              <span class="text-[0.72rem] opacity-70 font-medium">Taupe Gray</span>
             </div>
           </div>
-          <div class="pt-3 border-t border-[rgba(47,36,27,0.08)]">
-            <p class="text-[0.7rem] opacity-60 italic font-light">
-              Coordinated elegance honoring our primary mentors and sponsors.
+          <div class="mt-4 pt-3 border-t border-[rgba(47,36,27,0.08)]">
+            <p class="text-[0.72rem] opacity-60 italic font-light">
+              Coordinated elegance honoring our esteemed mentors and godmothers.
             </p>
           </div>
         </div>
       </div>
 
-      <!-- Card 4: Secondary Sponsors -->
+      <!-- 2. Principal Sponsors — Male (Ninong) -->
+      <div class="dc-card-item" data-category="principal">
+        <div class="dc-img-container">
+          <img src="/dress-code/principal-sponsor-male.webp" alt="Ninong Principal Sponsor Formal Barong Tagalog" width="1086" height="1448" loading="lazy">
+        </div>
+        <div class="p-5 sm:p-6 flex flex-col justify-between flex-1">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-[0.68rem] uppercase tracking-[0.16em] font-semibold text-[#8a5a2b]">Principal Sponsors</span>
+              <span class="text-[0.7rem] px-2.5 py-0.5 rounded-full border border-[rgba(47,36,27,0.12)] bg-[rgba(47,36,27,0.04)] font-medium opacity-75">Male</span>
+            </div>
+            <h3 class="text-xl sm:text-2xl font-normal mb-2" style="font-family: var(--template-font-display-stack, 'Playfair Display', Georgia, serif);">Ninong</h3>
+            <p class="text-xs sm:text-sm opacity-80 leading-relaxed font-light mb-3">
+              Formal Barong Tagalog, black tailored trousers, and polished black formal shoes.
+            </p>
+            <div class="flex items-center gap-2 mt-1">
+              <span class="inline-block w-3 h-3 rounded-full border border-black/10 shadow-xs" style="background-color: #ede7da;"></span>
+              <span class="inline-block w-3 h-3 rounded-full border border-black/10 shadow-xs" style="background-color: #1a1a1a;"></span>
+              <span class="text-[0.72rem] opacity-70 font-medium">Formal Barong &amp; Black</span>
+            </div>
+          </div>
+          <div class="mt-4 pt-3 border-t border-[rgba(47,36,27,0.08)]">
+            <p class="text-[0.72rem] opacity-60 italic font-light">
+              Traditional Filipino formal wear for our distinguished godfathers.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. Secondary Sponsors — Female -->
       <div class="dc-card-item" data-category="secondary">
         <div class="dc-img-container">
-          <img src="/dress-code/inspo-4.webp" alt="Secondary Sponsors Attire Inspiration" loading="lazy">
-          <div class="absolute bottom-3 left-3 flex gap-1.5">
-            <span class="dc-badge-pill bg-[#D9C5A7] text-[#473623] shadow-sm">Champagne</span>
-            <span class="dc-badge-pill bg-[#F7F3E8] text-[#2f241b] shadow-sm">Formal Barong</span>
-          </div>
+          <img src="/dress-code/secondary-sponsor-female.webp" alt="Secondary Sponsors Female Champagne Long Gown" width="1086" height="1448" loading="lazy">
         </div>
-        <div class="p-6 flex flex-col justify-between flex-1">
+        <div class="p-5 sm:p-6 flex flex-col justify-between flex-1">
           <div>
             <div class="flex items-center justify-between mb-2">
-              <span class="text-[0.65rem] uppercase tracking-wider font-semibold opacity-60">Candle · Veil · Cord</span>
-              <span class="text-xs px-2.5 py-0.5 rounded-full border border-[rgba(47,36,27,0.15)] bg-[rgba(47,36,27,0.05)] font-medium">Assigned Palette</span>
+              <span class="text-[0.68rem] uppercase tracking-[0.16em] font-semibold text-[#8a5a2b]">Secondary Sponsors</span>
+              <span class="text-[0.7rem] px-2.5 py-0.5 rounded-full border border-[rgba(47,36,27,0.12)] bg-[rgba(47,36,27,0.04)] font-medium opacity-75">Female</span>
             </div>
-            <h3 class="text-xl sm:text-2xl font-normal mb-2" style="font-family: var(--template-font-display-stack, serif);">Secondary Sponsors</h3>
-            <div class="text-xs sm:text-sm opacity-80 leading-relaxed font-light space-y-1 mb-3">
-              <p><strong class="font-medium opacity-90">Female:</strong> Champagne long dress</p>
-              <p><strong class="font-medium opacity-90">Male:</strong> Formal Barong Tagalog, black trousers, black shoes</p>
+            <h3 class="text-xl sm:text-2xl font-normal mb-2" style="font-family: var(--template-font-display-stack, 'Playfair Display', Georgia, serif);">Candle, Veil &amp; Cord</h3>
+            <p class="text-xs sm:text-sm opacity-80 leading-relaxed font-light mb-3">
+              Champagne-colored long formal gown.
+            </p>
+            <div class="flex items-center gap-2 mt-1">
+              <span class="inline-block w-3 h-3 rounded-full border border-black/10 shadow-xs" style="background-color: #d9c5a7;"></span>
+              <span class="text-[0.72rem] opacity-70 font-medium">Champagne</span>
             </div>
           </div>
-          <div class="pt-3 border-t border-[rgba(47,36,27,0.08)]">
-            <p class="text-[0.7rem] opacity-60 italic font-light">
-              Light and graceful champagne tones complementing the wedding theme.
+          <div class="mt-4 pt-3 border-t border-[rgba(47,36,27,0.08)]">
+            <p class="text-[0.72rem] opacity-60 italic font-light">
+              Light and graceful champagne tones complementing the wedding party.
             </p>
           </div>
         </div>
       </div>
 
-      <!-- Card 5: Bridesmaids -->
+      <!-- 4. Secondary Sponsors — Male -->
+      <div class="dc-card-item" data-category="secondary">
+        <div class="dc-img-container">
+          <img src="/dress-code/secondary-sponsor-male.webp" alt="Secondary Sponsors Male Formal Barong Tagalog" width="1086" height="1448" loading="lazy">
+        </div>
+        <div class="p-5 sm:p-6 flex flex-col justify-between flex-1">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-[0.68rem] uppercase tracking-[0.16em] font-semibold text-[#8a5a2b]">Secondary Sponsors</span>
+              <span class="text-[0.7rem] px-2.5 py-0.5 rounded-full border border-[rgba(47,36,27,0.12)] bg-[rgba(47,36,27,0.04)] font-medium opacity-75">Male</span>
+            </div>
+            <h3 class="text-xl sm:text-2xl font-normal mb-2" style="font-family: var(--template-font-display-stack, 'Playfair Display', Georgia, serif);">Candle, Veil &amp; Cord</h3>
+            <p class="text-xs sm:text-sm opacity-80 leading-relaxed font-light mb-3">
+              Formal Barong Tagalog, black trousers, and black formal shoes.
+            </p>
+            <div class="flex items-center gap-2 mt-1">
+              <span class="inline-block w-3 h-3 rounded-full border border-black/10 shadow-xs" style="background-color: #ede7da;"></span>
+              <span class="inline-block w-3 h-3 rounded-full border border-black/10 shadow-xs" style="background-color: #1a1a1a;"></span>
+              <span class="text-[0.72rem] opacity-70 font-medium">Formal Barong &amp; Black</span>
+            </div>
+          </div>
+          <div class="mt-4 pt-3 border-t border-[rgba(47,36,27,0.08)]">
+            <p class="text-[0.72rem] opacity-60 italic font-light">
+              Formal Barong Tagalog paired with tailored trousers.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. Bridesmaids -->
       <div class="dc-card-item" data-category="bridesmaids">
         <div class="dc-img-container">
-          <img src="/dress-code/inspo-5.webp" alt="Bridesmaids Sage Green Dress Inspiration" loading="lazy">
-          <div class="absolute bottom-3 left-3 flex gap-1.5">
-            <span class="dc-badge-pill bg-[#8A9A7B] text-white/95 shadow-sm">Sage Green</span>
-            <span class="dc-badge-pill bg-[rgba(255,255,255,0.85)] text-[#2f241b] shadow-sm">Tulle Mismatch</span>
-          </div>
+          <img src="/dress-code/bridesmaid.webp" alt="Bridesmaids Sage Green Tulle Dresses" width="1086" height="1448" loading="lazy">
         </div>
-        <div class="p-6 flex flex-col justify-between flex-1">
+        <div class="p-5 sm:p-6 flex flex-col justify-between flex-1">
           <div>
             <div class="flex items-center justify-between mb-2">
-              <span class="text-[0.65rem] uppercase tracking-wider font-semibold opacity-60">Bridal Party</span>
-              <span class="text-xs px-2.5 py-0.5 rounded-full border border-[#8A9A7B]/40 bg-[#8A9A7B]/15 text-[#3b4c30] font-medium">Sage Green</span>
+              <span class="text-[0.68rem] uppercase tracking-[0.16em] font-semibold text-[#8a5a2b]">Bridal Entourage</span>
+              <span class="text-[0.7rem] px-2.5 py-0.5 rounded-full border border-[#8a9a7b]/30 bg-[#8a9a7b]/10 text-[#425237] font-medium">Sage Green</span>
             </div>
-            <h3 class="text-xl sm:text-2xl font-normal mb-2" style="font-family: var(--template-font-display-stack, serif);">Bridesmaids</h3>
+            <h3 class="text-xl sm:text-2xl font-normal mb-2" style="font-family: var(--template-font-display-stack, 'Playfair Display', Georgia, serif);">Bridesmaids</h3>
             <p class="text-xs sm:text-sm opacity-80 leading-relaxed font-light mb-3">
-              Sage green long dress in tulle fabric. Mismatched neckline and silhouette styles are warmly welcomed.
+              Sage green floor-length tulle dresses. Mismatched necklines and silhouettes are allowed while keeping the overall color cohesive.
             </p>
+            <div class="flex items-center gap-2 mt-1">
+              <span class="inline-block w-3 h-3 rounded-full border border-black/10 shadow-xs" style="background-color: #8a9a7b;"></span>
+              <span class="text-[0.72rem] opacity-70 font-medium">Sage Green Tulle</span>
+            </div>
           </div>
-          <div class="pt-3 border-t border-[rgba(47,36,27,0.08)]">
-            <p class="text-[0.7rem] opacity-60 italic font-light">
-              Individualized tulle styles in harmonious organic sage green.
+          <div class="mt-4 pt-3 border-t border-[rgba(47,36,27,0.08)]">
+            <p class="text-[0.72rem] opacity-60 italic font-light">
+              Ethereal and romantic textures celebrating individual elegance.
             </p>
           </div>
         </div>
       </div>
 
-      <!-- Card 6: Groomsmen & Bearers -->
-      <div class="dc-card-item" data-category="groomsmen">
-        <div class="dc-img-container">
-          <img src="/dress-code/inspo-6.webp" alt="Groomsmen Formal Barong Inspiration" loading="lazy">
-          <div class="absolute bottom-3 left-3 flex gap-1.5">
-            <span class="dc-badge-pill bg-[#F7F3E8] text-[#2f241b] shadow-sm">Formal Barong</span>
-            <span class="dc-badge-pill bg-[#2f241b] text-white/90 shadow-sm">Black Trousers</span>
-          </div>
-        </div>
-        <div class="p-6 flex flex-col justify-between flex-1">
-          <div>
-            <div class="flex items-center justify-between mb-2">
-              <span class="text-[0.65rem] uppercase tracking-wider font-semibold opacity-60">Groom&#x27;s Entourage</span>
-              <span class="text-xs px-2.5 py-0.5 rounded-full border border-[rgba(47,36,27,0.15)] bg-[rgba(47,36,27,0.05)] font-medium">Formal Filipino</span>
-            </div>
-            <h3 class="text-xl sm:text-2xl font-normal mb-2" style="font-family: var(--template-font-display-stack, serif);">Groomsmen &amp; Bearers</h3>
-            <p class="text-xs sm:text-sm opacity-80 leading-relaxed font-light mb-3">
-              Formal Barong Tagalog paired with black trousers and polished black dress shoes.
-            </p>
-          </div>
-          <div class="pt-3 border-t border-[rgba(47,36,27,0.08)]">
-            <p class="text-[0.7rem] opacity-60 italic font-light">
-              Includes Best Man, Groomsmen, Bible Bearer, Coin Bearer, and Ring Bearer.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Card 7: Flower Girls -->
+      <!-- 6. Flower Girls -->
       <div class="dc-card-item" data-category="bridesmaids">
         <div class="dc-img-container">
-          <img src="/dress-code/inspo-7.webp" alt="Flower Girl Sage Green Floral Inspiration" loading="lazy">
-          <div class="absolute bottom-3 left-3 flex gap-1.5">
-            <span class="dc-badge-pill bg-[#8A9A7B] text-white/95 shadow-sm">Sage Floral</span>
-            <span class="dc-badge-pill bg-[rgba(255,255,255,0.85)] text-[#2f241b] shadow-sm">Midi Dress</span>
-          </div>
+          <img src="/dress-code/flower-girl.webp" alt="Flower Girl Sage Green Floral Midi Dress" width="1086" height="1448" loading="lazy">
         </div>
-        <div class="p-6 flex flex-col justify-between flex-1">
+        <div class="p-5 sm:p-6 flex flex-col justify-between flex-1">
           <div>
             <div class="flex items-center justify-between mb-2">
-              <span class="text-[0.65rem] uppercase tracking-wider font-semibold opacity-60">Little Ones</span>
-              <span class="text-xs px-2.5 py-0.5 rounded-full border border-[#8A9A7B]/40 bg-[#8A9A7B]/15 text-[#3b4c30] font-medium">Floral Midi</span>
+              <span class="text-[0.68rem] uppercase tracking-[0.16em] font-semibold text-[#8a5a2b]">Young Entourage</span>
+              <span class="text-[0.7rem] px-2.5 py-0.5 rounded-full border border-[#8a9a7b]/30 bg-[#8a9a7b]/10 text-[#425237] font-medium">Floral Midi</span>
             </div>
-            <h3 class="text-xl sm:text-2xl font-normal mb-2" style="font-family: var(--template-font-display-stack, serif);">Flower Girls</h3>
+            <h3 class="text-xl sm:text-2xl font-normal mb-2" style="font-family: var(--template-font-display-stack, 'Playfair Display', Georgia, serif);">Flower Girls</h3>
             <p class="text-xs sm:text-sm opacity-80 leading-relaxed font-light mb-3">
-              Sage green floral midi dress with comfortable footwear for walking down the aisle.
+              Sage green floral midi dress with comfortable, wedding-appropriate footwear.
             </p>
+            <div class="flex items-center gap-2 mt-1">
+              <span class="inline-block w-3 h-3 rounded-full border border-black/10 shadow-xs" style="background-color: #8a9a7b;"></span>
+              <span class="text-[0.72rem] opacity-70 font-medium">Sage Green Floral</span>
+            </div>
           </div>
-          <div class="pt-3 border-t border-[rgba(47,36,27,0.08)]">
-            <p class="text-[0.7rem] opacity-60 italic font-light">
-              Delicate floral patterns on fresh sage green fabric.
+          <div class="mt-4 pt-3 border-t border-[rgba(47,36,27,0.08)]">
+            <p class="text-[0.72rem] opacity-60 italic font-light">
+              Charming floral prints designed for ease and celebration.
             </p>
           </div>
         </div>
       </div>
 
-      <!-- Card 8: Bearers -->
+      <!-- 7. Groomsmen -->
       <div class="dc-card-item" data-category="groomsmen">
         <div class="dc-img-container">
-          <img src="/dress-code/inspo-8.webp" alt="Bearers Attire Inspiration" loading="lazy">
-          <div class="absolute bottom-3 left-3 flex gap-1.5">
-            <span class="dc-badge-pill bg-[#2f241b] text-white/95 shadow-sm">Formal Barong</span>
-            <span class="dc-badge-pill bg-[rgba(255,255,255,0.85)] text-[#2f241b] shadow-sm">Dark Trousers</span>
-          </div>
+          <img src="/dress-code/groomsmen.webp" alt="Groomsmen Formal Barong Tagalog and Black Trousers" width="1086" height="1448" loading="lazy">
         </div>
-        <div class="p-6 flex flex-col justify-between flex-1">
+        <div class="p-5 sm:p-6 flex flex-col justify-between flex-1">
           <div>
             <div class="flex items-center justify-between mb-2">
-              <span class="text-[0.65rem] uppercase tracking-wider font-semibold opacity-60">Little Ones</span>
-              <span class="text-xs px-2.5 py-0.5 rounded-full border border-[#8a5a2b]/30 bg-[#8a5a2b]/10 text-[#8a5a2b] font-medium">Formal Barong</span>
+              <span class="text-[0.68rem] uppercase tracking-[0.16em] font-semibold text-[#8a5a2b]">Groom&#x27;s Entourage</span>
+              <span class="text-[0.7rem] px-2.5 py-0.5 rounded-full border border-[rgba(47,36,27,0.12)] bg-[rgba(47,36,27,0.04)] font-medium opacity-75">Formal Barong</span>
             </div>
-            <h3 class="text-xl sm:text-2xl font-normal mb-2" style="font-family: var(--template-font-display-stack, serif);">Ring, Coin &amp; Bible Bearers</h3>
+            <h3 class="text-xl sm:text-2xl font-normal mb-2" style="font-family: var(--template-font-display-stack, 'Playfair Display', Georgia, serif);">Groomsmen</h3>
             <p class="text-xs sm:text-sm opacity-80 leading-relaxed font-light mb-3">
-              Crisp Barong Tagalog paired with neat black pants and dark dress shoes.
+              Formal Barong Tagalog, black tailored trousers, and polished black formal shoes.
+            </p>
+            <div class="flex items-center gap-2 mt-1">
+              <span class="inline-block w-3 h-3 rounded-full border border-black/10 shadow-xs" style="background-color: #ede7da;"></span>
+              <span class="inline-block w-3 h-3 rounded-full border border-black/10 shadow-xs" style="background-color: #1a1a1a;"></span>
+              <span class="text-[0.72rem] opacity-70 font-medium">Formal Barong &amp; Black</span>
+            </div>
+          </div>
+          <div class="mt-4 pt-3 border-t border-[rgba(47,36,27,0.08)]">
+            <p class="text-[0.72rem] opacity-60 italic font-light">
+              Includes Best Man and Groomsmen standing by the groom.
             </p>
           </div>
-          <div class="pt-3 border-t border-[rgba(47,36,27,0.08)]">
-            <p class="text-[0.7rem] opacity-60 italic font-light">
-              Classic and comfortable formal wear for our young gentlemen.
+        </div>
+      </div>
+
+      <!-- 8. Ring, Coin & Bible Bearers -->
+      <div class="dc-card-item" data-category="groomsmen">
+        <div class="dc-img-container">
+          <img src="/dress-code/bearers.webp" alt="Bearers Young Gentlemen Formal Barong Tagalog" width="1086" height="1448" loading="lazy">
+        </div>
+        <div class="p-5 sm:p-6 flex flex-col justify-between flex-1">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-[0.68rem] uppercase tracking-[0.16em] font-semibold text-[#8a5a2b]">Young Entourage</span>
+              <span class="text-[0.7rem] px-2.5 py-0.5 rounded-full border border-[rgba(47,36,27,0.12)] bg-[rgba(47,36,27,0.04)] font-medium opacity-75">Barong</span>
+            </div>
+            <h3 class="text-xl sm:text-2xl font-normal mb-2" style="font-family: var(--template-font-display-stack, 'Playfair Display', Georgia, serif);">Ring, Coin &amp; Bible Bearers</h3>
+            <p class="text-xs sm:text-sm opacity-80 leading-relaxed font-light mb-3">
+              Formal Barong Tagalog, black trousers, and black formal shoes.
+            </p>
+            <div class="flex items-center gap-2 mt-1">
+              <span class="inline-block w-3 h-3 rounded-full border border-black/10 shadow-xs" style="background-color: #ede7da;"></span>
+              <span class="inline-block w-3 h-3 rounded-full border border-black/10 shadow-xs" style="background-color: #1a1a1a;"></span>
+              <span class="text-[0.72rem] opacity-70 font-medium">Formal Barong &amp; Black</span>
+            </div>
+          </div>
+          <div class="mt-4 pt-3 border-t border-[rgba(47,36,27,0.08)]">
+            <p class="text-[0.72rem] opacity-60 italic font-light">
+              Neat and handsome formal wear for our young bearers.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 9. Wedding Guests — Ladies -->
+      <div class="dc-card-item" data-category="guests">
+        <div class="dc-img-container">
+          <img src="/dress-code/guests-female.webp" alt="Wedding Guests Ladies Attire Inspiration in Mocha" width="736" height="1041" loading="lazy">
+        </div>
+        <div class="p-5 sm:p-6 flex flex-col justify-between flex-1">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-[0.68rem] uppercase tracking-[0.16em] font-semibold text-[#8a5a2b]">Wedding Guests</span>
+              <span class="text-[0.7rem] px-2.5 py-0.5 rounded-full border border-[#8a5a2b]/30 bg-[#8a5a2b]/10 text-[#8a5a2b] font-medium">Ladies</span>
+            </div>
+            <h3 class="text-xl sm:text-2xl font-normal mb-2" style="font-family: var(--template-font-display-stack, 'Playfair Display', Georgia, serif);">Ladies Attire</h3>
+            <p class="text-xs sm:text-sm opacity-80 leading-relaxed font-light mb-3">
+              Long dresses, midi dresses, elegant jumpsuits, or formal garden attire in mocha and coordinated warm earth-tone palette.
+            </p>
+            <div class="flex items-center gap-2 mt-1">
+              <span class="inline-block w-3 h-3 rounded-full border border-black/10 shadow-xs" style="background-color: #4a3324;"></span>
+              <span class="inline-block w-3 h-3 rounded-full border border-black/10 shadow-xs" style="background-color: #cdbcac;"></span>
+              <span class="text-[0.72rem] opacity-70 font-medium">Mocha &amp; Warm Sand</span>
+            </div>
+          </div>
+          <div class="mt-4 pt-3 border-t border-[rgba(47,36,27,0.08)]">
+            <p class="text-[0.72rem] opacity-60 italic font-light">
+              Ceremony is outdoors on garden grounds; block heels or dressy flats recommended.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 10. Wedding Guests — Gentlemen -->
+      <div class="dc-card-item" data-category="guests">
+        <div class="dc-img-container">
+          <img src="/dress-code/guests-male.webp" alt="Wedding Guests Gentlemen Long-Sleeved Polo or Suit" width="1086" height="1448" loading="lazy">
+        </div>
+        <div class="p-5 sm:p-6 flex flex-col justify-between flex-1">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-[0.68rem] uppercase tracking-[0.16em] font-semibold text-[#8a5a2b]">Wedding Guests</span>
+              <span class="text-[0.7rem] px-2.5 py-0.5 rounded-full border border-[#8a5a2b]/30 bg-[#8a5a2b]/10 text-[#8a5a2b] font-medium">Gentlemen</span>
+            </div>
+            <h3 class="text-xl sm:text-2xl font-normal mb-2" style="font-family: var(--template-font-display-stack, 'Playfair Display', Georgia, serif);">Gentlemen Attire</h3>
+            <p class="text-xs sm:text-sm opacity-80 leading-relaxed font-light mb-3">
+              Long-sleeved polo with tailored trousers, or a formal suit in wedding-appropriate neutral or earth-tone styling.
+            </p>
+            <div class="flex items-center gap-2 mt-1">
+              <span class="inline-block w-3 h-3 rounded-full border border-black/10 shadow-xs" style="background-color: #79614e;"></span>
+              <span class="inline-block w-3 h-3 rounded-full border border-black/10 shadow-xs" style="background-color: #2f241b;"></span>
+              <span class="text-[0.72rem] opacity-70 font-medium">Earth Tones &amp; Neutrals</span>
+            </div>
+          </div>
+          <div class="mt-4 pt-3 border-t border-[rgba(47,36,27,0.08)]">
+            <p class="text-[0.72rem] opacity-60 italic font-light">
+              Tailored trousers and leather dress shoes.
             </p>
           </div>
         </div>
@@ -334,12 +400,48 @@
 
     </div>
 
+    <!-- Guest Attire Reminders Editorial Callout -->
+    <div class="mt-14 max-w-3xl mx-auto rounded-3xl p-6 sm:p-8 bg-white/70 border border-[rgba(47,36,27,0.08)] shadow-xs text-left">
+      <div class="flex items-center gap-2 mb-3">
+        <span class="w-1.5 h-1.5 rounded-full bg-[#8a5a2b]"></span>
+        <h4 class="text-sm uppercase tracking-wider font-semibold opacity-75">Attire Etiquette &amp; Reminders</h4>
+      </div>
+      <ul class="text-xs sm:text-sm opacity-80 font-light leading-relaxed space-y-2 list-disc list-inside">
+        <li>Please avoid wearing all-white, ivory, or cream dresses reserved for the bride.</li>
+        <li>Kindly avoid neon colors, very bright red, orange, yellow, or overly loud prints.</li>
+        <li>We request no denim jeans, shorts, and casual footwear (rubber slippers or sneakers).</li>
+        <li>Garden setting: ladies are encouraged to wear comfortable block heels, wedges, or dressy flats.</li>
+      </ul>
+    </div>
+
     <!-- Heartfelt Note Footer -->
-    <div class="mt-14 text-center">
+    <div class="mt-12 text-center">
       <p class="text-xs sm:text-sm opacity-70 font-light">
-        Your presence and prayers are our greatest gift. We can&#x27;t wait to celebrate and capture memories together!
+        Your presence and prayers are our greatest gift. We cannot wait to celebrate and capture memories together!
       </p>
     </div>
 
   </div>
+
+  <script>
+    (function() {
+      window.filterDressCode = function(category, btn) {
+        var buttons = document.querySelectorAll('.dc-filter-btn');
+        buttons.forEach(function(b) { b.classList.remove('active'); });
+        if (btn) btn.classList.add('active');
+
+        var cards = document.querySelectorAll('#dc-grid .dc-card-item');
+        cards.forEach(function(card) {
+          var cardCat = (card.getAttribute('data-category') || '').trim().split(/\s+/);
+          if (category === 'all' || cardCat.indexOf(category) !== -1) {
+            card.classList.remove('dc-hidden');
+          } else {
+            card.classList.add('dc-hidden');
+          }
+        });
+
+        window.dispatchEvent(new Event('resize'));
+      };
+    })();
+  </script>
 </section>
