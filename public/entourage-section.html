@@ -1,0 +1,207 @@
+<section id="entourage-section" class="relative z-20 w-full px-4 py-20 md:py-32 text-center" style="color: var(--template-text, #2f241b); background-color: var(--template-page-background, #fcf7ed);">
+  <style>
+    .entourage-flex-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+    }
+    .entourage-sponsor-card {
+      width: 100%;
+      padding: 1rem;
+      border-radius: 0.75rem;
+      border: 1px solid rgba(47, 36, 27, 0.08);
+      background: rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      text-align: center;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .entourage-party-card {
+      width: 100%;
+      padding: 1rem;
+      border-radius: 0.75rem;
+      border: 1px solid rgba(47, 36, 27, 0.08);
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      text-align: center;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .entourage-sponsor-card:hover, .entourage-party-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(47, 36, 27, 0.06);
+    }
+    @media (min-width: 640px) {
+      .entourage-sponsor-card, .entourage-party-card {
+        width: calc((100% - 1rem) / 2);
+      }
+    }
+    @media (min-width: 1024px) {
+      .entourage-sponsor-card, .entourage-party-card {
+        width: calc((100% - 2rem) / 3);
+      }
+    }
+  </style>
+
+  <div class="mx-auto max-w-5xl">
+    
+    <!-- Header -->
+    <div class="mb-16 md:mb-20">
+      <span class="block text-xs uppercase tracking-[0.25em] opacity-60 font-medium mb-3">Our Beloved Circle</span>
+      <h2 class="text-4xl sm:text-5xl md:text-6xl not-italic font-normal tracking-tight" style="font-family: var(--template-font-display-stack, serif);">The Entourage</h2>
+      <p class="text-xs sm:text-sm md:text-base opacity-75 max-w-xl mx-auto mt-4 font-light leading-relaxed">
+        Surrounded by the family and friends who have walked with us, guided us, and prayed for us.
+      </p>
+      <div class="mx-auto mt-6 h-[1px] w-24 opacity-25" style="background-color: var(--template-text, #2f241b);"></div>
+    </div>
+
+    <!-- Parents -->
+    <div class="mb-16 md:mb-20">
+      <h3 class="text-xs uppercase tracking-[0.2em] font-semibold opacity-60 mb-6">Parents</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-2xl mx-auto">
+        <div class="p-6 rounded-2xl border border-[rgba(47,36,27,0.12)] bg-[rgba(255,255,255,0.4)] backdrop-blur-sm">
+          <p class="text-[0.65rem] uppercase tracking-wider opacity-60 mb-2">Parents of the Groom</p>
+          <p class="text-xl md:text-2xl font-normal leading-snug" style="font-family: var(--template-font-display-stack, serif);">Domingo Garde</p>
+          <p class="text-xl md:text-2xl font-normal leading-snug" style="font-family: var(--template-font-display-stack, serif);">Jerelyn Garde</p>
+        </div>
+        <div class="p-6 rounded-2xl border border-[rgba(47,36,27,0.12)] bg-[rgba(255,255,255,0.4)] backdrop-blur-sm">
+          <p class="text-[0.65rem] uppercase tracking-wider opacity-60 mb-2">Parents of the Bride</p>
+          <p class="text-xl md:text-2xl font-normal leading-snug" style="font-family: var(--template-font-display-stack, serif);">Virgilio Rosaldo</p>
+          <p class="text-xl md:text-2xl font-normal leading-snug" style="font-family: var(--template-font-display-stack, serif);">Vicenta Rosaldo</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Best Man & Maid of Honor -->
+    <div class="mb-16 md:mb-20">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-2xl mx-auto">
+        <div class="p-6 rounded-2xl border border-[rgba(47,36,27,0.12)] bg-[rgba(255,255,255,0.4)] backdrop-blur-sm">
+          <p class="text-[0.65rem] uppercase tracking-[0.2em] font-semibold opacity-60 mb-2">Best Man</p>
+          <p class="text-2xl md:text-3xl font-normal" style="font-family: var(--template-font-display-stack, serif);">Karl Dela Pena</p>
+        </div>
+        <div class="p-6 rounded-2xl border border-[rgba(47,36,27,0.12)] bg-[rgba(255,255,255,0.4)] backdrop-blur-sm">
+          <p class="text-[0.65rem] uppercase tracking-[0.2em] font-semibold opacity-60 mb-2">Maid of Honor</p>
+          <p class="text-2xl md:text-3xl font-normal" style="font-family: var(--template-font-display-stack, serif);">Mychel Faith Bartonico</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Secondary Sponsors -->
+    <div class="mb-16 md:mb-20">
+      <h3 class="text-xs uppercase tracking-[0.2em] font-semibold opacity-60 mb-6">Secondary Sponsors</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 max-w-3xl mx-auto">
+        <div class="p-5 rounded-2xl border border-[rgba(47,36,27,0.1)] bg-[rgba(255,255,255,0.3)]">
+          <p class="text-[0.65rem] uppercase tracking-wider opacity-60 mb-2">Candle · To Light Our Path</p>
+          <p class="text-lg md:text-xl font-normal" style="font-family: var(--template-font-display-stack, serif);">Alejandro &amp; Cara Abad</p>
+        </div>
+        <div class="p-5 rounded-2xl border border-[rgba(47,36,27,0.1)] bg-[rgba(255,255,255,0.3)]">
+          <p class="text-[0.65rem] uppercase tracking-wider opacity-60 mb-2">Veil · To Clothe Us as One</p>
+          <p class="text-lg md:text-xl font-normal" style="font-family: var(--template-font-display-stack, serif);">David &amp; Alexa Mueller</p>
+        </div>
+        <div class="p-5 rounded-2xl border border-[rgba(47,36,27,0.1)] bg-[rgba(255,255,255,0.3)]">
+          <p class="text-[0.65rem] uppercase tracking-wider opacity-60 mb-2">Cord · To Bind Us in Love</p>
+          <p class="text-lg md:text-xl font-normal" style="font-family: var(--template-font-display-stack, serif);">Winnie &amp; Marvin Espanola</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Principal Sponsors -->
+    <div class="mb-16 md:mb-20">
+      <h3 class="text-xs uppercase tracking-[0.2em] font-semibold opacity-60 mb-6">Principal Sponsors</h3>
+      <div class="entourage-flex-grid max-w-4xl mx-auto">
+        <div class="entourage-sponsor-card">
+          <p class="text-base md:text-lg font-normal" style="font-family: var(--template-font-display-stack, serif);">Princess &amp; Paul Gacuma</p>
+        </div>
+        <div class="entourage-sponsor-card">
+          <p class="text-base md:text-lg font-normal" style="font-family: var(--template-font-display-stack, serif);">Jeremy &amp; Nika Albolario</p>
+        </div>
+        <div class="entourage-sponsor-card">
+          <p class="text-base md:text-lg font-normal" style="font-family: var(--template-font-display-stack, serif);">Philip &amp; Sabrina Porras</p>
+        </div>
+        <div class="entourage-sponsor-card">
+          <p class="text-base md:text-lg font-normal" style="font-family: var(--template-font-display-stack, serif);">Cloyd &amp; Sharyn Verdeflor</p>
+        </div>
+        <div class="entourage-sponsor-card">
+          <p class="text-base md:text-lg font-normal" style="font-family: var(--template-font-display-stack, serif);">Miguel &amp; Macy Zayco</p>
+        </div>
+        <div class="entourage-sponsor-card">
+          <p class="text-base md:text-lg font-normal" style="font-family: var(--template-font-display-stack, serif);">David &amp; MaryGlen Gargantiel</p>
+        </div>
+        <div class="entourage-sponsor-card">
+          <p class="text-base md:text-lg font-normal" style="font-family: var(--template-font-display-stack, serif);">Paul &amp; Maricel Guillen</p>
+        </div>
+        <div class="entourage-sponsor-card">
+          <p class="text-base md:text-lg font-normal" style="font-family: var(--template-font-display-stack, serif);">Jolita &amp; Herminigildo Salvador</p>
+        </div>
+        <div class="entourage-sponsor-card">
+          <p class="text-base md:text-lg font-normal" style="font-family: var(--template-font-display-stack, serif);">Mildeson &amp; Ella Lim</p>
+        </div>
+        <div class="entourage-sponsor-card">
+          <p class="text-base md:text-lg font-normal" style="font-family: var(--template-font-display-stack, serif);">Ryan &amp; Rhea Toledo</p>
+        </div>
+        <div class="entourage-sponsor-card">
+          <p class="text-base md:text-lg font-normal" style="font-family: var(--template-font-display-stack, serif);">Jr &amp; June Abello</p>
+        </div>
+        <div class="entourage-sponsor-card">
+          <p class="text-base md:text-lg font-normal" style="font-family: var(--template-font-display-stack, serif);">Harold &amp; Jean Jamito</p>
+        </div>
+        <div class="entourage-sponsor-card">
+          <p class="text-base md:text-lg font-normal" style="font-family: var(--template-font-display-stack, serif);">Kix Javier &amp; Bless Manuel Javier</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bridesmaids & Groomsmen -->
+    <div class="mb-16 md:mb-20">
+      <h3 class="text-xs uppercase tracking-[0.2em] font-semibold opacity-60 mb-6">Bridesmaids &amp; Groomsmen</h3>
+      <div class="entourage-flex-grid max-w-4xl mx-auto">
+        <div class="entourage-party-card">
+          <p class="text-base md:text-lg font-normal" style="font-family: var(--template-font-display-stack, serif);">Jan &amp; Joanne Irog</p>
+        </div>
+        <div class="entourage-party-card">
+          <p class="text-base md:text-lg font-normal" style="font-family: var(--template-font-display-stack, serif);">John Gil Salvador &amp; Rhea Mae</p>
+        </div>
+        <div class="entourage-party-card">
+          <p class="text-base md:text-lg font-normal" style="font-family: var(--template-font-display-stack, serif);">Martin &amp; Janice</p>
+        </div>
+        <div class="entourage-party-card">
+          <p class="text-base md:text-lg font-normal" style="font-family: var(--template-font-display-stack, serif);">Virgil Vincent Rosaldo &amp; Lovely Rosaldo</p>
+        </div>
+        <div class="entourage-party-card">
+          <p class="text-base md:text-lg font-normal" style="font-family: var(--template-font-display-stack, serif);">Jedeboy Garde &amp; Suanny Namacpacan</p>
+        </div>
+        <div class="entourage-party-card">
+          <p class="text-base md:text-lg font-normal" style="font-family: var(--template-font-display-stack, serif);">Joshua &amp; Meybelle Tacardon</p>
+        </div>
+        <div class="entourage-party-card">
+          <p class="text-base md:text-lg font-normal" style="font-family: var(--template-font-display-stack, serif);">Aspaul &amp; Manuela Lim</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bearers & Flower Girls -->
+    <div>
+      <h3 class="text-xs uppercase tracking-[0.2em] font-semibold opacity-60 mb-6">Bearers &amp; Flower Girls</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+        <div class="p-4 rounded-xl border border-[rgba(47,36,27,0.08)] bg-[rgba(255,255,255,0.25)]">
+          <p class="text-[0.65rem] uppercase tracking-wider opacity-60 mb-1">Bible Bearer</p>
+          <p class="text-base md:text-lg font-normal" style="font-family: var(--template-font-display-stack, serif);">Paulo Gacuma</p>
+        </div>
+        <div class="p-4 rounded-xl border border-[rgba(47,36,27,0.08)] bg-[rgba(255,255,255,0.25)]">
+          <p class="text-[0.65rem] uppercase tracking-wider opacity-60 mb-1">Coin Bearer</p>
+          <p class="text-base md:text-lg font-normal" style="font-family: var(--template-font-display-stack, serif);">James Garde</p>
+        </div>
+        <div class="p-4 rounded-xl border border-[rgba(47,36,27,0.08)] bg-[rgba(255,255,255,0.25)]">
+          <p class="text-[0.65rem] uppercase tracking-wider opacity-60 mb-1">Ring Bearer</p>
+          <p class="text-base md:text-lg font-normal" style="font-family: var(--template-font-display-stack, serif);">Benedict Gerson</p>
+        </div>
+        <div class="p-4 rounded-xl border border-[rgba(47,36,27,0.08)] bg-[rgba(255,255,255,0.25)]">
+          <p class="text-[0.65rem] uppercase tracking-wider opacity-60 mb-1">Flower Girls</p>
+          <p class="text-base md:text-lg font-normal" style="font-family: var(--template-font-display-stack, serif);">Elena, Carren &amp; Angestel</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
