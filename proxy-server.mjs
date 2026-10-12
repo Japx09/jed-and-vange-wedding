@@ -264,7 +264,9 @@ const replacements = [
   // Venue
   ['Cecil Green Park House', 'Zaycoland Resort and Hotel'],
   ['6251 Cecil Green Park Rd, Vancouver, BC', 'Kabankalan City, Negros Occidental'],
-  ['https://maps.google.com/?q=6251+Cecil+Green+Park+Rd+Vancouver+BC', 'https://maps.google.com/?q=Zaycoland+Resort+and+Hotel+Kabankalan+City+Negros+Occidental'],
+  ['https://maps.google.com/?q=6251+Cecil+Green+Park+Rd+Vancouver+BC', 'https://share.google/hZBElWZSFrunPhIBL'],
+  ['https://maps.google.com/?q=Zaycoland+Resort+and+Hotel+Kabankalan+City+Negros+Occidental', 'https://share.google/hZBElWZSFrunPhIBL'],
+  ['>Kabankalan City, Negros Occidental</a>', '>Kabankalan City, Negros Occidental</a><div id="venue-location-btn" class="mt-6 flex justify-center"><a href="https://share.google/hZBElWZSFrunPhIBL" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-xs sm:text-sm font-medium tracking-wide shadow-sm transition-transform hover:scale-105" style="background-color: #8a5a2b; color: #fff9f1; box-shadow: 0 4px 14px rgba(138, 90, 43, 0.28); text-decoration: none;"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg><span>View on Google Maps</span></a></div>'],
 
   // Chapter 1
   [`\\"${ch1BodyOld}\\"`, `\\"${ch1BodyJson}\\"`],
@@ -471,7 +473,22 @@ app.use(createProxyMiddleware({
       }
     }
 
-    // 3. Remove any Cordially platform badge elements
+    // 3. Ensure Venue Location button exists and points to share.google link
+    var venueAddr = document.querySelector('[data-site-section-id="venue"] a[href*="google"], [data-site-section-id="venue"] a[href*="share.google"]');
+    if (venueAddr) {
+      venueAddr.setAttribute('href', 'https://share.google/hZBElWZSFrunPhIBL');
+      if (!document.getElementById('venue-location-btn')) {
+        var btnDiv = document.createElement('div');
+        btnDiv.id = 'venue-location-btn';
+        btnDiv.className = 'mt-6 flex justify-center';
+        btnDiv.innerHTML = '<a href="https://share.google/hZBElWZSFrunPhIBL" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-xs sm:text-sm font-medium tracking-wide shadow-sm transition-transform hover:scale-105" style="background-color: #8a5a2b; color: #fff9f1; box-shadow: 0 4px 14px rgba(138, 90, 43, 0.28); text-decoration: none;"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg><span>View on Google Maps</span></a>';
+        if (venueAddr.parentNode) {
+          venueAddr.parentNode.appendChild(btnDiv);
+        }
+      }
+    }
+
+    // 4. Remove any Cordially platform badge elements
     document.querySelectorAll('a[href*="cordially.io"]').forEach(function(el) { el.remove(); });
 
     window.dispatchEvent(new Event('resize'));
