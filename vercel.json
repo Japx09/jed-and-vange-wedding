@@ -6,6 +6,10 @@
       "destination": "https://www.cordially.io/_next/static/:path*"
     },
     {
+      "source": "/api/rsvp",
+      "destination": "/api/rsvp.js"
+    },
+    {
       "source": "/(.*)",
       "destination": "/api/index.js"
     }
