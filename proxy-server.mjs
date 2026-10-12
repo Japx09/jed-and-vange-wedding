@@ -64,7 +64,13 @@ app.use((req, res, next) => {
 
   if (targetUrl) {
     const cleanName = path.basename(decodeURIComponent(targetUrl).split('?')[0]);
-    const resolved = resolveFilePath(cleanName);
+    let resolved = resolveFilePath(cleanName);
+    if (!fs.existsSync(resolved) || fs.statSync(resolved).isDirectory()) {
+      const dot = cleanName.lastIndexOf('.');
+      if (dot !== -1) {
+        resolved = resolveFilePath(cleanName.substring(0, dot) + '.webp');
+      }
+    }
     if (fs.existsSync(resolved) && !fs.statSync(resolved).isDirectory()) {
       return serveFile(resolved, res);
     }
@@ -73,7 +79,13 @@ app.use((req, res, next) => {
   const cleanPath = req.url.split('?')[0];
   if (/\.(webp|png|jpe?g|svg)$/i.test(cleanPath)) {
     const filename = path.basename(cleanPath);
-    const resolved = resolveFilePath(filename);
+    let resolved = resolveFilePath(filename);
+    if (!fs.existsSync(resolved) || fs.statSync(resolved).isDirectory()) {
+      const dot = filename.lastIndexOf('.');
+      if (dot !== -1) {
+        resolved = resolveFilePath(filename.substring(0, dot) + '.webp');
+      }
+    }
     if (fs.existsSync(resolved) && !fs.statSync(resolved).isDirectory()) {
       return serveFile(resolved, res);
     }
