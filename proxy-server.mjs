@@ -302,26 +302,20 @@ const newQuoteJson = newQuoteText.split('\n').join('\\\\n');
 const ch1TitleOld = 'chapter one: how we met';
 const ch1TitleNew = 'Chapter 1: “Where it all began”';
 const ch1BodyOld = 'We met at university, became fast friends, and eventually realized the best parts of every week were the parts we spent together.';
-const ch1BodyNew = `A simple "hello" grew into shared moments
-and intentional friendship—
-God quietly weaving our stories together from the very start.`;
-const ch1BodyJson = JSON.stringify(ch1BodyNew).slice(1, -1);
+const ch1BodyNew = 'A simple “hello” grew into shared moments and intentional friendship—God quietly weaving our stories together from the very start.';
+const ch1BodyJson = ch1BodyNew;
 
 const ch2TitleOld = 'chapter two: falling in love';
 const ch2TitleNew = 'Chapter 2: “When it became intentional”';
 const ch2BodyOld = 'Toronto became our home base for late dinners, weekend walks, shared routines, and all of the small moments that made life feel bigger.';
-const ch2BodyNew = `Casual talks turned into clear intentions.
-Not rushed, but with prayer, purpose, and grace
-— God led us to one another.`;
-const ch2BodyJson = JSON.stringify(ch2BodyNew).slice(1, -1);
+const ch2BodyNew = 'Casual talks turned into clear intentions. Not rushed, but with prayer, purpose, and grace — God led us to one another.';
+const ch2BodyJson = ch2BodyNew;
 
 const ch3TitleOld = 'chapter three: the next step';
 const ch3TitleNew = 'Chapter 3: “When we said YES to a lifetime”';
 const ch3BodyOld = 'A trip, a question, a very easy yes, and suddenly the future we had been imagining became something we could invite everyone into.';
-const ch3BodyNew = `After every intentional step came a resounding YES—
-trusting the God who brought us this far
-for a lifetime of walking together in grace.`;
-const ch3BodyJson = JSON.stringify(ch3BodyNew).slice(1, -1);
+const ch3BodyNew = 'After every intentional step came a resounding YES—trusting the God who brought us this far for a lifetime of walking together in grace.';
+const ch3BodyJson = ch3BodyNew;
 
 const polaroidTitles = [
   'First year on campus',
@@ -337,7 +331,7 @@ const polaroidTitles = [
 
 // Transition Line configuration
 const oldTransitionSpans = '<span data-vision-word="true" style="opacity:0.4;transition:opacity 0.3s ease-out">you&#x27;re</span> <span data-vision-word="true" style="opacity:0.4;transition:opacity 0.3s ease-out">cordially</span> <span data-vision-word="true" style="opacity:0.4;transition:opacity 0.3s ease-out">invited</span> <span data-vision-word="true" style="opacity:0.4;transition:opacity 0.3s ease-out">to</span> <span data-vision-word="true" style="opacity:0.4;transition:opacity 0.3s ease-out">celebrate</span> <span data-vision-word="true" style="opacity:0.4;transition:opacity 0.3s ease-out">the</span> <span data-vision-word="true" style="opacity:0.4;transition:opacity 0.3s ease-out">story</span> <span data-vision-word="true" style="opacity:0.4;transition:opacity 0.3s ease-out">of...</span>';
-const newTransitionSpans = '<span data-vision-word="true" style="opacity:0.4;transition:opacity 0.3s ease-out">two</span> <span data-vision-word="true" style="opacity:0.4;transition:opacity 0.3s ease-out">separate</span> <span data-vision-word="true" style="opacity:0.4;transition:opacity 0.3s ease-out">stories</span> <span data-vision-word="true" style="opacity:0.4;transition:opacity 0.3s ease-out">woven</span> <span data-vision-word="true" style="opacity:0.4;transition:opacity 0.3s ease-out">by</span> <span data-vision-word="true" style="opacity:0.4;transition:opacity 0.3s ease-out;font-style:italic"><em>grace</em></span> <span data-vision-word="true" style="opacity:0.4;transition:opacity 0.3s ease-out">into</span> <span data-vision-word="true" style="opacity:0.4;transition:opacity 0.3s ease-out">one...</span>';
+const newTransitionSpans = '<span data-vision-word="true" style="opacity:0.4;transition:opacity 0.3s ease-out">two</span> <span data-vision-word="true" style="opacity:0.4;transition:opacity 0.3s ease-out">separate</span> <span data-vision-word="true" style="opacity:0.4;transition:opacity 0.3s ease-out">stories</span> <span data-vision-word="true" style="opacity:0.4;transition:opacity 0.3s ease-out">woven</span> <span data-vision-word="true" style="opacity:0.4;transition:opacity 0.3s ease-out">by</span> <span data-vision-word="true" style="opacity:0.4;transition:opacity 0.3s ease-out;font-style:italic">grace</span> <span data-vision-word="true" style="opacity:0.4;transition:opacity 0.3s ease-out">into</span> <span data-vision-word="true" style="opacity:0.4;transition:opacity 0.3s ease-out">one...</span>';
 const oldTransitionText = "you're cordially invited to celebrate the story of...";
 const newTransitionText = "two separate stories woven by grace into one...";
 
