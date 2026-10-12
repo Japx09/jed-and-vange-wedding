@@ -454,7 +454,7 @@
 
         var cards = document.querySelectorAll('#dc-grid .dc-card-item');
         cards.forEach(function(card) {
-          var cardCat = (card.getAttribute('data-category') || '').trim().split(/\s+/);
+          var cardCat = (card.getAttribute('data-category') || '').split(' ');
           if (category === 'all' || cardCat.indexOf(category) !== -1) {
             card.classList.remove('dc-hidden');
           } else {
