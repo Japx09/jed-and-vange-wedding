@@ -1,11 +1,10 @@
 {
   "version": 2,
-  "functions": {
-    "api/index.js": {
-      "includeFiles": "{*.webp,*.html,story/**,collage/**,public/**}"
-    }
-  },
   "rewrites": [
+    {
+      "source": "/_next/static/:path*",
+      "destination": "https://www.cordially.io/_next/static/:path*"
+    },
     {
       "source": "/(.*)",
       "destination": "/api/index.js"

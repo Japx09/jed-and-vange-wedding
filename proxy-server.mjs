@@ -6,55 +6,48 @@ import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-function resolveAssetPath(...relativeParts) {
-  const candidates = [
-    path.join(__dirname, ...relativeParts),
-    path.join(process.cwd(), ...relativeParts),
-    path.join(__dirname, '..', ...relativeParts),
-    path.join(__dirname, 'public', ...relativeParts),
-    path.join(process.cwd(), 'public', ...relativeParts)
-  ];
-  for (const c of candidates) {
-    if (fs.existsSync(c)) return c;
-  }
-  return path.join(__dirname, ...relativeParts);
+function resolveFilePath(...segments) {
+  const p1 = path.join(__dirname, ...segments);
+  if (fs.existsSync(p1)) return p1;
+  const p2 = path.join(process.cwd(), ...segments);
+  if (fs.existsSync(p2)) return p2;
+  const p3 = path.join(__dirname, 'public', ...segments);
+  if (fs.existsSync(p3)) return p3;
+  const p4 = path.join(process.cwd(), 'public', ...segments);
+  if (fs.existsSync(p4)) return p4;
+  return p1;
 }
 
-const COVER_PATH = resolveAssetPath('cover.webp');
-const FOOTER_PATH = resolveAssetPath('footer.webp');
-const VENUE_PATH = resolveAssetPath('venue.webp');
-const STORY_DIR = resolveAssetPath('story');
-const COLLAGE_DIR = resolveAssetPath('collage');
+const COVER_PATH = resolveFilePath('cover.webp');
+const FOOTER_PATH = resolveFilePath('footer.webp');
+const VENUE_PATH = resolveFilePath('venue.webp');
+const STORY_DIR = resolveFilePath('story');
+const COLLAGE_DIR = resolveFilePath('collage');
 
 const app = express();
 const PORT = 3333;
 
-// Transparent path rewriting: serve the wedding site directly at root '/' without any '/demo' redirect
+// Normalize request URL for Vercel Serverless environment
 app.use((req, res, next) => {
   const matched = req.headers['x-matched-path'];
-  if (matched) {
-    req.url = matched;
-  } else if (req.url.startsWith('/api/index.js')) {
-    req.url = req.url.replace('/api/index.js', '') || '/';
-  } else if (req.url.startsWith('/index.js')) {
-    req.url = req.url.replace('/index.js', '') || '/';
-  }
-
-  if (req.url === '' || req.url === '/') {
-    req.url = '/demo';
+  if (matched && !matched.startsWith('/api') && matched !== '/index.js') {
+    const qIndex = req.url.indexOf('?');
+    const qs = qIndex !== -1 ? req.url.slice(qIndex) : '';
+    req.url = matched.includes('?') ? matched : (matched + qs);
+  } else if (req.url === '/api/index.js' || req.url === '/api/index' || req.url === '/api' || req.url === '/index.js') {
+    req.url = '/';
   }
   next();
 });
 
 // Helper to serve local images
 const serveFile = (filePath, res) => {
-  const resolved = fs.existsSync(filePath) ? filePath : resolveAssetPath(path.basename(filePath));
+  const resolved = fs.existsSync(filePath) ? filePath : resolveFilePath(path.basename(filePath));
   if (!fs.existsSync(resolved)) {
-    console.error('File not found:', filePath, resolved);
     return res.status(404).send('Not found');
   }
   res.setHeader('Content-Type', 'image/webp');
-  res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+  res.setHeader('Cache-Control', 'public, max-age=86400');
   fs.createReadStream(resolved).pipe(res);
 };
 
@@ -81,6 +74,12 @@ const collageImageMap = {
   'hero-thunderbay.webp': path.join(COLLAGE_DIR, 'hero-thunderbay.webp'),
   'hero-shoes.webp': path.join(COLLAGE_DIR, 'hero-shoes.webp')
 };
+
+// Route root '/' to '/demo' so the wedding website serves as the homepage
+app.get('/', (req, res, next) => {
+  req.url = '/demo';
+  next();
+});
 
 // Intercept cover, footer, and venue image requests
 app.get('/demo/kevin-wedding/hero.webp', (req, res) => serveFile(COVER_PATH, res));
@@ -345,10 +344,10 @@ app.use(createProxyMiddleware({
         text = replaceInfo(text);
 
         if (contentType.includes('text/html')) {
-          const entouragePath = resolveAssetPath('entourage-section.html');
+          const entouragePath = resolveFilePath('entourage-section.html');
           const entourageHtml = fs.existsSync(entouragePath) ? fs.readFileSync(entouragePath, 'utf8') : '';
 
-          const dressCodePath = resolveAssetPath('dress-code-section.html');
+          const dressCodePath = resolveFilePath('dress-code-section.html');
           const dressCodeHtml = fs.existsSync(dressCodePath) ? fs.readFileSync(dressCodePath, 'utf8') : '';
 
           // 1. Server-side initial render injection
