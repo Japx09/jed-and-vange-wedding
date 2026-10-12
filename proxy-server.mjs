@@ -165,11 +165,12 @@ async function appendRsvpToGoogleSheet(data) {
 app.use(express.json());
 
 app.use((req, res, next) => {
-  const matched = req.headers['x-matched-path'];
-  if (req.url === '/api/rsvp' || matched === '/api/rsvp') {
+  const isRsvp = req.url.includes('action=rsvp') || req.url === '/api/rsvp' || req.headers['x-matched-path'] === '/api/rsvp';
+  if (isRsvp) {
     req.url = '/api/rsvp';
     return next();
   }
+  const matched = req.headers['x-matched-path'];
   if (matched && !matched.startsWith('/api') && matched !== '/index.js' && !matched.includes('[...catchAll]')) {
     const qIndex = req.url.indexOf('?');
     const qs = qIndex !== -1 ? req.url.slice(qIndex) : '';
