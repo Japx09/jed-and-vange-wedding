@@ -161,8 +161,27 @@ async function appendRsvpToGoogleSheet(data) {
   return appendData;
 }
 
+// 2. Parse JSON & normalize request URL for Vercel Serverless environment
+app.use(express.json());
+
+app.use((req, res, next) => {
+  const matched = req.headers['x-matched-path'];
+  if (req.url === '/api/rsvp' || matched === '/api/rsvp') {
+    req.url = '/api/rsvp';
+    return next();
+  }
+  if (matched && !matched.startsWith('/api') && matched !== '/index.js' && !matched.includes('[...catchAll]')) {
+    const qIndex = req.url.indexOf('?');
+    const qs = qIndex !== -1 ? req.url.slice(qIndex) : '';
+    req.url = matched.includes('?') ? matched : (matched + qs);
+  } else if (req.url === '/api/index.js' || req.url === '/api/index' || req.url === '/api' || req.url === '/index.js' || (matched && matched.includes('[...catchAll]'))) {
+    req.url = '/';
+  }
+  next();
+});
+
 // RSVP submission endpoint
-app.post('/api/rsvp', express.json(), async (req, res) => {
+app.post('/api/rsvp', async (req, res) => {
   try {
     const { fullName, attendance, guestCount, dietary, message } = req.body || {};
     if (!fullName || !fullName.trim()) {
@@ -189,23 +208,6 @@ app.post('/api/rsvp', express.json(), async (req, res) => {
       error: 'An error occurred while saving your RSVP. Please try again.'
     });
   }
-});
-
-// 2. Normalize request URL for Vercel Serverless environment
-app.use((req, res, next) => {
-  const matched = req.headers['x-matched-path'];
-  if (req.url === '/api/rsvp' || matched === '/api/rsvp') {
-    req.url = '/api/rsvp';
-    return next();
-  }
-  if (matched && !matched.startsWith('/api') && matched !== '/index.js' && !matched.includes('[...catchAll]')) {
-    const qIndex = req.url.indexOf('?');
-    const qs = qIndex !== -1 ? req.url.slice(qIndex) : '';
-    req.url = matched.includes('?') ? matched : (matched + qs);
-  } else if (req.url === '/api/index.js' || req.url === '/api/index' || req.url === '/api' || req.url === '/index.js' || (matched && matched.includes('[...catchAll]'))) {
-    req.url = '/';
-  }
-  next();
 });
 
 // Story images mapping
