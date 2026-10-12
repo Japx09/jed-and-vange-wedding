@@ -42,6 +42,7 @@ const FAVICON_ICO_PATH = resolveFilePath('favicon.ico');
 const ICON_SVG_PATH = resolveFilePath('icon.svg');
 const APPLE_TOUCH_ICON_PATH = resolveFilePath('apple-touch-icon.png');
 const QR_PATH = resolveFilePath('qr.jpg');
+const OG_IMAGE_PATH = resolveFilePath('og-image.jpg');
 
 const app = express();
 const PORT = 3333;
@@ -291,6 +292,10 @@ app.get('/apple-touch-icon.png', (req, res) => serveFile(APPLE_TOUCH_ICON_PATH, 
 app.get('/apple-touch-icon-precomposed.png', (req, res) => serveFile(APPLE_TOUCH_ICON_PATH, res));
 app.get('/qr.jpg', (req, res) => serveFile(QR_PATH, res));
 app.get('/qr.png', (req, res) => serveFile(QR_PATH, res));
+app.get('/og-image.jpg', (req, res) => serveFile(OG_IMAGE_PATH, res));
+app.get('/og-image.jpeg', (req, res) => serveFile(OG_IMAGE_PATH, res));
+app.get('/opengraph-image.jpeg', (req, res) => serveFile(OG_IMAGE_PATH, res));
+app.get('/opengraph-image.jpg', (req, res) => serveFile(OG_IMAGE_PATH, res));
 
 // Intercept cover, footer, and venue image requests
 app.get('/demo/kevin-wedding/hero.webp', (req, res) => serveFile(COVER_PATH, res));
@@ -603,6 +608,27 @@ app.use(createProxyMiddleware({
           if (text.includes('data-design-anchor="faq"')) {
             text = text.replace('<div data-design-anchor="faq"', dressCodeWrapper + giftsWrapper + '<div data-design-anchor="faq"');
           }
+
+          // Open Graph & Social Share Link Embed Meta Tags
+          const ogTitle = 'Jed & Vanj — Wedding Celebration';
+          const ogDesc = 'We would love for you to join us as we celebrate our wedding day. December 8, 2026 • Zaycoland Resort, Kabankalan City.';
+          const ogUrl = 'https://jed-and-vange-wedding.vercel.app/';
+          const ogImageUrl = 'https://jed-and-vange-wedding.vercel.app/og-image.jpg';
+
+          text = text.replace(/<title>[^<]*<\/title>/i, `<title>${ogTitle}</title>`);
+          text = text.replace(/<meta property="og:title" content="[^"]*"\/>/i, `<meta property="og:title" content="${ogTitle}"/>`);
+          text = text.replace(/<meta name="twitter:title" content="[^"]*"\/>/i, `<meta name="twitter:title" content="${ogTitle}"/>`);
+          text = text.replace(/<meta name="description" content="[^"]*"\/>/i, `<meta name="description" content="${ogDesc}"/>`);
+          text = text.replace(/<meta property="og:description" content="[^"]*"\/>/i, `<meta property="og:description" content="${ogDesc}"/>`);
+          text = text.replace(/<meta name="twitter:description" content="[^"]*"\/>/i, `<meta name="twitter:description" content="${ogDesc}"/>`);
+          text = text.replace(/<meta property="og:url" content="[^"]*"\/>/i, `<meta property="og:url" content="${ogUrl}"/>`);
+          text = text.replace(/<meta property="og:site_name" content="[^"]*"\/>/i, `<meta property="og:site_name" content="Jed &amp; Vanj Wedding"/>`);
+          text = text.replace(/<meta property="og:image" content="[^"]*"\/>/i, `<meta property="og:image" content="${ogImageUrl}"/>\n<meta property="og:image:secure_url" content="${ogImageUrl}"/>\n<meta property="og:image:alt" content="Jed &amp; Vanj Wedding"/>`);
+          text = text.replace(/<meta property="og:image:width" content="[^"]*"\/>/i, `<meta property="og:image:width" content="1200"/>`);
+          text = text.replace(/<meta property="og:image:height" content="[^"]*"\/>/i, `<meta property="og:image:height" content="630"/>`);
+          text = text.replace(/<meta property="og:image:type" content="[^"]*"\/>/i, `<meta property="og:image:type" content="image/jpeg"/>`);
+          text = text.replace(/<meta name="twitter:image" content="[^"]*"\/>/i, `<meta name="twitter:image" content="${ogImageUrl}"/>`);
+          text = text.replace(/<meta name="twitter:image:alt" content="[^"]*"\/>/i, `<meta name="twitter:image:alt" content="Jed &amp; Vanj Wedding"/>`);
 
           // 2. Client-side hydration watchdog and interactive controller
           const safeEntourageJson = JSON.stringify(entourageHtml).replace(/<\/script/gi, '<\\/script');
