@@ -139,6 +139,30 @@ async function appendRsvpToGoogleSheet(data) {
     throw new Error('Could not refresh Google OAuth token: ' + JSON.stringify(tokenData));
   }
 
+  const spreadsheetId = process.env.GOOGLE_SPREADSHEET_ID || gcfg.spreadsheetId || '1ZpztAtu_ah0CSvAuHw4V2rWA9dTDK0F9F_GSFSXIQgA';
+  const sheetName = gcfg.sheetName || 'RSVP Responses';
+
+  // Check for duplicate name in Column B (Full Name)
+  const getUrl = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(sheetName)}!B:B`;
+  const getRes = await fetch(getUrl, {
+    headers: { 'Authorization': `Bearer ${tokenData.access_token}` }
+  });
+  const getData = await getRes.json();
+
+  if (getData.values && getData.values.length > 1) {
+    const inputNormalized = (data.fullName || '').trim().toLowerCase();
+    const isDuplicate = getData.values.slice(1).some(row => {
+      const existingName = (row[0] || '').toString().trim().toLowerCase();
+      return existingName === inputNormalized;
+    });
+
+    if (isDuplicate) {
+      const err = new Error(`An RSVP under the name "${data.fullName}" has already been submitted.`);
+      err.code = 'DUPLICATE_NAME';
+      throw err;
+    }
+  }
+
   const timestamp = new Date().toLocaleString('en-US', {
     timeZone: 'Asia/Manila',
     dateStyle: 'medium',
@@ -154,8 +178,6 @@ async function appendRsvpToGoogleSheet(data) {
     data.message || ''
   ];
 
-  const spreadsheetId = process.env.GOOGLE_SPREADSHEET_ID || gcfg.spreadsheetId || '1ZpztAtu_ah0CSvAuHw4V2rWA9dTDK0F9F_GSFSXIQgA';
-  const sheetName = gcfg.sheetName || 'RSVP Responses';
   const appendUrl = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(sheetName)}!A:F:append?valueInputOption=USER_ENTERED`;
 
   const appendRes = await fetch(appendUrl, {
@@ -217,6 +239,12 @@ app.post('/api/rsvp', async (req, res) => {
       message: 'RSVP confirmed successfully!'
     });
   } catch (err) {
+    if (err.code === 'DUPLICATE_NAME') {
+      return res.status(409).json({
+        error: err.message,
+        duplicate: true
+      });
+    }
     console.error('Error recording RSVP:', err);
     return res.status(500).json({
       error: 'An error occurred while saving your RSVP. Please try again.'
@@ -677,11 +705,17 @@ app.use(createProxyMiddleware({
 
       var data = await res.json();
       if (!res.ok || data.error) {
+        if (data.duplicate) {
+          var nameInput = document.getElementById('rsvp-full-name');
+          if (nameInput) {
+            nameInput.style.borderColor = '#dc2626';
+            nameInput.style.boxShadow = '0 0 0 3px rgba(220, 38, 38, 0.15)';
+            nameInput.focus();
+          }
+        }
         throw new Error(data.error || 'Failed to submit RSVP. Please try again.');
       }
 
-      form.classList.add('hidden');
-      successCard.classList.remove('hidden');
       var confirmedName = document.getElementById('rsvp-confirmed-name');
       if (confirmedName) confirmedName.textContent = fullName;
       var confirmedDetail = document.getElementById('rsvp-confirmed-detail');
@@ -691,6 +725,11 @@ app.use(createProxyMiddleware({
         } else {
           confirmedDetail.textContent = 'Your response has been saved to our guest list. We look forward to celebrating this special day together on December 8, 2026 at Zaycoland Resort!';
         }
+      }
+      var modal = document.getElementById('rsvp-success-modal');
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.style.display = 'flex';
       }
     } catch (err) {
       if (errorDiv) {
@@ -705,7 +744,22 @@ app.use(createProxyMiddleware({
     }
   };
 
+  window.returnHomeFromRsvp = function() {
+    var modal = document.getElementById('rsvp-success-modal');
+    if (modal) {
+      modal.classList.add('hidden');
+      modal.style.display = 'none';
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.resetRsvpForm();
+  };
+
   window.resetRsvpForm = function() {
+    var modal = document.getElementById('rsvp-success-modal');
+    if (modal) {
+      modal.classList.add('hidden');
+      modal.style.display = 'none';
+    }
     var form = document.getElementById('wedding-rsvp-form');
     var successCard = document.getElementById('rsvp-success-card');
     if (form) {
@@ -713,6 +767,13 @@ app.use(createProxyMiddleware({
       form.classList.remove('hidden');
     }
     if (successCard) successCard.classList.add('hidden');
+    var errorDiv = document.getElementById('rsvp-error-msg');
+    if (errorDiv) errorDiv.classList.add('hidden');
+    var fullNameInput = document.getElementById('rsvp-full-name');
+    if (fullNameInput) {
+      fullNameInput.style.borderColor = 'rgba(47, 36, 27, 0.16)';
+      fullNameInput.style.boxShadow = 'none';
+    }
     var cards = document.querySelectorAll('.rsvp-radio-card');
     if (cards[0]) window.selectAttendance('Joyfully Accepts', cards[0]);
   };

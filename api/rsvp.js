@@ -29,6 +29,30 @@ async function appendRsvpToGoogleSheet(data) {
     throw new Error('Could not refresh Google OAuth token: ' + JSON.stringify(tokenData));
   }
 
+  const spreadsheetId = process.env.GOOGLE_SPREADSHEET_ID || gcfg.spreadsheetId || '1ZpztAtu_ah0CSvAuHw4V2rWA9dTDK0F9F_GSFSXIQgA';
+  const sheetName = gcfg.sheetName || 'RSVP Responses';
+
+  // Check for duplicate name in Column B (Full Name)
+  const getUrl = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(sheetName)}!B:B`;
+  const getRes = await fetch(getUrl, {
+    headers: { 'Authorization': `Bearer ${tokenData.access_token}` }
+  });
+  const getData = await getRes.json();
+
+  if (getData.values && getData.values.length > 1) {
+    const inputNormalized = (data.fullName || '').trim().toLowerCase();
+    const isDuplicate = getData.values.slice(1).some(row => {
+      const existingName = (row[0] || '').toString().trim().toLowerCase();
+      return existingName === inputNormalized;
+    });
+
+    if (isDuplicate) {
+      const err = new Error(`An RSVP under the name "${data.fullName}" has already been submitted.`);
+      err.code = 'DUPLICATE_NAME';
+      throw err;
+    }
+  }
+
   const timestamp = new Date().toLocaleString('en-US', {
     timeZone: 'Asia/Manila',
     dateStyle: 'medium',
@@ -44,8 +68,6 @@ async function appendRsvpToGoogleSheet(data) {
     data.message || ''
   ];
 
-  const spreadsheetId = process.env.GOOGLE_SPREADSHEET_ID || gcfg.spreadsheetId || '1ZpztAtu_ah0CSvAuHw4V2rWA9dTDK0F9F_GSFSXIQgA';
-  const sheetName = gcfg.sheetName || 'RSVP Responses';
   const appendUrl = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(sheetName)}!A:F:append?valueInputOption=USER_ENTERED`;
 
   const appendRes = await fetch(appendUrl, {
@@ -103,6 +125,12 @@ export default async function handler(req, res) {
       message: 'RSVP confirmed successfully!'
     });
   } catch (err) {
+    if (err.code === 'DUPLICATE_NAME') {
+      return res.status(409).json({
+        error: err.message,
+        duplicate: true
+      });
+    }
     console.error('Error handling RSVP in api/rsvp:', err);
     return res.status(500).json({
       error: 'An error occurred while saving your RSVP. Please try again.'

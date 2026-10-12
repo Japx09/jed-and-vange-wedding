@@ -141,8 +141,19 @@ export const rsvpHtml = `<!-- RSVP Section -->
         <div id="rsvp-error-msg" class="hidden text-center text-xs font-medium text-red-600 mt-2"></div>
       </form>
 
-      <!-- Success State (Shown after submission) -->
-      <div id="rsvp-success-card" class="hidden text-center py-8 sm:py-12 px-4 space-y-4">
+      <!-- Success State Modal Overlay (Popup) -->
+      <div id="rsvp-success-modal" class="fixed inset-0 z-[9999] hidden items-center justify-center p-4 sm:p-6" style="background-color: rgba(47, 36, 27, 0.65); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);">
+        <div id="rsvp-success-card" class="relative w-full max-w-lg mx-auto rounded-3xl p-8 sm:p-12 text-center shadow-2xl border space-y-4" style="background-color: #fffaf1; border-color: rgba(138, 90, 43, 0.2); box-shadow: 0 20px 50px rgba(47, 36, 27, 0.25);">
+          <!-- Close button -->
+          <button 
+            type="button" 
+            onclick="window.returnHomeFromRsvp()" 
+            class="absolute top-5 right-5 w-8 h-8 rounded-full flex items-center justify-center opacity-60 hover:opacity-100 transition-opacity cursor-pointer"
+            style="color: #2f241b; background-color: rgba(47, 36, 27, 0.05);"
+            aria-label="Close modal"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M18 6L6 18M6 6l12 12"/></svg>
+          </button>
         <div class="w-16 h-16 mx-auto rounded-full flex items-center justify-center text-2xl shadow-inner" style="background-color: rgba(138, 90, 43, 0.12); color: #8a5a2b;">
           🤍
         </div>
@@ -150,17 +161,26 @@ export const rsvpHtml = `<!-- RSVP Section -->
         <p id="rsvp-confirmed-detail" class="text-xs sm:text-sm max-w-md mx-auto leading-relaxed" style="color: #76614d;">
           Your RSVP has been saved to our guest list. We look forward to celebrating this special day together on December 8, 2026 at Zaycoland Resort!
         </p>
-        <div class="pt-4">
+        <div class="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <button 
+            type="button" 
+            onclick="window.returnHomeFromRsvp()" 
+            class="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3.5 rounded-full text-xs sm:text-sm font-semibold uppercase tracking-[0.2em] shadow-md transition-all duration-300 hover:scale-[1.03] active:scale-[0.98] cursor-pointer" 
+            style="background-color: #8a5a2b; color: #fff9f1; box-shadow: 0 4px 16px rgba(138, 90, 43, 0.32);"
+          >
+            RETURN HOME
+          </button>
           <button 
             type="button" 
             onclick="window.resetRsvpForm()" 
-            class="text-xs uppercase tracking-wider underline cursor-pointer hover:opacity-80 transition-opacity" 
+            class="text-xs uppercase tracking-wider underline cursor-pointer opacity-75 hover:opacity-100 transition-opacity py-2" 
             style="color: #8a5a2b;"
           >
             Submit another response
           </button>
         </div>
       </div>
+    </div>
 
     </div>
   </div>
