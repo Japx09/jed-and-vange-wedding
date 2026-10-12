@@ -520,6 +520,9 @@ const replacements = [
   ['Help! I have other questions!', 'What if I can\'t attend?'],
   ['Please reach out at your-email@example.com with any other questions.', 'We completely understand! Please let us know through the RSVP form so we can finalize our arrangements. Your prayers and love are more than enough. 🤍'],
 
+  // FAQ Contact Link & Modal Email
+  ['your-email@example.com', 'garderosaldo@gmail.com'],
+
   // Old Dress Code Modal Fallback (if ever opened)
   ['Summer garden party vibes.', 'Mocha Palette · Formal Attire'],
   ['Think summer garden party.', 'Formal and semi-formal garden attire. We warmly invite our guests to celebrate with us in our Mocha wedding palette.'],
