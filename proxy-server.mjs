@@ -94,9 +94,110 @@ app.use((req, res, next) => {
   next();
 });
 
+// Google Sheets RSVP Integration
+const DEFAULT_GCONFIG_B64 = 'eyJjbGllbnRJZCI6IjEwNzEwMDYwNjA1OTEtdG1oc3NpbjJoMjFsY3JlMjM1dnRvbG9qaDRnNDAzZXAuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJjbGllbnRTZWNyZXQiOiJHT0NTUFgtSzU4RldSNDg2TGRMSjFtTEI4c1hDNHo2cURBZiIsInJlZnJlc2hUb2tlbiI6IjEvLzBlVHEteU1ULVhtYkVDZ1lJQVJBQUdBNFNOd0YtTDlJcnVLSElUN1k5Zi1Nc0w0T2Z4VWRkUlRwWXNFcm1GTDRpNGI4SGF4RW80cEZBWXpvRFdDQ3pTUHh6Z2NscmRpNkNfZ00iLCJzcHJlYWRzaGVldElkIjoiMVpwenRBdHVfYWgwQ1N2QXVIdzRWMnJXQTlkVERLMEY5Rl9HU0ZTWElRZ0EiLCJzaGVldE5hbWUiOiJSU1ZQIFJlc3BvbnNlcyJ9';
+
+function getGoogleConfig() {
+  try {
+    const raw = process.env.GOOGLE_CONFIG_B64 || DEFAULT_GCONFIG_B64;
+    return JSON.parse(Buffer.from(raw, 'base64').toString('utf8'));
+  } catch (e) {
+    return {};
+  }
+}
+
+async function appendRsvpToGoogleSheet(data) {
+  const gcfg = getGoogleConfig();
+  const tokenParams = new URLSearchParams({
+    client_id: process.env.GOOGLE_CLIENT_ID || gcfg.clientId,
+    client_secret: process.env.GOOGLE_CLIENT_SECRET || gcfg.clientSecret,
+    refresh_token: process.env.GOOGLE_REFRESH_TOKEN || gcfg.refreshToken,
+    grant_type: 'refresh_token'
+  });
+
+  const tokenRes = await fetch('https://oauth2.googleapis.com/token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: tokenParams.toString()
+  });
+
+  const tokenData = await tokenRes.json();
+  if (!tokenData.access_token) {
+    throw new Error('Could not refresh Google OAuth token: ' + JSON.stringify(tokenData));
+  }
+
+  const timestamp = new Date().toLocaleString('en-US', {
+    timeZone: 'Asia/Manila',
+    dateStyle: 'medium',
+    timeStyle: 'short'
+  });
+
+  const row = [
+    timestamp,
+    data.fullName || '',
+    data.attendance || '',
+    String(data.guestCount !== undefined ? data.guestCount : 1),
+    data.dietary || 'None',
+    data.message || ''
+  ];
+
+  const spreadsheetId = process.env.GOOGLE_SPREADSHEET_ID || gcfg.spreadsheetId || '1ZpztAtu_ah0CSvAuHw4V2rWA9dTDK0F9F_GSFSXIQgA';
+  const sheetName = gcfg.sheetName || 'RSVP Responses';
+  const appendUrl = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(sheetName)}!A:F:append?valueInputOption=USER_ENTERED`;
+
+  const appendRes = await fetch(appendUrl, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${tokenData.access_token}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ values: [row] })
+  });
+
+  const appendData = await appendRes.json();
+  if (appendData.error) {
+    throw new Error('Google Sheets API error: ' + JSON.stringify(appendData.error));
+  }
+  return appendData;
+}
+
+// RSVP submission endpoint
+app.post('/api/rsvp', express.json(), async (req, res) => {
+  try {
+    const { fullName, attendance, guestCount, dietary, message } = req.body || {};
+    if (!fullName || !fullName.trim()) {
+      return res.status(400).json({ error: 'Please provide your full name.' });
+    }
+
+    const payload = {
+      fullName: fullName.trim(),
+      attendance: attendance || 'Joyfully Accepts',
+      guestCount: attendance === 'Regretfully Declines' ? 0 : (parseInt(guestCount, 10) || 1),
+      dietary: (dietary || '').trim() || 'None',
+      message: (message || '').trim()
+    };
+
+    await appendRsvpToGoogleSheet(payload);
+
+    return res.status(200).json({
+      success: true,
+      message: 'RSVP confirmed successfully!'
+    });
+  } catch (err) {
+    console.error('Error recording RSVP:', err);
+    return res.status(500).json({
+      error: 'An error occurred while saving your RSVP. Please try again.'
+    });
+  }
+});
+
 // 2. Normalize request URL for Vercel Serverless environment
 app.use((req, res, next) => {
   const matched = req.headers['x-matched-path'];
+  if (req.url === '/api/rsvp' || matched === '/api/rsvp') {
+    req.url = '/api/rsvp';
+    return next();
+  }
   if (matched && !matched.startsWith('/api') && matched !== '/index.js' && !matched.includes('[...catchAll]')) {
     const qIndex = req.url.indexOf('?');
     const qs = qIndex !== -1 ? req.url.slice(qIndex) : '';
@@ -356,6 +457,8 @@ const replacements = [
   ['href="#details">Registry</a>', 'href="#dress-code-section">Dress Code</a>'],
   ['{\\"label\\":\\"Travel\\",\\"targetId\\":\\"details\\",\\"overlayCardId\\":\\"travel\\"', '{\\"label\\":\\"Entourage\\",\\"targetId\\":\\"entourage-section\\",\\"overlayCardId\\":\\"\\"'],
   ['{\\"label\\":\\"Registry\\",\\"targetId\\":\\"details\\",\\"overlayCardId\\":\\"registry\\"', '{\\"label\\":\\"Dress Code\\",\\"targetId\\":\\"dress-code-section\\",\\"overlayCardId\\":\\"\\"'],
+  ['href="/demo/rsvp"', 'href="#rsvp-callout-section"'],
+  ['{\\"label\\":\\"RSVP\\",\\"targetId\\":\\"rsvp\\"', '{\\"label\\":\\"RSVP\\",\\"targetId\\":\\"rsvp-callout-section\\"'],
 
   // Remove Cordially platform branding badge
   ['Created on Cordially.io', ''],
@@ -365,7 +468,7 @@ const replacements = [
   ['style="fill:#ffffff;--template-fitted-font-size:140px;', 'style="fill:#f7efe2;--template-fitted-font-size:140px;'],
 
   // Preserve line breaks cleanly in footer quote and story captions & hide old details container & anchor offsets & responsive mobile story adjustments & minimal hero bottom gradient & mobile black burger/J&V
-  ['</head>', '<style>[data-testid="footer-quote"], [data-story-caption-group] p, [data-testid="mobile-story-caption-body"] { white-space: pre-line !important; line-height: 1.4 !important; } @media (max-width: 768px) { [data-story-caption-group] p, [data-testid="mobile-story-caption-body"] { font-size: 0.88rem !important; line-height: 1.35 !important; max-width: 92% !important; margin-left: auto !important; margin-right: auto !important; margin-bottom: 14px !important; } nav a[href="/"], nav [data-testid="nav-content"] > a { color: #000000 !important; } nav button[aria-label*="menu" i], nav [data-testid="nav-content"] button { color: #000000 !important; } nav button[aria-label*="menu" i] span, nav [data-testid="nav-content"] button span { background-color: #000000 !important; } nav button[aria-label*="menu" i] svg, nav [data-testid="nav-content"] button svg { stroke: #000000 !important; color: #000000 !important; } } [data-site-section-id="details"], a[href*="cordially.io"] { display: none !important; } #dress-code-section, #entourage-section { scroll-margin-top: 80px; } [data-site-section-id="hero"] [data-hero-headline-shell], [data-testid="hero-headline"] { fill: #f7efe2 !important; color: #f7efe2 !important; filter: none !important; stroke: none !important; -webkit-text-stroke: 0 !important; } [data-site-section-id="hero"] .bg-black\\/20 { display: none !important; } [data-testid="hero-foreground"] { background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.15) 70%, rgba(0,0,0,0.45) 85%, rgba(0,0,0,0.65) 100%) !important; } [data-site-section-id="hero"] img { object-position: center 40% !important; } [data-testid="hero-scroll-prompt"], [data-testid="hero-divider"] { filter: none !important; }</style></head>']
+  ['</head>', '<style>[data-testid="footer-quote"], [data-story-caption-group] p, [data-testid="mobile-story-caption-body"] { white-space: pre-line !important; line-height: 1.4 !important; } @media (max-width: 768px) { [data-story-caption-group] p, [data-testid="mobile-story-caption-body"] { font-size: 0.88rem !important; line-height: 1.35 !important; max-width: 92% !important; margin-left: auto !important; margin-right: auto !important; margin-bottom: 14px !important; } nav a[href="/"], nav [data-testid="nav-content"] > a { color: #000000 !important; } nav button[aria-label*="menu" i], nav [data-testid="nav-content"] button { color: #000000 !important; } nav button[aria-label*="menu" i] span, nav [data-testid="nav-content"] button span { background-color: #000000 !important; } nav button[aria-label*="menu" i] svg, nav [data-testid="nav-content"] button svg { stroke: #000000 !important; color: #000000 !important; } } [data-site-section-id="details"], a[href*="cordially.io"] { display: none !important; } #dress-code-section, #entourage-section, #rsvp-callout-section { scroll-margin-top: 80px; } [data-site-section-id="hero"] [data-hero-headline-shell], [data-testid="hero-headline"] { fill: #f7efe2 !important; color: #f7efe2 !important; filter: none !important; stroke: none !important; -webkit-text-stroke: 0 !important; } [data-site-section-id="hero"] .bg-black\\/20 { display: none !important; } [data-testid="hero-foreground"] { background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.15) 70%, rgba(0,0,0,0.45) 85%, rgba(0,0,0,0.65) 100%) !important; } [data-site-section-id="hero"] img { object-position: center 40% !important; } [data-testid="hero-scroll-prompt"], [data-testid="hero-divider"] { filter: none !important; }</style></head>']
 ];
 
 function replaceInfo(content) {
@@ -407,6 +510,9 @@ app.use(createProxyMiddleware({
           const dressCodePath = resolveFilePath('dress-code-section.html');
           const dressCodeHtml = fs.existsSync(dressCodePath) ? fs.readFileSync(dressCodePath, 'utf8') : '';
 
+          const rsvpPath = resolveFilePath('rsvp-section.html');
+          const rsvpHtml = fs.existsSync(rsvpPath) ? fs.readFileSync(rsvpPath, 'utf8') : '';
+
           // 1. Server-side initial render injection
           const entourageWrapper = `<div data-scroll-section="" data-scroll-section-kind="content" data-site-section-id="entourage">${entourageHtml}</div>`;
           const dressCodeWrapper = `<div data-scroll-section="" data-scroll-section-kind="content" data-site-section-id="dress-code">${dressCodeHtml}</div>`;
@@ -417,10 +523,17 @@ app.use(createProxyMiddleware({
           if (text.includes('data-design-anchor="faq"')) {
             text = text.replace('<div data-design-anchor="faq"', dressCodeWrapper + '<div data-design-anchor="faq"');
           }
+          if (rsvpHtml && text.includes('id="rsvp-callout-section"')) {
+            text = text.replace(
+              /<section id="rsvp-callout-section"[\s\S]*?<\/section>/,
+              `<section id="rsvp-callout-section" class="relative z-30 w-full" style="scroll-margin-top: 80px;">${rsvpHtml}</section>`
+            );
+          }
 
           // 2. Client-side hydration watchdog and interactive controller
           const safeEntourageJson = JSON.stringify(entourageHtml).replace(/<\/script/gi, '<\\/script');
           const safeDressCodeJson = JSON.stringify(dressCodeHtml).replace(/<\/script/gi, '<\\/script');
+          const safeRsvpJson = JSON.stringify(rsvpHtml).replace(/<\/script/gi, '<\\/script');
 
           const clientScript = `
 <script>
@@ -441,6 +554,115 @@ app.use(createProxyMiddleware({
     });
 
     window.dispatchEvent(new Event('resize'));
+  };
+
+  window.selectAttendance = function(val, card) {
+    var cards = document.querySelectorAll('.rsvp-radio-card');
+    cards.forEach(function(c) {
+      c.style.borderColor = 'rgba(47, 36, 27, 0.16)';
+      c.style.backgroundColor = '#ffffff';
+    });
+    if (card) {
+      card.style.borderColor = '#8a5a2b';
+      card.style.backgroundColor = 'rgba(138, 90, 43, 0.05)';
+      var radio = card.querySelector('input[type="radio"]');
+      if (radio) radio.checked = true;
+    }
+    var guestWrapper = document.getElementById('guest-count-wrapper');
+    var guestSelect = document.getElementById('rsvp-guest-count');
+    if (val === 'Regretfully Declines') {
+      if (guestWrapper) guestWrapper.style.display = 'none';
+      if (guestSelect) guestSelect.value = '0';
+    } else {
+      if (guestWrapper) guestWrapper.style.display = 'block';
+      if (guestSelect && guestSelect.value === '0') guestSelect.value = '2';
+    }
+  };
+
+  window.handleRsvpSubmit = async function(e) {
+    e.preventDefault();
+    var form = document.getElementById('wedding-rsvp-form');
+    var btn = document.getElementById('rsvp-submit-btn');
+    var btnText = document.getElementById('rsvp-btn-text');
+    var btnSpinner = document.getElementById('rsvp-btn-spinner');
+    var errorDiv = document.getElementById('rsvp-error-msg');
+    var successCard = document.getElementById('rsvp-success-card');
+
+    var fullName = (document.getElementById('rsvp-full-name').value || '').trim();
+    var attendanceRadio = document.querySelector('input[name="attendance"]:checked');
+    var attendance = attendanceRadio ? attendanceRadio.value : 'Joyfully Accepts';
+    var guestSelect = document.getElementById('rsvp-guest-count');
+    var guestCount = guestSelect ? guestSelect.value : '1';
+    var dietary = (document.getElementById('rsvp-dietary').value || '').trim() || 'None';
+    var message = (document.getElementById('rsvp-message').value || '').trim();
+
+    if (!fullName) {
+      if (errorDiv) {
+        errorDiv.textContent = 'Please enter your full name.';
+        errorDiv.classList.remove('hidden');
+      }
+      return;
+    }
+
+    btn.disabled = true;
+    btn.style.opacity = '0.75';
+    btnText.textContent = 'SAVING RSVP...';
+    if (btnSpinner) btnSpinner.classList.remove('hidden');
+    if (errorDiv) errorDiv.classList.add('hidden');
+
+    try {
+      var res = await fetch('/api/rsvp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          fullName: fullName,
+          attendance: attendance,
+          guestCount: attendance === 'Regretfully Declines' ? 0 : parseInt(guestCount, 10),
+          dietary: dietary,
+          message: message
+        })
+      });
+
+      var data = await res.json();
+      if (!res.ok || data.error) {
+        throw new Error(data.error || 'Failed to submit RSVP. Please try again.');
+      }
+
+      form.classList.add('hidden');
+      successCard.classList.remove('hidden');
+      var confirmedName = document.getElementById('rsvp-confirmed-name');
+      if (confirmedName) confirmedName.textContent = fullName;
+      var confirmedDetail = document.getElementById('rsvp-confirmed-detail');
+      if (confirmedDetail) {
+        if (attendance === 'Regretfully Declines') {
+          confirmedDetail.textContent = 'Thank you for letting us know! You will be dearly missed, and we feel your warmth and prayers from afar. 🤍';
+        } else {
+          confirmedDetail.textContent = 'Your response has been saved to our guest list. We look forward to celebrating this special day together on December 8, 2026 at Zaycoland Resort!';
+        }
+      }
+    } catch (err) {
+      if (errorDiv) {
+        errorDiv.textContent = err.message || 'Something went wrong. Please check your connection and try again.';
+        errorDiv.classList.remove('hidden');
+      }
+    } finally {
+      btn.disabled = false;
+      btn.style.opacity = '1';
+      btnText.textContent = 'CONFIRM RSVP';
+      if (btnSpinner) btnSpinner.classList.add('hidden');
+    }
+  };
+
+  window.resetRsvpForm = function() {
+    var form = document.getElementById('wedding-rsvp-form');
+    var successCard = document.getElementById('rsvp-success-card');
+    if (form) {
+      form.reset();
+      form.classList.remove('hidden');
+    }
+    if (successCard) successCard.classList.add('hidden');
+    var cards = document.querySelectorAll('.rsvp-radio-card');
+    if (cards[0]) window.selectAttendance('Joyfully Accepts', cards[0]);
   };
 
   function insertCustomSections() {
@@ -491,17 +713,26 @@ app.use(createProxyMiddleware({
       }
     }
 
-    // 4. Remove any Cordially platform badge elements
+    // 4. Populate or preserve RSVP section form
+    var rsvpSec = document.getElementById('rsvp-callout-section');
+    if (rsvpSec && !document.getElementById('wedding-rsvp-form')) {
+      rsvpSec.innerHTML = ${safeRsvpJson};
+      rsvpSec.style.padding = '0';
+      rsvpSec.style.opacity = '1';
+    }
+
+    // 5. Remove any Cordially platform badge elements
     document.querySelectorAll('a[href*="cordially.io"]').forEach(function(el) { el.remove(); });
 
     window.dispatchEvent(new Event('resize'));
   }
 
-  // Smooth scroll click handler for custom sections
+  // Smooth scroll click handler for custom sections & RSVP
   document.addEventListener('click', function(e) {
-    var a = e.target.closest('a[href="#dress-code-section"], a[href="#entourage-section"]');
+    var a = e.target.closest('a[href="#dress-code-section"], a[href="#entourage-section"], a[href="#rsvp-callout-section"], a[href="/demo/rsvp"]');
     if (a) {
-      var targetId = a.getAttribute('href').slice(1);
+      var href = a.getAttribute('href');
+      var targetId = (href === '/demo/rsvp' || href === '#rsvp-callout-section') ? 'rsvp-callout-section' : href.slice(1);
       var targetEl = document.getElementById(targetId);
       if (targetEl) {
         e.preventDefault();
@@ -521,7 +752,7 @@ app.use(createProxyMiddleware({
   var pollTimer = setInterval(function() {
     pollCount++;
     insertCustomSections();
-    if (document.getElementById('entourage-section') && document.getElementById('dress-code-section')) {
+    if (document.getElementById('entourage-section') && document.getElementById('dress-code-section') && document.getElementById('wedding-rsvp-form')) {
       if (pollCount > 10) clearInterval(pollTimer);
     }
     if (pollCount > 30) clearInterval(pollTimer);
