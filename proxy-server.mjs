@@ -342,6 +342,10 @@ const newLadiesBody = 'Long dresses, midi dresses, elegant jumpsuits, or formal 
 const oldGentlemenSection = '{\\"id\\":\\"gentlemen\\",\\"title\\":\\"For the Gentlemen\\",\\"subtitle\\":\\"Classic with a summer touch\\",\\"body\\":\\"Dress shirts and suits are perfect. Linen and lighter colors are encouraged.\\\\n\\\\nKeep things polished but breathable for a warm summer evening.\\",\\"isVisible\\":true}';
 const newGentlemenAndEntourageSection = '{\\"id\\":\\"gentlemen\\",\\"title\\":\\"For the Gentlemen (Guests)\\",\\"subtitle\\":\\"Formal Suits & Polo\\",\\"body\\":\\"Suits or long-sleeved polo paired with trousers.\\\\n\\\\nKindly avoid jeans, shorts, and casual footwear.\\",\\"isVisible\\":true},{\\"id\\":\\"entourage\\",\\"title\\":\\"For the Entourage\\",\\"subtitle\\":\\"Curated Color & Attire Guide\\",\\"body\\":\\"• Principal Sponsors: Gray taupe long dress (Female) / Formal barong, black pants & black shoes (Male)\\\\n\\\\n• Secondary Sponsors: Champagne long dress (Female) / Formal barong, black pants & black shoes (Male)\\\\n\\\\n• Bridesmaids: Sage green long dress (tulle, mismatched styles)\\\\n\\\\n• Groomsmen & Bearers: Formal barong, black pants, black shoes\\\\n\\\\n• Flower Girls: Sage green floral midi dress\\",\\"isVisible\\":true}';
 
+// Vision Statement configuration
+const oldVisionText = "The vision for the night is simple: all of our most beloved people in one place that happens to have a gorgeous garden, flowing drinks, and an unforgettable dance floor.";
+const newVisionText = "In His time, grace upon grace. What began as two separate stories is now one celebration of God’s faithfulness, surrounded by the people we love most.";
+
 // Clean token replacements for information only
 const replacements = [
   // Names & Monogram
@@ -413,6 +417,11 @@ const replacements = [
   [`\\"${oldTransitionText}\\"`, `\\"${newTransitionText}\\"`],
   [`"${oldTransitionText}"`, `"${newTransitionText}"`],
   [oldTransitionText, newTransitionText],
+
+  // Vision Statement (Option 1)
+  [`\\"${oldVisionText}\\"`, `\\"${newVisionText}\\"`],
+  [`>${oldVisionText}<`, `>${newVisionText}<`],
+  [oldVisionText, newVisionText],
 
   // FAQ Replacements (10 Questions mapped into 9 slots from couple's wedding-plan.txt)
   // Q1: RSVP deadline
