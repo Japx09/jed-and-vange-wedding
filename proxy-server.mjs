@@ -302,20 +302,26 @@ const newQuoteJson = newQuoteText.split('\n').join('\\\\n');
 const ch1TitleOld = 'chapter one: how we met';
 const ch1TitleNew = 'Chapter 1: “Where it all began”';
 const ch1BodyOld = 'We met at university, became fast friends, and eventually realized the best parts of every week were the parts we spent together.';
-const ch1BodyNew = `A simple hello grew into shared moments and intentional friendship—God quietly weaving our stories together from the very start.`;
-const ch1BodyJson = ch1BodyNew.split('\n').join('\\\\n');
+const ch1BodyNew = `A simple "hello" grew into shared moments
+and intentional friendship—
+God quietly weaving our stories together from the very start.`;
+const ch1BodyJson = JSON.stringify(ch1BodyNew).slice(1, -1);
 
 const ch2TitleOld = 'chapter two: falling in love';
 const ch2TitleNew = 'Chapter 2: “When it became intentional”';
 const ch2BodyOld = 'Toronto became our home base for late dinners, weekend walks, shared routines, and all of the small moments that made life feel bigger.';
-const ch2BodyNew = `Casual talks turned into clear intentions. Not rushed, but with prayer, purpose, and grace, God led us to one another.`;
-const ch2BodyJson = ch2BodyNew.split('\n').join('\\\\n');
+const ch2BodyNew = `Casual talks turned into clear intentions.
+Not rushed, but with prayer, purpose, and grace
+— God led us to one another.`;
+const ch2BodyJson = JSON.stringify(ch2BodyNew).slice(1, -1);
 
 const ch3TitleOld = 'chapter three: the next step';
-const ch3TitleNew = 'Chapter 3: “When we said yes to a lifetime”';
+const ch3TitleNew = 'Chapter 3: “When we said YES to a lifetime”';
 const ch3BodyOld = 'A trip, a question, a very easy yes, and suddenly the future we had been imagining became something we could invite everyone into.';
-const ch3BodyNew = `After every intentional step came a resounding yes—trusting the God who brought us this far for a lifetime of walking together in grace.`;
-const ch3BodyJson = ch3BodyNew.split('\n').join('\\\\n');
+const ch3BodyNew = `After every intentional step came a resounding YES—
+trusting the God who brought us this far
+for a lifetime of walking together in grace.`;
+const ch3BodyJson = JSON.stringify(ch3BodyNew).slice(1, -1);
 
 const polaroidTitles = [
   'First year on campus',
@@ -331,7 +337,7 @@ const polaroidTitles = [
 
 // Transition Line configuration
 const oldTransitionSpans = '<span data-vision-word="true" style="opacity:0.4;transition:opacity 0.3s ease-out">you&#x27;re</span> <span data-vision-word="true" style="opacity:0.4;transition:opacity 0.3s ease-out">cordially</span> <span data-vision-word="true" style="opacity:0.4;transition:opacity 0.3s ease-out">invited</span> <span data-vision-word="true" style="opacity:0.4;transition:opacity 0.3s ease-out">to</span> <span data-vision-word="true" style="opacity:0.4;transition:opacity 0.3s ease-out">celebrate</span> <span data-vision-word="true" style="opacity:0.4;transition:opacity 0.3s ease-out">the</span> <span data-vision-word="true" style="opacity:0.4;transition:opacity 0.3s ease-out">story</span> <span data-vision-word="true" style="opacity:0.4;transition:opacity 0.3s ease-out">of...</span>';
-const newTransitionSpans = '<span data-vision-word="true" style="opacity:0.4;transition:opacity 0.3s ease-out">two</span> <span data-vision-word="true" style="opacity:0.4;transition:opacity 0.3s ease-out">separate</span> <span data-vision-word="true" style="opacity:0.4;transition:opacity 0.3s ease-out">stories</span> <span data-vision-word="true" style="opacity:0.4;transition:opacity 0.3s ease-out">woven</span> <span data-vision-word="true" style="opacity:0.4;transition:opacity 0.3s ease-out">by</span> <span data-vision-word="true" style="opacity:0.4;transition:opacity 0.3s ease-out">grace</span> <span data-vision-word="true" style="opacity:0.4;transition:opacity 0.3s ease-out">into</span> <span data-vision-word="true" style="opacity:0.4;transition:opacity 0.3s ease-out">one...</span>';
+const newTransitionSpans = '<span data-vision-word="true" style="opacity:0.4;transition:opacity 0.3s ease-out">two</span> <span data-vision-word="true" style="opacity:0.4;transition:opacity 0.3s ease-out">separate</span> <span data-vision-word="true" style="opacity:0.4;transition:opacity 0.3s ease-out">stories</span> <span data-vision-word="true" style="opacity:0.4;transition:opacity 0.3s ease-out">woven</span> <span data-vision-word="true" style="opacity:0.4;transition:opacity 0.3s ease-out">by</span> <span data-vision-word="true" style="opacity:0.4;transition:opacity 0.3s ease-out;font-style:italic"><em>grace</em></span> <span data-vision-word="true" style="opacity:0.4;transition:opacity 0.3s ease-out">into</span> <span data-vision-word="true" style="opacity:0.4;transition:opacity 0.3s ease-out">one...</span>';
 const oldTransitionText = "you're cordially invited to celebrate the story of...";
 const newTransitionText = "two separate stories woven by grace into one...";
 
@@ -357,10 +363,13 @@ const replacements = [
   ['J&P', 'J&V'],
   ['Demo Wedding Website | Cordially', 'Jed & Vange — Wedding Website'],
 
-  // Date
-  ['june 18, 2027', 'december 8, 2026'],
+  // Date & Event Kicker
+  ['june 18, 2027', 'December 8, 2026'],
   ['June 18, 2027', 'December 8, 2026'],
   ['2027-06-18', '2026-12-08'],
+  ['december 8, 2026', 'December 8, 2026'],
+  ['so please join us...', 'So please join us'],
+  ['so please join us', 'So please join us'],
 
   // RSVP deadline
   ['august 20, 2027', 'october 30, 2026'],
@@ -471,8 +480,8 @@ const replacements = [
   // Off-white Jed & Vange headline
   ['style="fill:#ffffff;--template-fitted-font-size:140px;', 'style="fill:#f7efe2;--template-fitted-font-size:140px;'],
 
-  // Preserve line breaks cleanly in footer quote and story captions & hide old details container & anchor offsets & responsive mobile story adjustments & minimal hero bottom gradient & mobile black burger/J&V & brown radio styling
-  ['</head>', '<style>[data-testid="footer-quote"], [data-story-caption-group] p, [data-testid="mobile-story-caption-body"] { white-space: pre-line !important; line-height: 1.4 !important; } @media (max-width: 768px) { [data-story-caption-group] p, [data-testid="mobile-story-caption-body"] { font-size: 0.88rem !important; line-height: 1.35 !important; max-width: 92% !important; margin-left: auto !important; margin-right: auto !important; margin-bottom: 14px !important; } nav a[href="/"], nav [data-testid="nav-content"] > a { color: #000000 !important; } nav button[aria-label*="menu" i], nav [data-testid="nav-content"] button { color: #000000 !important; } nav button[aria-label*="menu" i] span, nav [data-testid="nav-content"] button span { background-color: #000000 !important; } nav button[aria-label*="menu" i] svg, nav [data-testid="nav-content"] button svg { stroke: #000000 !important; color: #000000 !important; } } [data-site-section-id="details"], a[href*="cordially.io"] { display: none !important; } #dress-code-section, #entourage-section, #rsvp-callout-section { scroll-margin-top: 80px; } #rsvp-callout-section, #rsvp-section-wrapper, #wedding-rsvp-form { opacity: 1 !important; visibility: visible !important; display: block !important; } input[type="radio"], input[type="radio"]:focus, input[type="radio"]:checked { accent-color: #8a5a2b !important; outline: none !important; } [data-site-section-id="hero"] [data-hero-headline-shell], [data-testid="hero-headline"] { fill: #f7efe2 !important; color: #f7efe2 !important; filter: none !important; stroke: none !important; -webkit-text-stroke: 0 !important; } [data-site-section-id="hero"] .bg-black\\/20 { display: none !important; } [data-testid="hero-foreground"] { background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.15) 70%, rgba(0,0,0,0.45) 85%, rgba(0,0,0,0.65) 100%) !important; } [data-site-section-id="hero"] img { object-position: center 40% !important; } [data-testid="hero-scroll-prompt"], [data-testid="hero-divider"] { filter: none !important; }</style></head>']
+  // Preserve line breaks cleanly in footer quote and story captions & hide old details container & anchor offsets & responsive mobile story adjustments & minimal hero bottom gradient & mobile black burger/J&V & brown radio styling & italic grace & text-wrap balance
+  ['</head>', '<style>[data-testid="footer-quote"], [data-story-caption-group] p, [data-testid="mobile-story-caption-body"] { white-space: pre-line !important; line-height: 1.4 !important; text-wrap: balance !important; } @media (max-width: 768px) { [data-story-caption-group] p, [data-testid="mobile-story-caption-body"] { font-size: 0.88rem !important; line-height: 1.35 !important; max-width: 92% !important; margin-left: auto !important; margin-right: auto !important; margin-bottom: 14px !important; } nav a[href="/"], nav [data-testid="nav-content"] > a { color: #000000 !important; } nav button[aria-label*="menu" i], nav [data-testid="nav-content"] button { color: #000000 !important; } nav button[aria-label*="menu" i] span, nav [data-testid="nav-content"] button span { background-color: #000000 !important; } nav button[aria-label*="menu" i] svg, nav [data-testid="nav-content"] button svg { stroke: #000000 !important; color: #000000 !important; } } [data-site-section-id="details"], a[href*="cordially.io"] { display: none !important; } #dress-code-section, #entourage-section, #rsvp-callout-section { scroll-margin-top: 80px; } #rsvp-callout-section, #rsvp-section-wrapper, #wedding-rsvp-form { opacity: 1 !important; visibility: visible !important; display: block !important; } input[type="radio"], input[type="radio"]:focus, input[type="radio"]:checked { accent-color: #8a5a2b !important; outline: none !important; } [data-site-section-id="storyIntro"] em, [data-site-section-id="storyIntro"] [data-vision-word="true"]:nth-of-type(6) { font-style: italic !important; } [data-site-section-id="hero"] [data-hero-headline-shell], [data-testid="hero-headline"] { fill: #f7efe2 !important; color: #f7efe2 !important; filter: none !important; stroke: none !important; -webkit-text-stroke: 0 !important; } [data-site-section-id="hero"] .bg-black\\/20 { display: none !important; } [data-testid="hero-foreground"] { background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.15) 70%, rgba(0,0,0,0.45) 85%, rgba(0,0,0,0.65) 100%) !important; } [data-site-section-id="hero"] img { object-position: center 40% !important; } [data-testid="hero-scroll-prompt"], [data-testid="hero-divider"] { filter: none !important; }</style></head>']
 ];
 
 function replaceInfo(content) {
@@ -736,7 +745,14 @@ app.use(createProxyMiddleware({
       rsvpSec.style.opacity = '1';
     }
 
-    // 5. Remove any Cordially platform badge elements
+    // 5. Ensure 'grace' in transition line stays italicized
+    document.querySelectorAll('[data-vision-word="true"]').forEach(function(el) {
+      if (el.textContent.trim().toLowerCase() === 'grace') {
+        el.style.fontStyle = 'italic';
+      }
+    });
+
+    // 6. Remove any Cordially platform badge elements
     document.querySelectorAll('a[href*="cordially.io"]').forEach(function(el) { el.remove(); });
 
     window.dispatchEvent(new Event('resize'));
