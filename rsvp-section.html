@@ -43,15 +43,21 @@
             Will you be attending? <span style="color: #8a5a2b;">*</span>
           </label>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="attendance-options">
-            <label class="rsvp-radio-card flex items-center gap-3 p-3.5 rounded-xl border cursor-pointer transition-all duration-200" style="background-color: #ffffff; border-color: rgba(47, 36, 27, 0.16);" onclick="selectAttendance('Joyfully Accepts', this)">
-              <input type="radio" name="attendance" value="Joyfully Accepts" checked class="accent-[#8a5a2b] w-4 h-4 cursor-pointer" />
+            <label class="rsvp-radio-card relative flex items-center gap-3.5 p-3.5 rounded-xl border cursor-pointer transition-all duration-200" style="background-color: rgba(138, 90, 43, 0.06); border-color: #8a5a2b;" onclick="selectAttendance('Joyfully Accepts', this)">
+              <input type="radio" name="attendance" value="Joyfully Accepts" checked style="position: absolute; opacity: 0; width: 0; height: 0; pointer-events: none;" />
+              <div class="rsvp-radio-circle flex items-center justify-center shrink-0 w-5 h-5 rounded-full border-2 transition-all duration-200" style="border-color: #8a5a2b; background-color: #ffffff;">
+                <div class="rsvp-radio-dot w-2.5 h-2.5 rounded-full transition-all duration-200" style="background-color: #8a5a2b; opacity: 1; transform: scale(1);"></div>
+              </div>
               <div>
                 <span class="block text-sm font-medium" style="color: #2f241b;">Joyfully Accepts</span>
                 <span class="block text-[11px]" style="color: #76614d;">I will celebrate in person</span>
               </div>
             </label>
-            <label class="rsvp-radio-card flex items-center gap-3 p-3.5 rounded-xl border cursor-pointer transition-all duration-200" style="background-color: #ffffff; border-color: rgba(47, 36, 27, 0.16);" onclick="selectAttendance('Regretfully Declines', this)">
-              <input type="radio" name="attendance" value="Regretfully Declines" class="accent-[#8a5a2b] w-4 h-4 cursor-pointer" />
+            <label class="rsvp-radio-card relative flex items-center gap-3.5 p-3.5 rounded-xl border cursor-pointer transition-all duration-200" style="background-color: #ffffff; border-color: rgba(47, 36, 27, 0.16);" onclick="selectAttendance('Regretfully Declines', this)">
+              <input type="radio" name="attendance" value="Regretfully Declines" style="position: absolute; opacity: 0; width: 0; height: 0; pointer-events: none;" />
+              <div class="rsvp-radio-circle flex items-center justify-center shrink-0 w-5 h-5 rounded-full border-2 transition-all duration-200" style="border-color: rgba(47, 36, 27, 0.3); background-color: #ffffff;">
+                <div class="rsvp-radio-dot w-2.5 h-2.5 rounded-full transition-all duration-200" style="background-color: #8a5a2b; opacity: 0; transform: scale(0);"></div>
+              </div>
               <div>
                 <span class="block text-sm font-medium" style="color: #2f241b;">Regretfully Declines</span>
                 <span class="block text-[11px]" style="color: #76614d;">Celebrating from afar</span>

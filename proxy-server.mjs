@@ -471,8 +471,8 @@ const replacements = [
   // Off-white Jed & Vange headline
   ['style="fill:#ffffff;--template-fitted-font-size:140px;', 'style="fill:#f7efe2;--template-fitted-font-size:140px;'],
 
-  // Preserve line breaks cleanly in footer quote and story captions & hide old details container & anchor offsets & responsive mobile story adjustments & minimal hero bottom gradient & mobile black burger/J&V
-  ['</head>', '<style>[data-testid="footer-quote"], [data-story-caption-group] p, [data-testid="mobile-story-caption-body"] { white-space: pre-line !important; line-height: 1.4 !important; } @media (max-width: 768px) { [data-story-caption-group] p, [data-testid="mobile-story-caption-body"] { font-size: 0.88rem !important; line-height: 1.35 !important; max-width: 92% !important; margin-left: auto !important; margin-right: auto !important; margin-bottom: 14px !important; } nav a[href="/"], nav [data-testid="nav-content"] > a { color: #000000 !important; } nav button[aria-label*="menu" i], nav [data-testid="nav-content"] button { color: #000000 !important; } nav button[aria-label*="menu" i] span, nav [data-testid="nav-content"] button span { background-color: #000000 !important; } nav button[aria-label*="menu" i] svg, nav [data-testid="nav-content"] button svg { stroke: #000000 !important; color: #000000 !important; } } [data-site-section-id="details"], a[href*="cordially.io"] { display: none !important; } #dress-code-section, #entourage-section, #rsvp-callout-section { scroll-margin-top: 80px; } #rsvp-callout-section, #rsvp-section-wrapper, #wedding-rsvp-form { opacity: 1 !important; visibility: visible !important; display: block !important; } [data-site-section-id="hero"] [data-hero-headline-shell], [data-testid="hero-headline"] { fill: #f7efe2 !important; color: #f7efe2 !important; filter: none !important; stroke: none !important; -webkit-text-stroke: 0 !important; } [data-site-section-id="hero"] .bg-black\\/20 { display: none !important; } [data-testid="hero-foreground"] { background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.15) 70%, rgba(0,0,0,0.45) 85%, rgba(0,0,0,0.65) 100%) !important; } [data-site-section-id="hero"] img { object-position: center 40% !important; } [data-testid="hero-scroll-prompt"], [data-testid="hero-divider"] { filter: none !important; }</style></head>']
+  // Preserve line breaks cleanly in footer quote and story captions & hide old details container & anchor offsets & responsive mobile story adjustments & minimal hero bottom gradient & mobile black burger/J&V & brown radio styling
+  ['</head>', '<style>[data-testid="footer-quote"], [data-story-caption-group] p, [data-testid="mobile-story-caption-body"] { white-space: pre-line !important; line-height: 1.4 !important; } @media (max-width: 768px) { [data-story-caption-group] p, [data-testid="mobile-story-caption-body"] { font-size: 0.88rem !important; line-height: 1.35 !important; max-width: 92% !important; margin-left: auto !important; margin-right: auto !important; margin-bottom: 14px !important; } nav a[href="/"], nav [data-testid="nav-content"] > a { color: #000000 !important; } nav button[aria-label*="menu" i], nav [data-testid="nav-content"] button { color: #000000 !important; } nav button[aria-label*="menu" i] span, nav [data-testid="nav-content"] button span { background-color: #000000 !important; } nav button[aria-label*="menu" i] svg, nav [data-testid="nav-content"] button svg { stroke: #000000 !important; color: #000000 !important; } } [data-site-section-id="details"], a[href*="cordially.io"] { display: none !important; } #dress-code-section, #entourage-section, #rsvp-callout-section { scroll-margin-top: 80px; } #rsvp-callout-section, #rsvp-section-wrapper, #wedding-rsvp-form { opacity: 1 !important; visibility: visible !important; display: block !important; } input[type="radio"], input[type="radio"]:focus, input[type="radio"]:checked { accent-color: #8a5a2b !important; outline: none !important; } [data-site-section-id="hero"] [data-hero-headline-shell], [data-testid="hero-headline"] { fill: #f7efe2 !important; color: #f7efe2 !important; filter: none !important; stroke: none !important; -webkit-text-stroke: 0 !important; } [data-site-section-id="hero"] .bg-black\\/20 { display: none !important; } [data-testid="hero-foreground"] { background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.15) 70%, rgba(0,0,0,0.45) 85%, rgba(0,0,0,0.65) 100%) !important; } [data-site-section-id="hero"] img { object-position: center 40% !important; } [data-testid="hero-scroll-prompt"], [data-testid="hero-divider"] { filter: none !important; }</style></head>']
 ];
 
 function replaceInfo(content) {
@@ -562,12 +562,26 @@ app.use(createProxyMiddleware({
     cards.forEach(function(c) {
       c.style.borderColor = 'rgba(47, 36, 27, 0.16)';
       c.style.backgroundColor = '#ffffff';
+      var circle = c.querySelector('.rsvp-radio-circle');
+      if (circle) circle.style.borderColor = 'rgba(47, 36, 27, 0.3)';
+      var dot = c.querySelector('.rsvp-radio-dot');
+      if (dot) {
+        dot.style.opacity = '0';
+        dot.style.transform = 'scale(0)';
+      }
     });
     if (card) {
       card.style.borderColor = '#8a5a2b';
-      card.style.backgroundColor = 'rgba(138, 90, 43, 0.05)';
+      card.style.backgroundColor = 'rgba(138, 90, 43, 0.06)';
       var radio = card.querySelector('input[type="radio"]');
       if (radio) radio.checked = true;
+      var circle = card.querySelector('.rsvp-radio-circle');
+      if (circle) circle.style.borderColor = '#8a5a2b';
+      var dot = card.querySelector('.rsvp-radio-dot');
+      if (dot) {
+        dot.style.opacity = '1';
+        dot.style.transform = 'scale(1)';
+      }
     }
     var guestWrapper = document.getElementById('guest-count-wrapper');
     var guestSelect = document.getElementById('rsvp-guest-count');
