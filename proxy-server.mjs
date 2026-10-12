@@ -537,18 +537,11 @@ app.use(createProxyMiddleware({
             );
           }
 
-          // Insert Dress Code and Entourage right after Venue (before RSVP)
-          if (text.includes('data-design-anchor="rsvp"')) {
-            text = text.replace('<div data-design-anchor="rsvp"', dressCodeWrapper + entourageWrapper + '<div data-design-anchor="rsvp"');
+          if (text.includes('data-design-anchor="venue"')) {
+            text = text.replace('<div data-design-anchor="venue"', entourageWrapper + '<div data-design-anchor="venue"');
           }
-
-          // Relocate RSVP section right before Footer in initial HTML
-          const rsvpStart = text.indexOf('<div data-design-anchor="rsvp"');
-          const detailsStart = text.indexOf('<div data-design-anchor="details"');
-          if (rsvpStart !== -1 && detailsStart !== -1) {
-            const rsvpBlock = text.slice(rsvpStart, detailsStart);
-            text = text.slice(0, rsvpStart) + text.slice(detailsStart);
-            text = text.replace('<div data-design-anchor="footer"', rsvpBlock + '<div data-design-anchor="footer"');
+          if (text.includes('data-design-anchor="faq"')) {
+            text = text.replace('<div data-design-anchor="faq"', dressCodeWrapper + '<div data-design-anchor="faq"');
           }
 
           // 2. Client-side hydration watchdog and interactive controller
@@ -701,68 +694,35 @@ app.use(createProxyMiddleware({
   };
 
   function insertCustomSections() {
-    var venue = document.querySelector('[data-site-section-id="venue"]') || document.getElementById('venue-section');
-    var dc = document.getElementById('dress-code-section');
-    var ent = document.getElementById('entourage-section');
-    var rsvp = document.querySelector('[data-site-section-id="rsvp"]') || document.getElementById('rsvp-callout-section');
-    var footer = document.querySelector('[data-site-section-id="footer"]');
-    var faq = document.querySelector('[data-site-section-id="faq"]') || document.getElementById('faq');
-    var vision = document.querySelector('[data-site-section-id="vision"]') || document.getElementById('vision');
-
-    // 1. Ensure Dress Code section exists and sits right after Venue
-    var dcWrap = dc ? (dc.closest('[data-scroll-section]') || dc) : null;
-    if (!dc) {
+    // 1. Insert Entourage section right before Venue
+    if (!document.getElementById('entourage-section')) {
+      var venue = document.querySelector('[data-site-section-id="venue"]') || document.getElementById('venue-section');
       if (venue) {
-        var venueWrap = venue.closest('[data-scroll-section]') || venue;
-        if (venueWrap && venueWrap.parentNode) {
+        var target = venue.closest('[data-scroll-section]') || venue;
+        if (target && target.parentNode) {
+          var div = document.createElement('div');
+          div.setAttribute('data-scroll-section', '');
+          div.setAttribute('data-scroll-section-kind', 'content');
+          div.setAttribute('data-site-section-id', 'entourage');
+          div.innerHTML = ${safeEntourageJson};
+          target.parentNode.insertBefore(div, target);
+        }
+      }
+    }
+
+    // 2. Insert Bespoke Dress Code section right before FAQ
+    if (!document.getElementById('dress-code-section')) {
+      var faq = document.querySelector('[data-site-section-id="faq"]') || document.getElementById('faq');
+      if (faq) {
+        var targetFaq = faq.closest('[data-scroll-section]') || faq;
+        if (targetFaq && targetFaq.parentNode) {
           var divDc = document.createElement('div');
           divDc.setAttribute('data-scroll-section', '');
           divDc.setAttribute('data-scroll-section-kind', 'content');
           divDc.setAttribute('data-site-section-id', 'dress-code');
           divDc.innerHTML = ${safeDressCodeJson};
-          venueWrap.parentNode.insertBefore(divDc, venueWrap.nextSibling);
-          dcWrap = divDc;
+          targetFaq.parentNode.insertBefore(divDc, targetFaq);
         }
-      }
-    } else if (venue && dcWrap) {
-      var venueWrap = venue.closest('[data-scroll-section]') || venue;
-      if (venueWrap && venueWrap.parentNode && venueWrap.nextSibling !== dcWrap) {
-        venueWrap.parentNode.insertBefore(dcWrap, venueWrap.nextSibling);
-      }
-    }
-
-    // 2. Ensure Entourage section exists and sits right after Dress Code
-    var entWrap = ent ? (ent.closest('[data-scroll-section]') || ent) : null;
-    if (!ent) {
-      if (dcWrap && dcWrap.parentNode) {
-        var divEnt = document.createElement('div');
-        divEnt.setAttribute('data-scroll-section', '');
-        divEnt.setAttribute('data-scroll-section-kind', 'content');
-        divEnt.setAttribute('data-site-section-id', 'entourage');
-        divEnt.innerHTML = ${safeEntourageJson};
-        dcWrap.parentNode.insertBefore(divEnt, dcWrap.nextSibling);
-        entWrap = divEnt;
-      }
-    } else if (dcWrap && entWrap) {
-      if (dcWrap.parentNode && dcWrap.nextSibling !== entWrap) {
-        dcWrap.parentNode.insertBefore(entWrap, dcWrap.nextSibling);
-      }
-    }
-
-    // 3. Ensure FAQ sits right before Vision
-    if (faq && vision) {
-      var faqWrap = faq.closest('[data-scroll-section]') || faq;
-      var visWrap = vision.closest('[data-scroll-section]') || vision;
-      if (visWrap.parentNode && visWrap.previousElementSibling !== faqWrap) {
-        visWrap.parentNode.insertBefore(faqWrap, visWrap);
-      }
-    }
-
-    // 4. Ensure RSVP section sits right before Footer (after Vision)
-    if (rsvp && footer) {
-      var rsvpWrap = rsvp.closest('[data-scroll-section]') || rsvp;
-      if (footer.parentNode && footer.previousElementSibling !== rsvpWrap) {
-        footer.parentNode.insertBefore(rsvpWrap, footer);
       }
     }
 
