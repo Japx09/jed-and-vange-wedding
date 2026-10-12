@@ -7,15 +7,28 @@ import { fileURLToPath } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 function resolveFilePath(...segments) {
-  const p1 = path.join(__dirname, ...segments);
-  if (fs.existsSync(p1)) return p1;
-  const p2 = path.join(process.cwd(), ...segments);
-  if (fs.existsSync(p2)) return p2;
-  const p3 = path.join(__dirname, 'public', ...segments);
-  if (fs.existsSync(p3)) return p3;
-  const p4 = path.join(process.cwd(), 'public', ...segments);
-  if (fs.existsSync(p4)) return p4;
-  return p1;
+  const candidates = [
+    path.join(__dirname, ...segments),
+    path.join(process.cwd(), ...segments),
+    path.join(__dirname, 'public', ...segments),
+    path.join(process.cwd(), 'public', ...segments),
+    path.join(__dirname, 'public', 'demo', 'kevin-wedding', ...segments),
+    path.join(process.cwd(), 'public', 'demo', 'kevin-wedding', ...segments),
+    path.join(__dirname, 'public', 'templates', 'kevin-wedding', ...segments),
+    path.join(process.cwd(), 'public', 'templates', 'kevin-wedding', ...segments),
+    path.join(__dirname, 'public', 'images', ...segments),
+    path.join(process.cwd(), 'public', 'images', ...segments),
+    path.join(__dirname, 'public', 'story', ...segments),
+    path.join(process.cwd(), 'public', 'story', ...segments),
+    path.join(__dirname, 'public', 'collage', ...segments),
+    path.join(process.cwd(), 'public', 'collage', ...segments),
+    path.join(__dirname, 'public', 'dress-code', ...segments),
+    path.join(process.cwd(), 'public', 'dress-code', ...segments)
+  ];
+  for (const c of candidates) {
+    if (fs.existsSync(c)) return c;
+  }
+  return candidates[0];
 }
 
 const COVER_PATH = resolveFilePath('cover.webp');
@@ -27,29 +40,60 @@ const COLLAGE_DIR = resolveFilePath('collage');
 const app = express();
 const PORT = 3333;
 
-// Normalize request URL for Vercel Serverless environment
+// Helper to serve local images
+const serveFile = (filePath, res) => {
+  const resolved = fs.existsSync(filePath) ? filePath : resolveFilePath(path.basename(filePath));
+  if (!fs.existsSync(resolved) || fs.statSync(resolved).isDirectory()) {
+    return res.status(404).send('Not found');
+  }
+  const ext = path.extname(resolved).toLowerCase();
+  res.setHeader('Content-Type', ext === '.png' ? 'image/png' : ext === '.jpeg' || ext === '.jpg' ? 'image/jpeg' : 'image/webp');
+  res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+  fs.createReadStream(resolved).pipe(res);
+};
+
+// 1. Universal image interceptor (handles _next/image, direct image URLs, and query URLs regardless of path)
+app.use((req, res, next) => {
+  let targetUrl = req.query.url;
+  if (!targetUrl && req.url.includes('?')) {
+    try {
+      const u = new URL(req.url, 'http://localhost');
+      targetUrl = u.searchParams.get('url');
+    } catch (e) {}
+  }
+
+  if (targetUrl) {
+    const cleanName = path.basename(decodeURIComponent(targetUrl).split('?')[0]);
+    const resolved = resolveFilePath(cleanName);
+    if (fs.existsSync(resolved) && !fs.statSync(resolved).isDirectory()) {
+      return serveFile(resolved, res);
+    }
+  }
+
+  const cleanPath = req.url.split('?')[0];
+  if (/\.(webp|png|jpe?g|svg)$/i.test(cleanPath)) {
+    const filename = path.basename(cleanPath);
+    const resolved = resolveFilePath(filename);
+    if (fs.existsSync(resolved) && !fs.statSync(resolved).isDirectory()) {
+      return serveFile(resolved, res);
+    }
+  }
+
+  next();
+});
+
+// 2. Normalize request URL for Vercel Serverless environment
 app.use((req, res, next) => {
   const matched = req.headers['x-matched-path'];
-  if (matched && !matched.startsWith('/api') && matched !== '/index.js') {
+  if (matched && !matched.startsWith('/api') && matched !== '/index.js' && !matched.includes('[...catchAll]')) {
     const qIndex = req.url.indexOf('?');
     const qs = qIndex !== -1 ? req.url.slice(qIndex) : '';
     req.url = matched.includes('?') ? matched : (matched + qs);
-  } else if (req.url === '/api/index.js' || req.url === '/api/index' || req.url === '/api' || req.url === '/index.js') {
+  } else if (req.url === '/api/index.js' || req.url === '/api/index' || req.url === '/api' || req.url === '/index.js' || (matched && matched.includes('[...catchAll]'))) {
     req.url = '/';
   }
   next();
 });
-
-// Helper to serve local images
-const serveFile = (filePath, res) => {
-  const resolved = fs.existsSync(filePath) ? filePath : resolveFilePath(path.basename(filePath));
-  if (!fs.existsSync(resolved)) {
-    return res.status(404).send('Not found');
-  }
-  res.setHeader('Content-Type', 'image/webp');
-  res.setHeader('Cache-Control', 'public, max-age=86400');
-  fs.createReadStream(resolved).pipe(res);
-};
 
 // Story images mapping
 const storyImageMap = {
