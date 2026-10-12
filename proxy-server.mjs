@@ -197,23 +197,19 @@ const newQuoteJson = newQuoteText.split('\n').join('\\\\n');
 const ch1TitleOld = 'chapter one: how we met';
 const ch1TitleNew = 'Chapter 1: “Where it all began”';
 const ch1BodyOld = 'We met at university, became fast friends, and eventually realized the best parts of every week were the parts we spent together.';
-const ch1BodyNew = `What began with a simple introduction slowly became conversations, shared moments, unexpected trips, and a friendship that grew with intention.
-
-Looking back, what felt ordinary was God quietly weaving our stories together.`;
+const ch1BodyNew = `A simple hello grew into shared moments and intentional friendship—God quietly weaving our stories together from the very start.`;
 const ch1BodyJson = ch1BodyNew.split('\n').join('\\\\n');
 
 const ch2TitleOld = 'chapter two: falling in love';
 const ch2TitleNew = 'Chapter 2: “When it became intentional”';
 const ch2BodyOld = 'Toronto became our home base for late dinners, weekend walks, shared routines, and all of the small moments that made life feel bigger.';
-const ch2BodyNew = `Somewhere along the way, the casual conversations became intentional ones. Friendship grew, intentions were made clear, and the decision to pursue one another unfolded, not rushed, but with prayer, purpose, and grace.
-
-Looking back, we see how God was quietly leading us, one step at a time.`;
+const ch2BodyNew = `Casual talks turned into clear intentions. Not rushed, but with prayer, purpose, and grace, God led us to one another.`;
 const ch2BodyJson = ch2BodyNew.split('\n').join('\\\\n');
 
 const ch3TitleOld = 'chapter three: the next step';
 const ch3TitleNew = 'Chapter 3: “When we said yes to a lifetime”';
 const ch3BodyOld = 'A trip, a question, a very easy yes, and suddenly the future we had been imagining became something we could invite everyone into.';
-const ch3BodyNew = `After all the little moments, unexpected turns, and intentional steps came the question and a resounding yes. Not because we know everything the future holds, but because we trust the God who brought us this far. And now, by His grace, we say yes, not just to each other, but to a lifetime of choosing, growing, serving, and walking with God together.`;
+const ch3BodyNew = `After every intentional step came a resounding yes—trusting the God who brought us this far for a lifetime of walking together in grace.`;
 const ch3BodyJson = ch3BodyNew.split('\n').join('\\\\n');
 
 const polaroidTitles = [
@@ -363,8 +359,8 @@ const replacements = [
   ['Created on Cordially.io', ''],
   ['Created on Cordially', ''],
 
-  // Preserve line breaks cleanly in footer quote and story captions & hide old details container & anchor offsets & remove badge
-  ['</head>', '<style>[data-testid="footer-quote"], [data-story-caption-group] p, [data-testid="mobile-story-caption-body"] { white-space: pre-line !important; line-height: 1.35 !important; } [data-site-section-id="details"], a[href*="cordially.io"] { display: none !important; } #dress-code-section, #entourage-section { scroll-margin-top: 80px; }</style></head>']
+  // Preserve line breaks cleanly in footer quote and story captions & hide old details container & anchor offsets & responsive mobile story adjustments
+  ['</head>', '<style>[data-testid="footer-quote"], [data-story-caption-group] p, [data-testid="mobile-story-caption-body"] { white-space: pre-line !important; line-height: 1.4 !important; } @media (max-width: 768px) { [data-story-caption-group] p, [data-testid="mobile-story-caption-body"] { font-size: 0.88rem !important; line-height: 1.35 !important; max-width: 92% !important; margin-left: auto !important; margin-right: auto !important; margin-bottom: 14px !important; } } [data-site-section-id="details"], a[href*="cordially.io"] { display: none !important; } #dress-code-section, #entourage-section { scroll-margin-top: 80px; }</style></head>']
 ];
 
 function replaceInfo(content) {
