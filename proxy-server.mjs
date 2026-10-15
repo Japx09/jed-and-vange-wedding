@@ -344,8 +344,14 @@ for (const [filename, filePath] of Object.entries(collageImageMap)) {
   app.get(`/templates/kevin-wedding/${filename}`, (req, res) => serveFile(filePath, res));
 }
 
-// Serve dress code inspiration images
-app.use('/dress-code', express.static(path.join(__dirname, 'public', 'dress-code')));
+// Serve dress code inspiration images with long-term immutable caching
+app.use('/dress-code', express.static(path.join(__dirname, 'public', 'dress-code'), {
+  maxAge: '1y',
+  immutable: true,
+  setHeaders: (res) => {
+    res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+  }
+}));
 
 // Next.js image optimization endpoint
 app.get('/_next/image', (req, res, next) => {
@@ -963,6 +969,11 @@ app.use(createProxyMiddleware({
       var musicLabel = document.getElementById('wedding-music-label');
       var userPaused = false;
 
+      if (bgAudio) {
+        bgAudio.volume = 0.7;
+        bgAudio.addEventListener('play', function() { bgAudio.volume = 0.7; });
+      }
+
       window.updateMusicUI = function(isPlaying) {
         if (!musicBtn) return;
         if (isPlaying) {
@@ -981,6 +992,7 @@ app.use(createProxyMiddleware({
           e.stopPropagation();
           if (bgAudio.paused) {
             userPaused = false;
+            bgAudio.volume = 0.7;
             bgAudio.play().then(function() {
               window.updateMusicUI(true);
             }).catch(function() {});
@@ -993,6 +1005,7 @@ app.use(createProxyMiddleware({
 
         function handleFirstInteraction() {
           if (!userPaused && bgAudio && bgAudio.paused) {
+            bgAudio.volume = 0.7;
             bgAudio.play().then(function() {
               window.updateMusicUI(true);
             }).catch(function() {});
