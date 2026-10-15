@@ -45,6 +45,7 @@ const QR_PATH = resolveFilePath('qr.jpg');
 const OG_IMAGE_PATH = resolveFilePath('og-image.jpg');
 const TIMELINE_PATH = resolveFilePath('timeline.png');
 const MUSIC_PATH = resolveFilePath('music.mp3');
+const MUSIC_V2_PATH = resolveFilePath('music-v2.mp3');
 
 const app = express();
 const PORT = 3333;
@@ -325,6 +326,7 @@ app.get('/opengraph-image.jpeg', (req, res) => serveFile(OG_IMAGE_PATH, res, req
 app.get('/opengraph-image.jpg', (req, res) => serveFile(OG_IMAGE_PATH, res, req));
 app.get('/timeline.png', (req, res) => serveFile(TIMELINE_PATH, res, req));
 app.get('/music.mp3', (req, res) => serveFile(MUSIC_PATH, res, req));
+app.get('/music-v2.mp3', (req, res) => serveFile(MUSIC_V2_PATH, res, req));
 
 // Intercept cover, footer, and venue image requests
 app.get('/demo/kevin-wedding/hero.webp', (req, res) => serveFile(COVER_PATH, res));
@@ -961,7 +963,7 @@ app.use(createProxyMiddleware({
       var musicDiv = document.createElement('div');
       musicDiv.id = 'wedding-music-player';
       musicDiv.style.cssText = 'position:fixed;bottom:20px;left:20px;z-index:9999;';
-      musicDiv.innerHTML = '<button id="wedding-music-toggle" type="button" aria-label="Toggle wedding song" class="music-paused" style="display:flex;align-items:center;gap:8px;background:rgba(255,252,247,0.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(47,36,27,0.14);border-radius:9999px;padding:8px 14px;box-shadow:0 4px 16px rgba(47,36,27,0.12);color:#2f241b;font-family:inherit;font-size:11.5px;font-weight:500;cursor:pointer;transition:all 0.25s cubic-bezier(0.16,1,0.3,1);"><span id="wedding-music-equalizer" style="display:inline-flex;align-items:flex-end;gap:2.5px;height:14px;width:14px;"><span class="music-bar music-bar-1" style="width:2.5px;height:8px;background:#8a5a2b;border-radius:1px;transition:height 0.2s;"></span><span class="music-bar music-bar-2" style="width:2.5px;height:14px;background:#8a5a2b;border-radius:1px;transition:height 0.2s;"></span><span class="music-bar music-bar-3" style="width:2.5px;height:10px;background:#8a5a2b;border-radius:1px;transition:height 0.2s;"></span></span><span id="wedding-music-label" style="opacity:0.85;white-space:nowrap;letter-spacing:0.02em;">He Knows</span></button><audio id="wedding-bg-audio" src="/music.mp3" loop preload="auto" playsinline></audio>';
+      musicDiv.innerHTML = '<button id="wedding-music-toggle" type="button" aria-label="Toggle wedding song" class="music-paused" style="display:flex;align-items:center;gap:8px;background:rgba(255,252,247,0.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(47,36,27,0.14);border-radius:9999px;padding:8px 14px;box-shadow:0 4px 16px rgba(47,36,27,0.12);color:#2f241b;font-family:inherit;font-size:11.5px;font-weight:500;cursor:pointer;transition:all 0.25s cubic-bezier(0.16,1,0.3,1);"><span id="wedding-music-equalizer" style="display:inline-flex;align-items:flex-end;gap:2.5px;height:14px;width:14px;"><span class="music-bar music-bar-1" style="width:2.5px;height:8px;background:#8a5a2b;border-radius:1px;transition:height 0.2s;"></span><span class="music-bar music-bar-2" style="width:2.5px;height:14px;background:#8a5a2b;border-radius:1px;transition:height 0.2s;"></span><span class="music-bar music-bar-3" style="width:2.5px;height:10px;background:#8a5a2b;border-radius:1px;transition:height 0.2s;"></span></span><span id="wedding-music-label" style="opacity:0.85;white-space:nowrap;letter-spacing:0.02em;">He Knows</span></button><audio id="wedding-bg-audio" src="/music-v2.mp3" loop preload="auto" playsinline></audio>';
       document.body.appendChild(musicDiv);
 
       var bgAudio = document.getElementById('wedding-bg-audio');
