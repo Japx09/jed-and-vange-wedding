@@ -43,12 +43,14 @@ const ICON_SVG_PATH = resolveFilePath('icon.svg');
 const APPLE_TOUCH_ICON_PATH = resolveFilePath('apple-touch-icon.png');
 const QR_PATH = resolveFilePath('qr.jpg');
 const OG_IMAGE_PATH = resolveFilePath('og-image.jpg');
+const TIMELINE_PATH = resolveFilePath('timeline.png');
+const MUSIC_PATH = resolveFilePath('music.mp3');
 
 const app = express();
 const PORT = 3333;
 
-// Helper to serve local images
-const serveFile = (filePath, res) => {
+// Helper to serve local images and media assets
+const serveFile = (filePath, res, req) => {
   const resolved = fs.existsSync(filePath) ? filePath : resolveFilePath(path.basename(filePath));
   if (!fs.existsSync(resolved) || fs.statSync(resolved).isDirectory()) {
     return res.status(404).send('Not found');
@@ -60,9 +62,34 @@ const serveFile = (filePath, res) => {
     '.jpeg': 'image/jpeg',
     '.webp': 'image/webp',
     '.svg': 'image/svg+xml',
-    '.ico': 'image/x-icon'
+    '.ico': 'image/x-icon',
+    '.mp3': 'audio/mpeg'
   };
-  res.setHeader('Content-Type', mimeTypes[ext] || 'image/webp');
+
+  const stat = fs.statSync(resolved);
+  const fileSize = stat.size;
+
+  if (ext === '.mp3' && req && req.headers && req.headers.range) {
+    const range = req.headers.range;
+    const parts = range.replace(/bytes=/, "").split("-");
+    const start = parseInt(parts[0], 10);
+    const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
+    const chunksize = (end - start) + 1;
+    const file = fs.createReadStream(resolved, { start, end });
+    const head = {
+      'Content-Range': `bytes ${start}-${end}/${fileSize}`,
+      'Accept-Ranges': 'bytes',
+      'Content-Length': chunksize,
+      'Content-Type': 'audio/mpeg',
+    };
+    res.writeHead(206, head);
+    file.pipe(res);
+    return;
+  }
+
+  res.setHeader('Content-Type', mimeTypes[ext] || 'application/octet-stream');
+  res.setHeader('Accept-Ranges', 'bytes');
+  res.setHeader('Content-Length', fileSize);
   res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
   fs.createReadStream(resolved).pipe(res);
 };
@@ -294,8 +321,10 @@ app.get('/qr.jpg', (req, res) => serveFile(QR_PATH, res));
 app.get('/qr.png', (req, res) => serveFile(QR_PATH, res));
 app.get('/og-image.jpg', (req, res) => serveFile(OG_IMAGE_PATH, res));
 app.get('/og-image.jpeg', (req, res) => serveFile(OG_IMAGE_PATH, res));
-app.get('/opengraph-image.jpeg', (req, res) => serveFile(OG_IMAGE_PATH, res));
-app.get('/opengraph-image.jpg', (req, res) => serveFile(OG_IMAGE_PATH, res));
+app.get('/opengraph-image.jpeg', (req, res) => serveFile(OG_IMAGE_PATH, res, req));
+app.get('/opengraph-image.jpg', (req, res) => serveFile(OG_IMAGE_PATH, res, req));
+app.get('/timeline.png', (req, res) => serveFile(TIMELINE_PATH, res, req));
+app.get('/music.mp3', (req, res) => serveFile(MUSIC_PATH, res, req));
 
 // Intercept cover, footer, and venue image requests
 app.get('/demo/kevin-wedding/hero.webp', (req, res) => serveFile(COVER_PATH, res));
@@ -345,7 +374,7 @@ app.get('/_next/image', (req, res, next) => {
 
 // Quote configuration
 const oldQuote = 'you’re my favorite person to do anything with for the rest of my life.';
-const newQuoteText = `weaving every detail together.
+const newQuoteText = `God was quietly weaving every detail together.
 
 What felt ordinary in the moment became part of something extraordinary.
 
@@ -533,10 +562,10 @@ const replacements = [
 
   // Navbar Links
   ['href="#details">Travel Logistics</a>', 'href="#entourage-section">Entourage</a>'],
-  ['href="#details">Registry</a>', 'href="#dress-code-section">Dress Code</a>'],
+  ['href="#details">Registry</a>', 'href="#wedding-timeline-section">Timeline</a></li><li><a class="template-font-accent block py-2 pe-2 text-lg transition-opacity duration-200 hover:opacity-100" style="color:#2f241b;opacity:0.85" href="#dress-code-section">Dress Code</a>'],
   ['href="#dress-code-section">Dress Code</a></li><li><a class="template-font-accent block py-2 pe-2 text-lg transition-opacity duration-200 hover:opacity-100" style="color:#2f241b;opacity:0.85" href="#faq">FAQ</a>', 'href="#dress-code-section">Dress Code</a></li><li><a class="template-font-accent block py-2 pe-2 text-lg transition-opacity duration-200 hover:opacity-100" style="color:#2f241b;opacity:0.85" href="#wedding-gifts-section">Wedding Gifts</a></li><li><a class="template-font-accent block py-2 pe-2 text-lg transition-opacity duration-200 hover:opacity-100" style="color:#2f241b;opacity:0.85" href="#faq">FAQ</a>'],
   ['{\\"label\\":\\"Travel\\",\\"targetId\\":\\"details\\",\\"overlayCardId\\":\\"travel\\"', '{\\"label\\":\\"Entourage\\",\\"targetId\\":\\"entourage-section\\",\\"overlayCardId\\":\\"\\"'],
-  ['{\\"label\\":\\"Registry\\",\\"targetId\\":\\"details\\",\\"overlayCardId\\":\\"registry\\"', '{\\"label\\":\\"Dress Code\\",\\"targetId\\":\\"dress-code-section\\",\\"overlayCardId\\":\\"\\"'],
+  ['{\\"label\\":\\"Registry\\",\\"targetId\\":\\"details\\",\\"overlayCardId\\":\\"registry\\"', '{\\"label\\":\\"Timeline\\",\\"targetId\\":\\"wedding-timeline-section\\",\\"overlayCardId\\":\\"\\"},{\\"label\\":\\"Dress Code\\",\\"targetId\\":\\"dress-code-section\\",\\"overlayCardId\\":\\"\\"'],
   ['href="/demo/rsvp"', 'href="#rsvp-callout-section"'],
   ['{\\"label\\":\\"RSVP\\",\\"targetId\\":\\"rsvp\\"', '{\\"label\\":\\"RSVP\\",\\"targetId\\":\\"rsvp-callout-section\\"'],
 
@@ -548,7 +577,7 @@ const replacements = [
   ['style="fill:#ffffff;--template-fitted-font-size:140px;', 'style="fill:#f7efe2;--template-fitted-font-size:140px;'],
 
   // Preserve line breaks cleanly in footer quote and story captions & hide old details container & anchor offsets & responsive mobile story adjustments & minimal hero bottom gradient & mobile black burger/J&V & brown radio styling & italic grace & text-wrap balance & lowered hero headline & tab favicon & remove hero divider line
-  ['</head>', '<link rel="icon" type="image/png" sizes="192x192" href="/favicon.png"><link rel="shortcut icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><style>[data-testid="footer-quote"], [data-story-caption-group] p, [data-testid="mobile-story-caption-body"] { white-space: pre-line !important; line-height: 1.4 !important; text-wrap: balance !important; } @media (max-width: 768px) { [data-story-caption-group] p, [data-testid="mobile-story-caption-body"] { font-size: 0.88rem !important; line-height: 1.35 !important; max-width: 92% !important; margin-left: auto !important; margin-right: auto !important; margin-bottom: 14px !important; } nav a[href="/"], nav [data-testid="nav-content"] > a { color: #000000 !important; } nav button[aria-label*="menu" i], nav [data-testid="nav-content"] button { color: #000000 !important; } nav button[aria-label*="menu" i] span, nav [data-testid="nav-content"] button span { background-color: #000000 !important; } nav button[aria-label*="menu" i] svg, nav [data-testid="nav-content"] button svg { stroke: #000000 !important; color: #000000 !important; } } [data-site-section-id="details"], a[href*="cordially.io"] { display: none !important; } #dress-code-section, #entourage-section, #rsvp-callout-section, #wedding-gifts-section { scroll-margin-top: 80px; } #rsvp-callout-section, #rsvp-section-wrapper, #wedding-rsvp-form { opacity: 1 !important; visibility: visible !important; display: block !important; } #attendance-options { display: grid !important; gap: 14px !important; } .rsvp-radio-card { display: flex !important; align-items: center !important; padding: 16px 20px !important; cursor: pointer !important; } .rsvp-radio-circle { margin-right: 18px !important; flex-shrink: 0 !important; width: 22px !important; height: 22px !important; min-width: 22px !important; min-height: 22px !important; border-radius: 9999px !important; } input[type="radio"], input[type="radio"]:focus, input[type="radio"]:checked { accent-color: #8a5a2b !important; outline: none !important; } [data-site-section-id="storyIntro"] em, [data-site-section-id="storyIntro"] [data-vision-word="true"]:nth-of-type(6) { font-style: italic !important; } [data-site-section-id="hero"] [data-hero-headline-shell], [data-testid="hero-headline"] { fill: #f7efe2 !important; color: #f7efe2 !important; filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.45)) !important; stroke: none !important; -webkit-text-stroke: 0 !important; } [data-site-section-id="hero"] .bg-black\\/20 { display: none !important; } [data-testid="hero-foreground"] { background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.15) 70%, rgba(0,0,0,0.45) 85%, rgba(0,0,0,0.65) 100%) !important; } [data-site-section-id="hero"] [data-hero-headline-container] { bottom: 4.5rem !important; } [data-site-section-id="hero"] img { object-position: center center !important; } [data-testid="hero-scroll-prompt"] { filter: none !important; } [data-testid="hero-divider"] { display: none !important; opacity: 0 !important; visibility: hidden !important; }</style></head>']
+  ['</head>', '<link rel="icon" type="image/png" sizes="192x192" href="/favicon.png"><link rel="shortcut icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><style>[data-testid="footer-quote"], [data-story-caption-group] p, [data-testid="mobile-story-caption-body"] { white-space: pre-line !important; line-height: 1.4 !important; text-wrap: balance !important; } @media (max-width: 768px) { [data-story-caption-group] p, [data-testid="mobile-story-caption-body"] { font-size: 0.88rem !important; line-height: 1.35 !important; max-width: 92% !important; margin-left: auto !important; margin-right: auto !important; margin-bottom: 14px !important; } nav a[href="/"], nav [data-testid="nav-content"] > a { color: #000000 !important; } nav button[aria-label*="menu" i], nav [data-testid="nav-content"] button { color: #000000 !important; } nav button[aria-label*="menu" i] span, nav [data-testid="nav-content"] button span { background-color: #000000 !important; } nav button[aria-label*="menu" i] svg, nav [data-testid="nav-content"] button svg { stroke: #000000 !important; color: #000000 !important; } } [data-site-section-id="details"], a[href*="cordially.io"] { display: none !important; } #wedding-timeline-section, #dress-code-section, #entourage-section, #rsvp-callout-section, #wedding-gifts-section { scroll-margin-top: 80px; } #rsvp-callout-section, #rsvp-section-wrapper, #wedding-rsvp-form { opacity: 1 !important; visibility: visible !important; display: block !important; } #attendance-options { display: grid !important; gap: 14px !important; } .rsvp-radio-card { display: flex !important; align-items: center !important; padding: 16px 20px !important; cursor: pointer !important; } .rsvp-radio-circle { margin-right: 18px !important; flex-shrink: 0 !important; width: 22px !important; height: 22px !important; min-width: 22px !important; min-height: 22px !important; border-radius: 9999px !important; } input[type="radio"], input[type="radio"]:focus, input[type="radio"]:checked { accent-color: #8a5a2b !important; outline: none !important; } [data-site-section-id="storyIntro"] em, [data-site-section-id="storyIntro"] [data-vision-word="true"]:nth-of-type(6) { font-style: italic !important; } [data-site-section-id="hero"] [data-hero-headline-shell], [data-testid="hero-headline"] { fill: #f7efe2 !important; color: #f7efe2 !important; filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.45)) !important; stroke: none !important; -webkit-text-stroke: 0 !important; } [data-site-section-id="hero"] .bg-black\\/20 { display: none !important; } [data-testid="hero-foreground"] { background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.15) 70%, rgba(0,0,0,0.45) 85%, rgba(0,0,0,0.65) 100%) !important; } [data-site-section-id="hero"] [data-hero-headline-container] { bottom: 4.5rem !important; } [data-site-section-id="hero"] img { object-position: center center !important; } [data-testid="hero-scroll-prompt"] { filter: none !important; } [data-testid="hero-divider"] { display: none !important; opacity: 0 !important; visibility: hidden !important; } @keyframes eqBar1 { 0%, 100% { height: 4px; } 50% { height: 14px; } } @keyframes eqBar2 { 0%, 100% { height: 14px; } 50% { height: 6px; } } @keyframes eqBar3 { 0%, 100% { height: 7px; } 50% { height: 13px; } } .music-playing .music-bar-1 { animation: eqBar1 0.9s ease-in-out infinite !important; } .music-playing .music-bar-2 { animation: eqBar2 0.75s ease-in-out infinite 0.15s !important; } .music-playing .music-bar-3 { animation: eqBar3 0.85s ease-in-out infinite 0.3s !important; } .music-paused .music-bar { animation: none !important; height: 3px !important; opacity: 0.5 !important; }</style></head>']
 ];
 
 function replaceInfo(content) {
@@ -587,6 +616,9 @@ app.use(createProxyMiddleware({
           const entouragePath = resolveFilePath('entourage-section.html');
           const entourageHtml = fs.existsSync(entouragePath) ? fs.readFileSync(entouragePath, 'utf8') : '';
 
+          const timelinePath = resolveFilePath('timeline-section.html');
+          const timelineHtml = fs.existsSync(timelinePath) ? fs.readFileSync(timelinePath, 'utf8') : '';
+
           const dressCodePath = resolveFilePath('dress-code-section.html');
           const dressCodeHtml = fs.existsSync(dressCodePath) ? fs.readFileSync(dressCodePath, 'utf8') : '';
 
@@ -595,6 +627,7 @@ app.use(createProxyMiddleware({
 
           // 1. Server-side initial render injection
           const entourageWrapper = `<div data-scroll-section="" data-scroll-section-kind="content" data-site-section-id="entourage">${entourageHtml}</div>`;
+          const timelineWrapper = `<div data-scroll-section="" data-scroll-section-kind="content" data-site-section-id="timeline">${timelineHtml}</div>`;
           const dressCodeWrapper = `<div data-scroll-section="" data-scroll-section-kind="content" data-site-section-id="dress-code">${dressCodeHtml}</div>`;
           const giftsWrapper = `<div data-scroll-section="" data-scroll-section-kind="content" data-site-section-id="wedding-gifts">${giftsHtml}</div>`;
 
@@ -609,7 +642,7 @@ app.use(createProxyMiddleware({
             text = text.replace('<div data-design-anchor="venue"', entourageWrapper + '<div data-design-anchor="venue"');
           }
           if (text.includes('data-design-anchor="faq"')) {
-            text = text.replace('<div data-design-anchor="faq"', dressCodeWrapper + giftsWrapper + '<div data-design-anchor="faq"');
+            text = text.replace('<div data-design-anchor="faq"', timelineWrapper + dressCodeWrapper + giftsWrapper + '<div data-design-anchor="faq"');
           }
 
           // Open Graph & Social Share Link Embed Meta Tags
@@ -635,6 +668,7 @@ app.use(createProxyMiddleware({
 
           // 2. Client-side hydration watchdog and interactive controller
           const safeEntourageJson = JSON.stringify(entourageHtml).replace(/<\/script/gi, '<\\/script');
+          const safeTimelineJson = JSON.stringify(timelineHtml).replace(/<\/script/gi, '<\\/script');
           const safeDressCodeJson = JSON.stringify(dressCodeHtml).replace(/<\/script/gi, '<\\/script');
           const safeGiftsJson = JSON.stringify(giftsHtml).replace(/<\/script/gi, '<\\/script');
           const safeRsvpJson = JSON.stringify(rsvpHtml).replace(/<\/script/gi, '<\\/script');
@@ -833,7 +867,22 @@ app.use(createProxyMiddleware({
       }
     }
 
-    // 2. Insert Bespoke Dress Code section right before FAQ
+    // 2. Insert Wedding Timeline section right before Dress Code / FAQ
+    if (!document.getElementById('wedding-timeline-section')) {
+      var dc = document.getElementById('dress-code-section');
+      var faq = document.querySelector('[data-site-section-id="faq"]') || document.getElementById('faq');
+      var refEl = dc ? (dc.closest('[data-scroll-section]') || dc) : (faq ? (faq.closest('[data-scroll-section]') || faq) : null);
+      if (refEl && refEl.parentNode) {
+        var divTl = document.createElement('div');
+        divTl.setAttribute('data-scroll-section', '');
+        divTl.setAttribute('data-scroll-section-kind', 'content');
+        divTl.setAttribute('data-site-section-id', 'timeline');
+        divTl.innerHTML = ${safeTimelineJson};
+        refEl.parentNode.insertBefore(divTl, refEl);
+      }
+    }
+
+    // 3. Insert Bespoke Dress Code section right before FAQ
     if (!document.getElementById('dress-code-section')) {
       var faq = document.querySelector('[data-site-section-id="faq"]') || document.getElementById('faq');
       if (faq) {
@@ -849,7 +898,7 @@ app.use(createProxyMiddleware({
       }
     }
 
-    // 3. Insert Wedding Gifts section right before FAQ
+    // 4. Insert Wedding Gifts section right before FAQ
     if (!document.getElementById('wedding-gifts-section')) {
       var faq = document.querySelector('[data-site-section-id="faq"]') || document.getElementById('faq');
       if (faq) {
@@ -888,25 +937,78 @@ app.use(createProxyMiddleware({
       rsvpSec.style.opacity = '1';
     }
 
-    // 5. Ensure 'grace' in transition line stays italicized
+    // 7. Ensure 'grace' in transition line stays italicized
     document.querySelectorAll('[data-vision-word="true"]').forEach(function(el) {
       if (el.textContent.trim().toLowerCase() === 'grace') {
         el.style.fontStyle = 'italic';
       }
     });
 
-    // 6. Remove any Cordially platform badge elements
+    // 8. Remove any Cordially platform badge elements
     document.querySelectorAll('a[href*="cordially.io"]').forEach(function(el) { el.remove(); });
 
-    // 7. Remove hero divider line
+    // 9. Remove hero divider line
     document.querySelectorAll('[data-testid="hero-divider"]').forEach(function(el) { el.remove(); });
+
+    // 10. Floating Wedding Music Player
+    if (!document.getElementById('wedding-music-player')) {
+      var musicDiv = document.createElement('div');
+      musicDiv.id = 'wedding-music-player';
+      musicDiv.style.cssText = 'position:fixed;bottom:20px;left:20px;z-index:9999;';
+      musicDiv.innerHTML = '<button id="wedding-music-toggle" type="button" aria-label="Toggle wedding song" class="music-paused" style="display:flex;align-items:center;gap:8px;background:rgba(255,252,247,0.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(47,36,27,0.14);border-radius:9999px;padding:8px 14px;box-shadow:0 4px 16px rgba(47,36,27,0.12);color:#2f241b;font-family:inherit;font-size:11.5px;font-weight:500;cursor:pointer;transition:all 0.25s cubic-bezier(0.16,1,0.3,1);"><span id="wedding-music-equalizer" style="display:inline-flex;align-items:flex-end;gap:2.5px;height:14px;width:14px;"><span class="music-bar music-bar-1" style="width:2.5px;height:8px;background:#8a5a2b;border-radius:1px;transition:height 0.2s;"></span><span class="music-bar music-bar-2" style="width:2.5px;height:14px;background:#8a5a2b;border-radius:1px;transition:height 0.2s;"></span><span class="music-bar music-bar-3" style="width:2.5px;height:10px;background:#8a5a2b;border-radius:1px;transition:height 0.2s;"></span></span><span id="wedding-music-label" style="opacity:0.85;white-space:nowrap;letter-spacing:0.02em;">He Knows</span></button><audio id="wedding-bg-audio" src="/music.mp3" loop preload="auto" playsinline></audio>';
+      document.body.appendChild(musicDiv);
+
+      var bgAudio = document.getElementById('wedding-bg-audio');
+      var musicBtn = document.getElementById('wedding-music-toggle');
+      var musicLabel = document.getElementById('wedding-music-label');
+      var userPaused = false;
+
+      window.updateMusicUI = function(isPlaying) {
+        if (!musicBtn) return;
+        if (isPlaying) {
+          musicBtn.classList.add('music-playing');
+          musicBtn.classList.remove('music-paused');
+          if (musicLabel) musicLabel.textContent = 'He Knows · Playing';
+        } else {
+          musicBtn.classList.remove('music-playing');
+          musicBtn.classList.add('music-paused');
+          if (musicLabel) musicLabel.textContent = 'Play Song';
+        }
+      };
+
+      if (musicBtn && bgAudio) {
+        musicBtn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          if (bgAudio.paused) {
+            userPaused = false;
+            bgAudio.play().then(function() {
+              window.updateMusicUI(true);
+            }).catch(function() {});
+          } else {
+            userPaused = true;
+            bgAudio.pause();
+            window.updateMusicUI(false);
+          }
+        });
+
+        function handleFirstInteraction() {
+          if (!userPaused && bgAudio && bgAudio.paused) {
+            bgAudio.play().then(function() {
+              window.updateMusicUI(true);
+            }).catch(function() {});
+          }
+        }
+        document.addEventListener('click', handleFirstInteraction, { once: true });
+        document.addEventListener('touchstart', handleFirstInteraction, { once: true });
+      }
+    }
 
     window.dispatchEvent(new Event('resize'));
   }
 
   // Smooth scroll click handler for custom sections & RSVP
   document.addEventListener('click', function(e) {
-    var a = e.target.closest('a[href="#dress-code-section"], a[href="#wedding-gifts-section"], a[href="#entourage-section"], a[href="#rsvp-callout-section"], a[href="/demo/rsvp"]');
+    var a = e.target.closest('a[href="#dress-code-section"], a[href="#wedding-gifts-section"], a[href="#wedding-timeline-section"], a[href="#entourage-section"], a[href="#rsvp-callout-section"], a[href="/demo/rsvp"]');
     if (a) {
       var href = a.getAttribute('href');
       var targetId = (href === '/demo/rsvp' || href === '#rsvp-callout-section') ? 'rsvp-callout-section' : href.slice(1);
@@ -929,7 +1031,7 @@ app.use(createProxyMiddleware({
   var pollTimer = setInterval(function() {
     pollCount++;
     insertCustomSections();
-    if (document.getElementById('entourage-section') && document.getElementById('dress-code-section') && document.getElementById('wedding-gifts-section') && document.getElementById('wedding-rsvp-form')) {
+    if (document.getElementById('entourage-section') && document.getElementById('wedding-timeline-section') && document.getElementById('dress-code-section') && document.getElementById('wedding-gifts-section') && document.getElementById('wedding-rsvp-form')) {
       if (pollCount > 10) clearInterval(pollTimer);
     }
     if (pollCount > 30) clearInterval(pollTimer);
