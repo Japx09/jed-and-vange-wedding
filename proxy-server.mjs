@@ -970,8 +970,8 @@ app.use(createProxyMiddleware({
       var userPaused = false;
 
       if (bgAudio) {
-        bgAudio.volume = 0.7;
-        bgAudio.addEventListener('play', function() { bgAudio.volume = 0.7; });
+        bgAudio.volume = 0.5;
+        bgAudio.addEventListener('play', function() { bgAudio.volume = 0.5; });
       }
 
       window.updateMusicUI = function(isPlaying) {
@@ -992,7 +992,7 @@ app.use(createProxyMiddleware({
           e.stopPropagation();
           if (bgAudio.paused) {
             userPaused = false;
-            bgAudio.volume = 0.7;
+            bgAudio.volume = 0.5;
             bgAudio.play().then(function() {
               window.updateMusicUI(true);
             }).catch(function() {});
@@ -1005,7 +1005,7 @@ app.use(createProxyMiddleware({
 
         function handleFirstInteraction() {
           if (!userPaused && bgAudio && bgAudio.paused) {
-            bgAudio.volume = 0.7;
+            bgAudio.volume = 0.5;
             bgAudio.play().then(function() {
               window.updateMusicUI(true);
             }).catch(function() {});
