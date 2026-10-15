@@ -1,25 +1,261 @@
-<section id="wedding-timeline-section" class="relative z-20 w-full px-4 py-16 md:py-24 text-center" style="color: var(--template-text, #2f241b); background-color: var(--template-page-background, #fcf7ed);">
-  <div class="mx-auto max-w-4xl">
-    <!-- Header -->
-    <div class="mb-10 md:mb-14">
-      <span class="block text-xs uppercase tracking-[0.25em] opacity-60 font-medium mb-3">Order of Events</span>
-      <h2 class="text-4xl sm:text-5xl md:text-6xl not-italic font-normal tracking-tight" style="font-family: var(--template-font-display-stack, serif);">Wedding Day Timeline</h2>
-      <p class="text-xs sm:text-sm md:text-base opacity-75 max-w-lg mx-auto mt-4 font-light leading-relaxed">
-        Here is what to expect throughout our special celebration as we share our vows and rejoice together.
-      </p>
-      <div class="mx-auto mt-6 h-[1px] w-24 opacity-25" style="background-color: var(--template-text, #2f241b);"></div>
-    </div>
+<section id="wedding-timeline-section" class="relative z-20 w-full px-4 py-20 md:py-28 text-center" style="color: var(--template-text, #2f241b); background-color: var(--template-page-background, #fcf7ed);">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Alex+Brush&family=Montserrat:wght@300;400;500;600&display=swap');
 
-    <!-- Timeline Graphic Card -->
-    <div class="max-w-[680px] mx-auto rounded-2xl sm:rounded-3xl border border-[rgba(47,36,27,0.12)] bg-[rgba(255,255,255,0.45)] backdrop-blur-sm p-3 sm:p-6 shadow-sm">
-      <img 
-        src="/timeline.png" 
-        alt="Jed & Vanj Wedding Day Timeline" 
-        class="w-full h-auto rounded-xl sm:rounded-2xl shadow-xs transition-transform duration-300 hover:scale-[1.01]" 
-        loading="lazy"
-        width="1414"
-        height="2000"
-      />
+    .timeline-script-title {
+      font-family: 'Alex Brush', cursive;
+      font-weight: 400;
+      line-height: 1.1;
+    }
+    .timeline-caps {
+      font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+      letter-spacing: 0.28em;
+    }
+    .timeline-event-time {
+      font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+      letter-spacing: 0.16em;
+      font-weight: 600;
+    }
+    .timeline-event-desc {
+      font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+      letter-spacing: 0.22em;
+      font-weight: 300;
+    }
+
+    /* Timeline container */
+    .timeline-container {
+      position: relative;
+      max-width: 620px;
+      margin: 0 auto;
+      padding: 3rem 1rem 3.5rem 1rem;
+    }
+
+    /* Vertical stem line */
+    .timeline-stem {
+      position: absolute;
+      top: 1.5rem;
+      bottom: 2rem;
+      left: 50%;
+      width: 1px;
+      background-color: rgba(47, 36, 27, 0.4);
+      transform: translateX(-50%);
+    }
+
+    /* Timeline item rows */
+    .timeline-row {
+      position: relative;
+      display: flex;
+      align-items: center;
+      margin-bottom: 3.25rem;
+      min-height: 52px;
+      transition: transform 0.2s ease;
+    }
+    .timeline-row:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Left-side item (text on left, branch tick to center) */
+    .timeline-row.is-left {
+      justify-content: flex-start;
+    }
+    .timeline-row.is-left .timeline-content {
+      width: calc(50% - 32px);
+      text-align: right;
+      padding-right: 14px;
+    }
+    .timeline-row.is-left .timeline-branch {
+      position: absolute;
+      right: 50%;
+      width: 32px;
+      height: 1px;
+      background-color: rgba(47, 36, 27, 0.4);
+      transition: background-color 0.2s ease;
+    }
+    .timeline-row.is-left .timeline-node {
+      position: absolute;
+      left: 50%;
+      width: 7px;
+      height: 7px;
+      border-radius: 9999px;
+      background-color: #8a5a2b;
+      transform: translate(-50%, -50%);
+      top: 50%;
+      opacity: 0.85;
+      transition: transform 0.25s ease, background-color 0.25s ease;
+    }
+
+    /* Right-side item (branch tick to center, text on right) */
+    .timeline-row.is-right {
+      justify-content: flex-end;
+    }
+    .timeline-row.is-right .timeline-content {
+      width: calc(50% - 32px);
+      text-align: left;
+      padding-left: 14px;
+    }
+    .timeline-row.is-right .timeline-branch {
+      position: absolute;
+      left: 50%;
+      width: 32px;
+      height: 1px;
+      background-color: rgba(47, 36, 27, 0.4);
+      transition: background-color 0.2s ease;
+    }
+    .timeline-row.is-right .timeline-node {
+      position: absolute;
+      left: 50%;
+      width: 7px;
+      height: 7px;
+      border-radius: 9999px;
+      background-color: #8a5a2b;
+      transform: translate(-50%, -50%);
+      top: 50%;
+      opacity: 0.85;
+      transition: transform 0.25s ease, background-color 0.25s ease;
+    }
+
+    .timeline-row:hover .timeline-node {
+      transform: translate(-50%, -50%) scale(1.5);
+      background-color: #4a3324;
+    }
+    .timeline-row:hover .timeline-branch {
+      background-color: rgba(47, 36, 27, 0.75);
+    }
+    .timeline-row:hover .timeline-content {
+      transform: translateY(-1px);
+    }
+
+    /* Mobile adjustments */
+    @media (max-width: 540px) {
+      .timeline-container {
+        padding: 2.25rem 0.5rem 2.75rem 0.5rem;
+      }
+      .timeline-row {
+        margin-bottom: 2.5rem;
+      }
+      .timeline-row.is-left .timeline-content {
+        width: calc(50% - 20px);
+        padding-right: 8px;
+      }
+      .timeline-row.is-left .timeline-branch {
+        width: 20px;
+      }
+      .timeline-row.is-right .timeline-content {
+        width: calc(50% - 20px);
+        padding-left: 8px;
+      }
+      .timeline-row.is-right .timeline-branch {
+        width: 20px;
+      }
+      .timeline-event-time {
+        font-size: 0.82rem !important;
+        letter-spacing: 0.12em !important;
+      }
+      .timeline-event-desc {
+        font-size: 0.68rem !important;
+        letter-spacing: 0.15em !important;
+      }
+    }
+  </style>
+
+  <div class="mx-auto max-w-3xl">
+    <!-- Outer Card Frame replicating the editorial stationery print -->
+    <div class="rounded-3xl border border-[rgba(47,36,27,0.12)] bg-[#fffdf9]/95 backdrop-blur-md p-6 sm:p-12 md:p-16 shadow-[0_8px_30px_rgb(47,36,27,0.06)] relative overflow-hidden">
+      
+      <!-- Top Title Header -->
+      <div class="mb-10 sm:mb-14">
+        <h2 class="timeline-caps text-2xl sm:text-3xl md:text-4xl uppercase text-[#2f241b] tracking-[0.28em] font-light mb-1">
+          Wedding Day
+        </h2>
+        <div class="timeline-script-title text-4xl sm:text-5xl md:text-6xl text-[#2f241b] -mt-1 sm:-mt-2 opacity-90 select-none">
+          timeline
+        </div>
+      </div>
+
+      <!-- Timeline Core -->
+      <div class="timeline-container">
+        <div class="timeline-stem"></div>
+
+        <!-- 1. 3:30 PM — GUEST ARRIVAL (Right) -->
+        <div class="timeline-row is-right">
+          <div class="timeline-branch"></div>
+          <div class="timeline-node"></div>
+          <div class="timeline-content">
+            <div class="timeline-event-time text-xs sm:text-sm text-[#2f241b]">3:30 PM</div>
+            <div class="timeline-event-desc text-[0.72rem] sm:text-xs text-[#2f241b] uppercase mt-1 opacity-80">Guest Arrival</div>
+          </div>
+        </div>
+
+        <!-- 2. 4:00 PM — WEDDING CEREMONY (Left) -->
+        <div class="timeline-row is-left">
+          <div class="timeline-content">
+            <div class="timeline-event-time text-xs sm:text-sm text-[#2f241b]">4:00 PM</div>
+            <div class="timeline-event-desc text-[0.72rem] sm:text-xs text-[#2f241b] uppercase mt-1 opacity-80">Wedding Ceremony</div>
+          </div>
+          <div class="timeline-branch"></div>
+          <div class="timeline-node"></div>
+        </div>
+
+        <!-- 3. 5:30 PM — PHOTO SESSION (Right) -->
+        <div class="timeline-row is-right">
+          <div class="timeline-branch"></div>
+          <div class="timeline-node"></div>
+          <div class="timeline-content">
+            <div class="timeline-event-time text-xs sm:text-sm text-[#2f241b]">5:30 PM</div>
+            <div class="timeline-event-desc text-[0.72rem] sm:text-xs text-[#2f241b] uppercase mt-1 opacity-80">Photo Session</div>
+          </div>
+        </div>
+
+        <!-- 4. 6:00 PM — PIKA-PIKA (Left) -->
+        <div class="timeline-row is-left">
+          <div class="timeline-content">
+            <div class="timeline-event-time text-xs sm:text-sm text-[#2f241b]">6:00 PM</div>
+            <div class="timeline-event-desc text-[0.72rem] sm:text-xs text-[#2f241b] uppercase mt-1 opacity-80">Pika-Pika</div>
+          </div>
+          <div class="timeline-branch"></div>
+          <div class="timeline-node"></div>
+        </div>
+
+        <!-- 5. 6:30 PM — WEDDING RECEPTION (Right) -->
+        <div class="timeline-row is-right">
+          <div class="timeline-branch"></div>
+          <div class="timeline-node"></div>
+          <div class="timeline-content">
+            <div class="timeline-event-time text-xs sm:text-sm text-[#2f241b]">6:30 PM</div>
+            <div class="timeline-event-desc text-[0.72rem] sm:text-xs text-[#2f241b] uppercase mt-1 opacity-80">Wedding Reception</div>
+          </div>
+        </div>
+
+        <!-- 6. 7:30 PM — DINNER (Left) -->
+        <div class="timeline-row is-left">
+          <div class="timeline-content">
+            <div class="timeline-event-time text-xs sm:text-sm text-[#2f241b]">7:30 PM</div>
+            <div class="timeline-event-desc text-[0.72rem] sm:text-xs text-[#2f241b] uppercase mt-1 opacity-80">Dinner</div>
+          </div>
+          <div class="timeline-branch"></div>
+          <div class="timeline-node"></div>
+        </div>
+
+        <!-- 7. 9:30 PM — CLOSING AND FAREWELL (Right) -->
+        <div class="timeline-row is-right">
+          <div class="timeline-branch"></div>
+          <div class="timeline-node"></div>
+          <div class="timeline-content">
+            <div class="timeline-event-time text-xs sm:text-sm text-[#2f241b]">9:30 PM</div>
+            <div class="timeline-event-desc text-[0.72rem] sm:text-xs text-[#2f241b] uppercase mt-1 opacity-80">Closing and Farewell</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Bottom Signature Monogram -->
+      <div class="mt-6 pt-2 flex justify-end items-baseline pr-2 sm:pr-6">
+        <div class="inline-flex items-baseline gap-2 opacity-85">
+          <span class="timeline-script-title text-3xl sm:text-4xl text-[#2f241b]" style="letter-spacing: -0.05em;">J &amp; V</span>
+          <span class="timeline-caps text-[0.62rem] sm:text-[0.7rem] uppercase text-[#2f241b] tracking-[0.25em] font-light">Jed &amp; Vanj</span>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
