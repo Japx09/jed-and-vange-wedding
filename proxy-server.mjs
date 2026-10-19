@@ -306,9 +306,10 @@ const collageImageMap = {
   'hero-shoes.webp': path.join(COLLAGE_DIR, 'hero-shoes.webp')
 };
 
-// Route root '/' to '/demo' so the wedding website serves as the homepage
-app.get('/', (req, res, next) => {
-  req.url = '/demo';
+// On jim-pam.cordially.io, the wedding homepage is served at root '/'
+// If any incoming request is for /demo, rewrite it to '/'
+app.get(['/demo', '/demo/'], (req, res, next) => {
+  req.url = '/';
   next();
 });
 
@@ -598,17 +599,27 @@ function replaceInfo(content) {
 
 // 100% pure transparent proxy preserving all original code, scripts, styles, and animations
 app.use(createProxyMiddleware({
-  target: 'https://www.cordially.io',
+  target: 'https://jim-pam.cordially.io',
   changeOrigin: true,
   selfHandleResponse: true,
   on: {
     proxyReq: (proxyReq, req, res) => {
-      proxyReq.setHeader('Host', 'www.cordially.io');
+      proxyReq.setHeader('Host', 'jim-pam.cordially.io');
       proxyReq.setHeader('Accept-Encoding', 'identity');
     },
     proxyRes: responseInterceptor(async (responseBuffer, proxyRes, req, res) => {
       delete proxyRes.headers['content-security-policy'];
       delete proxyRes.headers['x-frame-options'];
+
+      if (proxyRes.headers['location']) {
+        proxyRes.headers['location'] = proxyRes.headers['location']
+          .replace('https://jim-pam.cordially.io', '')
+          .replace('https://www.cordially.io/demo', '')
+          .replace('https://www.cordially.io', '');
+        if (!proxyRes.headers['location']) {
+          proxyRes.headers['location'] = '/';
+        }
+      }
 
       const contentType = proxyRes.headers['content-type'] || '';
       if (

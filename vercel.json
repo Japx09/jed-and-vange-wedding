@@ -23,7 +23,7 @@
   "rewrites": [
     {
       "source": "/_next/static/:path*",
-      "destination": "https://www.cordially.io/_next/static/:path*"
+      "destination": "https://jim-pam.cordially.io/_next/static/:path*"
     },
     {
       "source": "/api/rsvp",
