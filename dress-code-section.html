@@ -448,26 +448,4 @@
     </div>
 
   </div>
-
-  <script>
-    (function() {
-      window.filterDressCode = function(category, btn) {
-        var buttons = document.querySelectorAll('.dc-filter-btn');
-        buttons.forEach(function(b) { b.classList.remove('active'); });
-        if (btn) btn.classList.add('active');
-
-        var cards = document.querySelectorAll('#dc-grid .dc-card-item');
-        cards.forEach(function(card) {
-          var cardCat = (card.getAttribute('data-category') || '').split(' ');
-          if (category === 'all' || cardCat.indexOf(category) !== -1) {
-            card.classList.remove('dc-hidden');
-          } else {
-            card.classList.add('dc-hidden');
-          }
-        });
-
-        window.dispatchEvent(new Event('resize'));
-      };
-    })();
-  </script>
 </section>
