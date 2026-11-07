@@ -456,11 +456,13 @@ const replacements = [
   ['J\\u0026P', 'J\\u0026V'],
   ['J&P', 'J&V'],
   ['https://jim-pam.cordially.io/icon.svg', '/favicon.png'],
-  ['https://jim-pam.cordially.io', 'https://jed-and-vange-wedding.vercel.app'],
   ['/icon.svg', '/favicon.png'],
   ['"sampleGuestName":"Alex Morgan"', '"sampleGuestName":""'],
   ['Alex Morgan', ''],
   ['This is a sample wedding. Try RSVP with', ''],
+  ['This is a sample wedding.', ''],
+  ['This is a sample wedding', ''],
+  ['Try RSVP with Alex Morgan', ''],
   ['Practice responses are saved in this demo.', ''],
   ['Demo Wedding Website | Cordially', 'Jed & Vanj — Wedding Website'],
   ['Jed &amp; Vange', 'Jed &amp; Vanj'],
@@ -619,7 +621,17 @@ const replacements = [
   ['href="https://jim-pam.cordially.io/rsvp" target="_blank"', 'href="#rsvp-callout-section" target="_self"'],
   ['href="https://jim-pam.cordially.io/rsvp"', 'href="#rsvp-callout-section"'],
   ['https://jim-pam.cordially.io/rsvp', '#rsvp-callout-section'],
+  ['href="https://jed-and-vange-wedding.vercel.app/rsvp" target="_blank"', 'href="#rsvp-callout-section" target="_self"'],
+  ['href="https://jed-and-vange-wedding.vercel.app/rsvp"', 'href="#rsvp-callout-section"'],
+  ['https://jed-and-vange-wedding.vercel.app/rsvp', '#rsvp-callout-section'],
+  ['href="/rsvp" target="_blank"', 'href="#rsvp-callout-section" target="_self"'],
+  ['href="/rsvp"', 'href="#rsvp-callout-section"'],
+  ['/rsvp', '#rsvp-callout-section'],
+  ['>Travel Logistics<', '>Entourage<'],
+  ['>Travel<', '>Entourage<'],
+  ['>Registry<', '>Timeline<'],
   ['{\\"label\\":\\"RSVP\\",\\"targetId\\":\\"rsvp\\"', '{\\"label\\":\\"RSVP\\",\\"targetId\\":\\"rsvp-callout-section\\"'],
+  ['https://jim-pam.cordially.io', 'https://jed-and-vange-wedding.vercel.app'],
 
   // Details Cards and Titles
   ['Travel Logistics</h3>', 'Entourage</h3>'],
@@ -727,7 +739,19 @@ app.use(createProxyMiddleware({
           const dressCodeWrapper = `<div data-scroll-section="" data-scroll-section-kind="content" data-site-section-id="dress-code">${dressCodeHtml}</div>`;
           const giftsWrapper = `<div data-scroll-section="" data-scroll-section-kind="content" data-site-section-id="wedding-gifts">${giftsHtml}</div>`;
 
-          if (rsvpHtml && text.includes('id="rsvp-callout-section"')) {
+          let rsvpBlock = '';
+          const rsvpStart = text.indexOf('<div data-design-anchor="rsvp"');
+          const rsvpEnd = text.indexOf('<div data-design-anchor="details"', rsvpStart);
+          if (rsvpStart !== -1 && rsvpEnd !== -1) {
+            rsvpBlock = text.substring(rsvpStart, rsvpEnd);
+            text = text.substring(0, rsvpStart) + text.substring(rsvpEnd);
+            if (rsvpHtml) {
+              rsvpBlock = rsvpBlock.replace(
+                /<section id="rsvp-callout-section"[\s\S]*?<\/section>/,
+                `<section id="rsvp-callout-section" class="relative z-30 w-full" style="scroll-margin-top: 80px;">${rsvpHtml}</section>`
+              );
+            }
+          } else if (rsvpHtml && text.includes('id="rsvp-callout-section"')) {
             text = text.replace(
               /<section id="rsvp-callout-section"[\s\S]*?<\/section>/,
               `<section id="rsvp-callout-section" class="relative z-30 w-full" style="scroll-margin-top: 80px;">${rsvpHtml}</section>`
@@ -738,7 +762,7 @@ app.use(createProxyMiddleware({
             text = text.replace('<div data-design-anchor="venue"', entourageWrapper + '<div data-design-anchor="venue"');
           }
           if (text.includes('data-design-anchor="faq"')) {
-            text = text.replace('<div data-design-anchor="faq"', timelineWrapper + dressCodeWrapper + giftsWrapper + '<div data-design-anchor="faq"');
+            text = text.replace('<div data-design-anchor="faq"', timelineWrapper + dressCodeWrapper + giftsWrapper + rsvpBlock + '<div data-design-anchor="faq"');
           }
 
           // Open Graph & Social Share Link Embed Meta Tags
@@ -966,15 +990,60 @@ app.use(createProxyMiddleware({
       }
     });
 
-    // 0c. Enforce Navbar Labels and Links in DOM
-    document.querySelectorAll('nav a, header a, #primary-menu a').forEach(function(link) {
+    // 0c. Enforce Navbar Labels, Links, and Items in DOM
+    document.querySelectorAll('nav a, header a, #primary-menu a, [data-testid="nav-container"] a').forEach(function(link) {
       var txt = (link.textContent || '').trim();
-      if (txt === 'Travel' || txt === 'Travel Logistics') {
+      if (txt === 'Travel' || txt === 'Travel Logistics' || txt.includes('Travel')) {
         link.textContent = 'Entourage';
         link.setAttribute('href', '#entourage-section');
-      } else if (txt === 'Registry') {
+      } else if (txt === 'Registry' || txt.includes('Registry')) {
         link.textContent = 'Timeline';
         link.setAttribute('href', '#wedding-timeline-section');
+      }
+    });
+
+    var navList = document.querySelector('[data-testid="nav-list"]');
+    if (navList && !document.getElementById('nav-item-entourage')) {
+      var entourageLi = document.createElement('li');
+      entourageLi.id = 'nav-item-entourage';
+      entourageLi.innerHTML = '<a class="template-font-accent whitespace-nowrap transition-all duration-300 hover:opacity-70" href="#entourage-section" style="font-size: 18px;">Entourage</a>';
+      var timelineLi = document.createElement('li');
+      timelineLi.id = 'nav-item-timeline';
+      timelineLi.innerHTML = '<a class="template-font-accent whitespace-nowrap transition-all duration-300 hover:opacity-70" href="#wedding-timeline-section" style="font-size: 18px;">Timeline</a>';
+      var dcLi = document.createElement('li');
+      dcLi.id = 'nav-item-dress-code';
+      dcLi.innerHTML = '<a class="template-font-accent whitespace-nowrap transition-all duration-300 hover:opacity-70" href="#dress-code-section" style="font-size: 18px;">Dress Code</a>';
+      var giftsLi = document.createElement('li');
+      giftsLi.id = 'nav-item-gifts';
+      giftsLi.innerHTML = '<a class="template-font-accent whitespace-nowrap transition-all duration-300 hover:opacity-70" href="#wedding-gifts-section" style="font-size: 18px;">Wedding Gifts</a>';
+      
+      var faqLi = navList.querySelector('a[href*="faq"]')?.closest('li');
+      var rsvpItem = navList.querySelector('a[href*="rsvp"]')?.closest('li');
+      var insertBeforeTarget = faqLi || rsvpItem;
+      if (insertBeforeTarget) {
+        navList.insertBefore(entourageLi, insertBeforeTarget);
+        navList.insertBefore(timelineLi, insertBeforeTarget);
+        navList.insertBefore(dcLi, insertBeforeTarget);
+        navList.insertBefore(giftsLi, insertBeforeTarget);
+      }
+    }
+
+    document.querySelectorAll('a, button').forEach(function(el) {
+      var txt = (el.textContent || '').trim().toLowerCase();
+      var href = el.getAttribute('href') || '';
+      if (txt === 'submit rsvp' || href.includes('rsvp')) {
+        el.setAttribute('href', '#rsvp-callout-section');
+        el.removeAttribute('target');
+        if (!el.__rsvpBound) {
+          el.__rsvpBound = true;
+          el.addEventListener('click', function(e) {
+            e.preventDefault();
+            var target = document.getElementById('rsvp-callout-section');
+            if (target) {
+              target.scrollIntoView({ behavior: 'smooth' });
+            }
+          });
+        }
       }
     });
 
@@ -1137,12 +1206,22 @@ app.use(createProxyMiddleware({
       }
     }
 
-    // 6. Populate or preserve RSVP section form
+    // 6. Populate and place RSVP section form AFTER Wedding Gifts
     var rsvpSec = document.getElementById('rsvp-callout-section');
-    if (rsvpSec && !document.getElementById('wedding-rsvp-form')) {
-      rsvpSec.innerHTML = ${safeRsvpJson};
-      rsvpSec.style.padding = '0';
-      rsvpSec.style.opacity = '1';
+    if (rsvpSec) {
+      if (!document.getElementById('wedding-rsvp-form')) {
+        rsvpSec.innerHTML = ${safeRsvpJson};
+        rsvpSec.style.padding = '0';
+        rsvpSec.style.opacity = '1';
+      }
+      var giftsSec = document.getElementById('wedding-gifts-section');
+      if (giftsSec) {
+        var giftsTarget = giftsSec.closest('[data-scroll-section]') || giftsSec;
+        var rsvpTarget = rsvpSec.closest('[data-scroll-section]') || rsvpSec;
+        if (giftsTarget && rsvpTarget && giftsTarget.parentNode && (rsvpTarget.compareDocumentPosition(giftsTarget) & Node.DOCUMENT_POSITION_FOLLOWING)) {
+          giftsTarget.parentNode.insertBefore(rsvpTarget, giftsTarget.nextSibling);
+        }
+      }
     }
 
     // 7. Ensure 'grace' in transition line stays italicized
