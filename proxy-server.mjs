@@ -890,16 +890,43 @@ app.use(createProxyMiddleware({
     // 0. Remove Cordially demo notice while preserving envelope introduction
     document.querySelectorAll('[data-marketing-demo-notice="true"], aside:has([data-marketing-demo-notice])').forEach(function(el) { el.remove(); });
 
-    // 0b. Bind envelope unlock listener
-    var envBtn = document.querySelector('[data-testid="wordmark-wipe-envelope-button"]');
-    if (envBtn && !envBtn.__boundScrollUnlock) {
-      envBtn.__boundScrollUnlock = true;
-      envBtn.addEventListener('click', function() {
-        setTimeout(function() {
-          document.body.style.overflow = '';
-          document.documentElement.style.overflow = '';
-        }, 750);
-      });
+    // 0b. Reliable Envelope Wipe Animation & Scroll Unlock
+    function openEnvelope() {
+      var env = document.querySelector('[data-testid="envelope-introduction"]');
+      var btn = document.querySelector('[data-testid="wordmark-wipe-envelope-button"]');
+      if (!env || env.__opened) return;
+      env.__opened = true;
+
+      if (btn) {
+        btn.style.transition = 'transform 750ms cubic-bezier(0.76, 0, 0.24, 1)';
+        btn.style.transform = 'translateY(-100%)';
+      }
+
+      var bgAudio = document.getElementById('wedding-bg-audio');
+      if (bgAudio && bgAudio.paused) {
+        bgAudio.volume = 0.5;
+        bgAudio.play().then(function() {
+          if (window.updateMusicUI) window.updateMusicUI(true);
+        }).catch(function() {});
+      }
+
+      setTimeout(function() {
+        if (env) {
+          env.style.display = 'none';
+          env.setAttribute('data-state', 'open');
+        }
+        document.body.style.overflow = '';
+        document.documentElement.style.overflow = '';
+        window.dispatchEvent(new Event('resize'));
+        window.dispatchEvent(new Event('scroll'));
+      }, 750);
+    }
+
+    var env = document.querySelector('[data-testid="envelope-introduction"]');
+    if (env && !env.__boundClick) {
+      env.__boundClick = true;
+      env.addEventListener('click', openEnvelope);
+      env.addEventListener('touchstart', openEnvelope, { passive: true });
     }
 
     // 1. Insert Entourage section right before Venue
