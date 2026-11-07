@@ -482,8 +482,16 @@ const replacements = [
   ['August 20, 2027', 'October 30, 2026'],
 
   // Venue RSC JSON fields & Address
+  ['https://maps.google.com/?q=Cecil%20Green%20Park%20House%2C%206251%20Cecil%20Green%20Park%20Rd%2C%20Vancouver%2C%20British%20Columbia%2C%20Canada', 'https://share.google/hZBElWZSFrunPhIBL'],
+  ['https://maps.google.com/?q=6251+Cecil+Green+Park+Rd+Vancouver+BC', 'https://share.google/hZBElWZSFrunPhIBL'],
+  ['https://maps.google.com/?q=6251+Cecil+Green+Park+Rd+Kabankalan City+BC', 'https://share.google/hZBElWZSFrunPhIBL'],
+  ['https://maps.google.com/?q=Zaycoland+Resort+and+Hotel+Kabankalan+City+Negros+Occidental', 'https://share.google/hZBElWZSFrunPhIBL'],
+  ['https://maps.google.com/?q=Cecil%20Green%20Park%20House%2C%20Kabankalan%20City%2C%20Negros%20Occidental', 'https://share.google/hZBElWZSFrunPhIBL'],
+  ['6251+Cecil+Green+Park+Rd+Vancouver+BC', 'Zaycoland+Resort+Kabankalan+City'],
+  ['6251+Cecil+Green+Park+Rd+Kabankalan City+BC', 'Zaycoland+Resort+Kabankalan+City'],
   ['"city":"Vancouver"', '"city":"Kabankalan City"'],
   ['"province":"British Columbia"', '"province":"Negros Occidental"'],
+  ['\\"country\\":\\"Canada\\"', '\\"country\\":\\"Philippines\\"'],
   ['"country":"Canada"', '"country":"Philippines"'],
   ['"streetAddress":"6251 Cecil Green Park Rd"', '"streetAddress":"Kabankalan City"'],
   ['"locationLine":"Vancouver, BC"', '"locationLine":"Kabankalan City, Negros Occidental"'],
@@ -495,15 +503,15 @@ const replacements = [
   ['6251 Cecil Green Park Rd, Vancouver, BC', 'Kabankalan City, Negros Occidental'],
   ['6251%20Cecil%20Green%20Park%20Rd%2C%20Vancouver%2C%20British%20Columbia%2C%20Canada', 'Kabankalan%20City%2C%20Negros%20Occidental'],
   ['6251 Cecil Green Park Rd', 'Kabankalan City'],
+  ['1038 Canada Place, Kabankalan City, Negros Occidental', 'Kabankalan City, Negros Occidental'],
+  ['1038 Canada Place', 'Kabankalan City'],
   ['Vancouver, British Columbia — Zaycoland Resort and Hotel', 'Kabankalan City — Zaycoland Resort and Hotel'],
   ['Vancouver, British Columbia', 'Kabankalan City, Negros Occidental'],
   ['Vancouver, BC', 'Kabankalan City, Negros Occidental'],
   ['Vancouver', 'Kabankalan City'],
   ['British Columbia', 'Negros Occidental'],
-  ['https://maps.google.com/?q=Cecil%20Green%20Park%20House%2C%206251%20Cecil%20Green%20Park%20Rd%2C%20Vancouver%2C%20British%20Columbia%2C%20Canada', 'https://share.google/hZBElWZSFrunPhIBL'],
-  ['https://maps.google.com/?q=6251+Cecil+Green+Park+Rd+Vancouver+BC', 'https://share.google/hZBElWZSFrunPhIBL'],
-  ['https://maps.google.com/?q=Zaycoland+Resort+and+Hotel+Kabankalan+City+Negros+Occidental', 'https://share.google/hZBElWZSFrunPhIBL'],
-  ['https://maps.google.com/?q=Cecil%20Green%20Park%20House%2C%20Kabankalan%20City%2C%20Negros%20Occidental', 'https://share.google/hZBElWZSFrunPhIBL'],
+  ['cecil-green', 'earthy-mocha'],
+  ['Cecil Green', 'Mocha Warmth'],
   ['>Kabankalan City, Negros Occidental</a>', '>Kabankalan City, Negros Occidental</a><div id="venue-location-btn" class="mt-6 flex justify-center"><a href="https://share.google/hZBElWZSFrunPhIBL" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-xs sm:text-sm font-medium tracking-wide shadow-sm transition-transform hover:scale-105" style="background-color: #8a5a2b; color: #fff9f1; box-shadow: 0 4px 14px rgba(138, 90, 43, 0.28); text-decoration: none;"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg><span>View on Google Maps</span></a></div>'],
 
   // Chapter 1
@@ -604,12 +612,42 @@ const replacements = [
   ['{\\"label\\":\\"Travel\\",\\"targetId\\":\\"details\\"', '{\\"label\\":\\"Entourage\\",\\"targetId\\":\\"entourage-section\\"'],
   ['{\\"label\\":\\"Registry\\",\\"targetId\\":\\"details\\"', '{\\"label\\":\\"Timeline\\",\\"targetId\\":\\"wedding-timeline-section\\"'],
   ['{"label":"Travel","targetId":"details","isVisible":true,"overlayCardId":"travel"},{"label":"Registry","targetId":"details","isVisible":true,"overlayCardId":"registry"},{"label":"FAQ","targetId":"faq","isVisible":true,"overlayCardId":""}', '{"label":"Entourage","targetId":"entourage-section","isVisible":true,"overlayCardId":""},{"label":"Timeline","targetId":"wedding-timeline-section","isVisible":true,"overlayCardId":""},{"label":"Dress Code","targetId":"dress-code-section","isVisible":true,"overlayCardId":""},{"label":"Wedding Gifts","targetId":"wedding-gifts-section","isVisible":true,"overlayCardId":""},{"label":"FAQ","targetId":"faq","isVisible":true,"overlayCardId":""}'],
+  ['{"label":"Travel","targetId":"details","overlayCardId":"travel","isVisible":true},{"label":"Registry","targetId":"details","overlayCardId":"registry","isVisible":true},{"label":"FAQ","targetId":"faq","overlayCardId":"","isVisible":true}', '{"label":"Entourage","targetId":"entourage-section","overlayCardId":"","isVisible":true},{"label":"Timeline","targetId":"wedding-timeline-section","overlayCardId":"","isVisible":true},{"label":"Dress Code","targetId":"dress-code-section","overlayCardId":"","isVisible":true},{"label":"Wedding Gifts","targetId":"wedding-gifts-section","overlayCardId":"","isVisible":true},{"label":"FAQ","targetId":"faq","overlayCardId":"","isVisible":true}'],
   ['{\\"label\\":\\"Travel\\",\\"targetId\\":\\"details\\",\\"isVisible\\":true,\\"overlayCardId\\":\\"travel\\"},{\\"label\\":\\"Registry\\",\\"targetId\\":\\"details\\",\\"isVisible\\":true,\\"overlayCardId\\":\\"registry\\"},{\\"label\\":\\"FAQ\\",\\"targetId\\":\\"faq\\",\\"isVisible\\":true,\\"overlayCardId\\":\\"\\"}', '{\\"label\\":\\"Entourage\\",\\"targetId\\":\\"entourage-section\\",\\"isVisible\\":true,\\"overlayCardId\\":\\"\\"},{\\"label\\":\\"Timeline\\",\\"targetId\\":\\"wedding-timeline-section\\",\\"isVisible\\":true,\\"overlayCardId\\":\\"\\"},{\\"label\\":\\"Dress Code\\",\\"targetId\\":\\"dress-code-section\\",\\"isVisible\\":true,\\"overlayCardId\\":\\"\\"},{\\"label\\":\\"Wedding Gifts\\",\\"targetId\\":\\"wedding-gifts-section\\",\\"isVisible\\":true,\\"overlayCardId\\":\\"\\"},{\\"label\\":\\"FAQ\\",\\"targetId\\":\\"faq\\",\\"isVisible\\":true,\\"overlayCardId\\":\\"\\"}'],
+  ['{\\"label\\":\\"Travel\\",\\"targetId\\":\\"details\\",\\"overlayCardId\\":\\"travel\\",\\"isVisible\\":true},{\\"label\\":\\"Registry\\",\\"targetId\\":\\"details\\",\\"overlayCardId\\":\\"registry\\",\\"isVisible\\":true},{\\"label\\":\\"FAQ\\",\\"targetId\\":\\"faq\\",\\"overlayCardId\\":\\"\\",\\"isVisible\\":true}', '{\\"label\\":\\"Entourage\\",\\"targetId\\":\\"entourage-section\\",\\"overlayCardId\\":\\"\\",\\"isVisible\\":true},{\\"label\\":\\"Timeline\\",\\"targetId\\":\\"wedding-timeline-section\\",\\"overlayCardId\\":\\"\\",\\"isVisible\\":true},{\\"label\\":\\"Dress Code\\",\\"targetId\\":\\"dress-code-section\\",\\"overlayCardId\\":\\"\\",\\"isVisible\\":true},{\\"label\\":\\"Wedding Gifts\\",\\"targetId\\":\\"wedding-gifts-section\\",\\"overlayCardId\\":\\"\\",\\"isVisible\\":true},{\\"label\\":\\"FAQ\\",\\"targetId\\":\\"faq\\",\\"overlayCardId\\":\\"\\",\\"isVisible\\":true}'],
   ['href="/demo/rsvp"', 'href="#rsvp-callout-section"'],
   ['href="https://jim-pam.cordially.io/rsvp" target="_blank"', 'href="#rsvp-callout-section" target="_self"'],
   ['href="https://jim-pam.cordially.io/rsvp"', 'href="#rsvp-callout-section"'],
   ['https://jim-pam.cordially.io/rsvp', '#rsvp-callout-section'],
   ['{\\"label\\":\\"RSVP\\",\\"targetId\\":\\"rsvp\\"', '{\\"label\\":\\"RSVP\\",\\"targetId\\":\\"rsvp-callout-section\\"'],
+
+  // Details Cards and Titles
+  ['Travel Logistics</h3>', 'Entourage</h3>'],
+  ['"title":"Travel Logistics"', '"title":"Entourage"'],
+  ['\\"title\\":\\"Travel Logistics\\"', '\\"title\\":\\"Entourage\\"'],
+  ['aria-label="View details for Travel Logistics"', 'aria-label="View Entourage"'],
+  ['alt="Travel Logistics"', 'alt="Entourage"'],
+  ['"subtitle":"Plan your trip and stay."', '"subtitle":"Meet our wedding entourage."'],
+  ['\\"subtitle\\":\\"Plan your trip and stay.\\"', '\\"subtitle\\":\\"Meet our wedding entourage.\\"'],
+  ['Plan your trip and stay.</p>', 'Meet our wedding entourage.</p>'],
+  ['"title":"Registry"', '"title":"Timeline"'],
+  ['\\"title\\":\\"Registry\\"', '\\"title\\":\\"Timeline\\"'],
+  ['aria-label="View details for Registry"', 'aria-label="View Timeline"'],
+  ['alt="Registry"', 'alt="Timeline"'],
+  ['"subtitle":"Your presence is enough, but if you insist..."', '"subtitle":"Order of wedding events."'],
+  ['\\"subtitle\\":\\"Your presence is enough, but if you insist...\\"', '\\"subtitle\\":\\"Order of wedding events.\\"'],
+  ['Your presence is enough, but if you insist...</p>', 'Order of wedding events.</p>'],
+
+  // Tab Title, Favicon & Brand tokens
+  ['Jim + Pam', 'Jed & Vanj — Wedding Celebration'],
+  ['Jim \\u002B Pam', 'Jed & Vanj — Wedding Celebration'],
+  ['https://jim-pam.cordially.io/icon.svg', '/favicon.png'],
+  ['/icon.svg', '/favicon.png'],
+
+  // Demo Notices
+  ['"sampleGuestName":"Alex Morgan"', '"sampleGuestName":""'],
+  ['Alex Morgan', ''],
+  ['This is a sample wedding. Try RSVP with Alex Morgan. No RSVPs are saved in this demo.', ''],
 
   // Remove Cordially platform branding badge
   ['Created on Cordially.io', ''],
@@ -619,7 +657,7 @@ const replacements = [
   ['style="fill:#ffffff;--template-fitted-font-size:140px;', 'style="fill:#f7efe2;--template-fitted-font-size:140px;'],
 
   // Preserve line breaks cleanly in footer quote and story captions & hide old details container & anchor offsets & responsive mobile story adjustments & minimal hero bottom gradient & mobile black burger/J&V & brown radio styling & italic grace & text-wrap balance & lowered hero headline & tab favicon & remove hero divider line
-  ['</head>', '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Montserrat:wght@300;400;500;600&display=swap"><link rel="icon" type="image/png" sizes="192x192" href="/favicon.png"><link rel="shortcut icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><style>html, body { overflow-y: auto !important; } [data-marketing-demo-notice="true"], aside:has([data-marketing-demo-notice]), [data-testid="language-selector"] { display: none !important; } [data-testid="footer-quote"], [data-story-caption-group] p, [data-testid="mobile-story-caption-body"] { white-space: pre-line !important; line-height: 1.4 !important; text-wrap: balance !important; } @media (max-width: 768px) { [data-story-caption-group] p, [data-testid="mobile-story-caption-body"] { font-size: 0.88rem !important; line-height: 1.35 !important; max-width: 92% !important; margin-left: auto !important; margin-right: auto !important; margin-bottom: 14px !important; } nav a[href="/"], nav [data-testid="nav-content"] > a { color: #000000 !important; } nav button[aria-label*="menu" i], nav [data-testid="nav-content"] button { color: #000000 !important; } nav button[aria-label*="menu" i] span, nav [data-testid="nav-content"] button span { background-color: #000000 !important; } nav button[aria-label*="menu" i] svg, nav [data-testid="nav-content"] button svg { stroke: #000000 !important; color: #000000 !important; } } [data-site-section-id="details"], a[href*="cordially.io"] { display: none !important; } #wedding-timeline-section, #dress-code-section, #entourage-section, #rsvp-callout-section, #wedding-gifts-section { scroll-margin-top: 80px; } #rsvp-callout-section, #rsvp-section-wrapper, #wedding-rsvp-form { opacity: 1 !important; visibility: visible !important; display: block !important; } #attendance-options { display: grid !important; gap: 14px !important; } .rsvp-radio-card { display: flex !important; align-items: center !important; padding: 16px 20px !important; cursor: pointer !important; } .rsvp-radio-circle { margin-right: 18px !important; flex-shrink: 0 !important; width: 22px !important; height: 22px !important; min-width: 22px !important; min-height: 22px !important; border-radius: 9999px !important; } input[type="radio"], input[type="radio"]:focus, input[type="radio"]:checked { accent-color: #8a5a2b !important; outline: none !important; } [data-site-section-id="storyIntro"] em, [data-site-section-id="storyIntro"] [data-vision-word="true"]:nth-of-type(6) { font-style: italic !important; } [data-site-section-id="hero"] [data-hero-headline-shell], [data-testid="hero-headline"] { fill: #f7efe2 !important; color: #f7efe2 !important; filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.45)) !important; stroke: none !important; -webkit-text-stroke: 0 !important; } [data-site-section-id="hero"] .bg-black\\/20 { display: none !important; } [data-testid="hero-foreground"] { background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.15) 70%, rgba(0,0,0,0.45) 85%, rgba(0,0,0,0.65) 100%) !important; } [data-site-section-id="hero"] [data-hero-headline-container] { bottom: 4.5rem !important; } [data-site-section-id="hero"] img { object-position: center center !important; } [data-testid="hero-scroll-prompt"] { filter: none !important; } [data-testid="hero-divider"] { display: none !important; opacity: 0 !important; visibility: hidden !important; } @keyframes eqBar1 { 0%, 100% { height: 4px; } 50% { height: 14px; } } @keyframes eqBar2 { 0%, 100% { height: 14px; } 50% { height: 6px; } } @keyframes eqBar3 { 0%, 100% { height: 7px; } 50% { height: 13px; } } .music-playing .music-bar-1 { animation: eqBar1 0.9s ease-in-out infinite !important; } .music-playing .music-bar-2 { animation: eqBar2 0.75s ease-in-out infinite 0.15s !important; } .music-playing .music-bar-3 { animation: eqBar3 0.85s ease-in-out infinite 0.3s !important; } .music-paused .music-bar { animation: none !important; height: 3px !important; opacity: 0.5 !important; }</style></head>']
+  ['</head>', '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Montserrat:wght@300;400;500;600&display=swap"><link rel="icon" type="image/png" sizes="192x192" href="/favicon.png"><link rel="shortcut icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><style>[data-marketing-demo-notice="true"], [class*="MarketingDemoNotice"], aside, [data-testid="language-selector"], div:has(> [data-marketing-demo-notice]) { display: none !important; opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; } [data-testid="footer-quote"], [data-story-caption-group] p, [data-testid="mobile-story-caption-body"] { white-space: pre-line !important; line-height: 1.4 !important; text-wrap: balance !important; } @media (max-width: 768px) { [data-story-caption-group] p, [data-testid="mobile-story-caption-body"] { font-size: 0.88rem !important; line-height: 1.35 !important; max-width: 92% !important; margin-left: auto !important; margin-right: auto !important; margin-bottom: 14px !important; } nav a[href="/"], nav [data-testid="nav-content"] > a { color: #000000 !important; } nav button[aria-label*="menu" i], nav [data-testid="nav-content"] button { color: #000000 !important; } nav button[aria-label*="menu" i] span, nav [data-testid="nav-content"] button span { background-color: #000000 !important; } nav button[aria-label*="menu" i] svg, nav [data-testid="nav-content"] button svg { stroke: #000000 !important; color: #000000 !important; } } [data-site-section-id="details"], a[href*="cordially.io"] { display: none !important; } #wedding-timeline-section, #dress-code-section, #entourage-section, #rsvp-callout-section, #wedding-gifts-section { scroll-margin-top: 80px; } #rsvp-callout-section, #rsvp-section-wrapper, #wedding-rsvp-form { opacity: 1 !important; visibility: visible !important; display: block !important; } #attendance-options { display: grid !important; gap: 14px !important; } .rsvp-radio-card { display: flex !important; align-items: center !important; padding: 16px 20px !important; cursor: pointer !important; } .rsvp-radio-circle { margin-right: 18px !important; flex-shrink: 0 !important; width: 22px !important; height: 22px !important; min-width: 22px !important; min-height: 22px !important; border-radius: 9999px !important; } input[type="radio"], input[type="radio"]:focus, input[type="radio"]:checked { accent-color: #8a5a2b !important; outline: none !important; } [data-site-section-id="storyIntro"] em, [data-site-section-id="storyIntro"] [data-vision-word="true"]:nth-of-type(6) { font-style: italic !important; } [data-site-section-id="hero"] [data-hero-headline-shell], [data-testid="hero-headline"] { fill: #f7efe2 !important; color: #f7efe2 !important; filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.45)) !important; stroke: none !important; -webkit-text-stroke: 0 !important; } [data-site-section-id="hero"] .bg-black\\/20 { display: none !important; } [data-testid="hero-foreground"] { background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.15) 70%, rgba(0,0,0,0.45) 85%, rgba(0,0,0,0.65) 100%) !important; } [data-site-section-id="hero"] [data-hero-headline-container] { bottom: 4.5rem !important; } [data-site-section-id="hero"] img { object-position: center center !important; } [data-testid="hero-scroll-prompt"] { filter: none !important; } [data-testid="hero-divider"] { display: none !important; opacity: 0 !important; visibility: hidden !important; } @keyframes eqBar1 { 0%, 100% { height: 4px; } 50% { height: 14px; } } @keyframes eqBar2 { 0%, 100% { height: 14px; } 50% { height: 6px; } } @keyframes eqBar3 { 0%, 100% { height: 7px; } 50% { height: 13px; } } .music-playing .music-bar-1 { animation: eqBar1 0.9s ease-in-out infinite !important; } .music-playing .music-bar-2 { animation: eqBar2 0.75s ease-in-out infinite 0.15s !important; } .music-playing .music-bar-3 { animation: eqBar3 0.85s ease-in-out infinite 0.3s !important; } .music-paused .music-bar { animation: none !important; height: 3px !important; opacity: 0.5 !important; }</style></head>']
 ];
 
 function replaceInfo(content) {
@@ -921,9 +959,26 @@ app.use(createProxyMiddleware({
     });
 
     // 0b. Remove Cordially demo notice while preserving envelope introduction
-    document.querySelectorAll('[data-marketing-demo-notice="true"], [class*="MarketingDemoNotice"], aside:has([data-marketing-demo-notice])').forEach(function(el) { el.remove(); });
+    document.querySelectorAll('[data-marketing-demo-notice="true"], [class*="MarketingDemoNotice"]').forEach(function(el) { el.remove(); });
+    document.querySelectorAll('aside, div').forEach(function(el) {
+      if (el.textContent && (el.textContent.includes('sample wedding') || el.textContent.includes('Alex Morgan'))) {
+        el.style.setProperty('display', 'none', 'important');
+      }
+    });
 
-    // 0c. Reliable Envelope Wipe Animation & Scroll Unlock
+    // 0c. Enforce Navbar Labels and Links in DOM
+    document.querySelectorAll('nav a, header a, #primary-menu a').forEach(function(link) {
+      var txt = (link.textContent || '').trim();
+      if (txt === 'Travel' || txt === 'Travel Logistics') {
+        link.textContent = 'Entourage';
+        link.setAttribute('href', '#entourage-section');
+      } else if (txt === 'Registry') {
+        link.textContent = 'Timeline';
+        link.setAttribute('href', '#wedding-timeline-section');
+      }
+    });
+
+    // 0d. Reliable Envelope Wipe Animation & Scroll Unlock
     window.openEnvelope = function() {
       var env = document.querySelector('[data-testid="envelope-introduction"]');
       var btn = document.querySelector('[data-testid="wordmark-wipe-envelope-button"]');
@@ -939,12 +994,6 @@ app.use(createProxyMiddleware({
       env.style.setProperty('pointer-events', 'none', 'important');
       env.style.setProperty('transition', 'opacity 750ms ease, transform 750ms cubic-bezier(0.76, 0, 0.24, 1)', 'important');
       env.style.setProperty('transform', 'translateY(-100%)', 'important');
-
-      // Immediately unlock body scrolling
-      document.body.style.setProperty('overflow-y', 'auto', 'important');
-      document.body.style.setProperty('overflow', 'auto', 'important');
-      document.documentElement.style.setProperty('overflow-y', 'auto', 'important');
-      document.documentElement.style.setProperty('overflow', 'auto', 'important');
 
       // Start background music
       var bgAudio = document.getElementById('wedding-bg-audio');
@@ -1052,6 +1101,13 @@ app.use(createProxyMiddleware({
     // 5. Ensure Venue Location button exists and points to share.google link
     var venueSection = document.querySelector('[data-site-section-id="venue"]') || document.getElementById('venue-section');
     if (venueSection) {
+      venueSection.querySelectorAll('*').forEach(function(el) {
+        if (el.children.length === 0 && el.textContent) {
+          if (el.textContent.includes('Vancouver') || el.textContent.includes('Cecil Green') || el.textContent.includes('British Columbia') || el.textContent.includes('Canada')) {
+            el.textContent = 'Kabankalan City, Negros Occidental';
+          }
+        }
+      });
       venueSection.querySelectorAll('a').forEach(function(a) {
         if (a.textContent.includes('Vancouver') || a.textContent.includes('Cecil Green') || a.textContent.includes('British Columbia') || a.textContent.includes('Canada')) {
           a.textContent = 'Kabankalan City, Negros Occidental';
