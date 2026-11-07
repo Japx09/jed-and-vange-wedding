@@ -597,7 +597,7 @@ const replacements = [
   ['style="fill:#ffffff;--template-fitted-font-size:140px;', 'style="fill:#f7efe2;--template-fitted-font-size:140px;'],
 
   // Preserve line breaks cleanly in footer quote and story captions & hide old details container & anchor offsets & responsive mobile story adjustments & minimal hero bottom gradient & mobile black burger/J&V & brown radio styling & italic grace & text-wrap balance & lowered hero headline & tab favicon & remove hero divider line
-  ['</head>', '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Montserrat:wght@300;400;500;600&display=swap"><link rel="icon" type="image/png" sizes="192x192" href="/favicon.png"><link rel="shortcut icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><style>[data-marketing-demo-notice="true"], aside:has([data-marketing-demo-notice]), [data-testid="language-selector"] { display: none !important; } [data-testid="footer-quote"], [data-story-caption-group] p, [data-testid="mobile-story-caption-body"] { white-space: pre-line !important; line-height: 1.4 !important; text-wrap: balance !important; } @media (max-width: 768px) { [data-story-caption-group] p, [data-testid="mobile-story-caption-body"] { font-size: 0.88rem !important; line-height: 1.35 !important; max-width: 92% !important; margin-left: auto !important; margin-right: auto !important; margin-bottom: 14px !important; } nav a[href="/"], nav [data-testid="nav-content"] > a { color: #000000 !important; } nav button[aria-label*="menu" i], nav [data-testid="nav-content"] button { color: #000000 !important; } nav button[aria-label*="menu" i] span, nav [data-testid="nav-content"] button span { background-color: #000000 !important; } nav button[aria-label*="menu" i] svg, nav [data-testid="nav-content"] button svg { stroke: #000000 !important; color: #000000 !important; } } [data-site-section-id="details"], a[href*="cordially.io"] { display: none !important; } #wedding-timeline-section, #dress-code-section, #entourage-section, #rsvp-callout-section, #wedding-gifts-section { scroll-margin-top: 80px; } #rsvp-callout-section, #rsvp-section-wrapper, #wedding-rsvp-form { opacity: 1 !important; visibility: visible !important; display: block !important; } #attendance-options { display: grid !important; gap: 14px !important; } .rsvp-radio-card { display: flex !important; align-items: center !important; padding: 16px 20px !important; cursor: pointer !important; } .rsvp-radio-circle { margin-right: 18px !important; flex-shrink: 0 !important; width: 22px !important; height: 22px !important; min-width: 22px !important; min-height: 22px !important; border-radius: 9999px !important; } input[type="radio"], input[type="radio"]:focus, input[type="radio"]:checked { accent-color: #8a5a2b !important; outline: none !important; } [data-site-section-id="storyIntro"] em, [data-site-section-id="storyIntro"] [data-vision-word="true"]:nth-of-type(6) { font-style: italic !important; } [data-site-section-id="hero"] [data-hero-headline-shell], [data-testid="hero-headline"] { fill: #f7efe2 !important; color: #f7efe2 !important; filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.45)) !important; stroke: none !important; -webkit-text-stroke: 0 !important; } [data-site-section-id="hero"] .bg-black\\/20 { display: none !important; } [data-testid="hero-foreground"] { background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.15) 70%, rgba(0,0,0,0.45) 85%, rgba(0,0,0,0.65) 100%) !important; } [data-site-section-id="hero"] [data-hero-headline-container] { bottom: 4.5rem !important; } [data-site-section-id="hero"] img { object-position: center center !important; } [data-testid="hero-scroll-prompt"] { filter: none !important; } [data-testid="hero-divider"] { display: none !important; opacity: 0 !important; visibility: hidden !important; } @keyframes eqBar1 { 0%, 100% { height: 4px; } 50% { height: 14px; } } @keyframes eqBar2 { 0%, 100% { height: 14px; } 50% { height: 6px; } } @keyframes eqBar3 { 0%, 100% { height: 7px; } 50% { height: 13px; } } .music-playing .music-bar-1 { animation: eqBar1 0.9s ease-in-out infinite !important; } .music-playing .music-bar-2 { animation: eqBar2 0.75s ease-in-out infinite 0.15s !important; } .music-playing .music-bar-3 { animation: eqBar3 0.85s ease-in-out infinite 0.3s !important; } .music-paused .music-bar { animation: none !important; height: 3px !important; opacity: 0.5 !important; }</style></head>']
+  ['</head>', '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Montserrat:wght@300;400;500;600&display=swap"><link rel="icon" type="image/png" sizes="192x192" href="/favicon.png"><link rel="shortcut icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><style>html, body { overflow-y: auto !important; } [data-marketing-demo-notice="true"], aside:has([data-marketing-demo-notice]), [data-testid="language-selector"] { display: none !important; } [data-testid="footer-quote"], [data-story-caption-group] p, [data-testid="mobile-story-caption-body"] { white-space: pre-line !important; line-height: 1.4 !important; text-wrap: balance !important; } @media (max-width: 768px) { [data-story-caption-group] p, [data-testid="mobile-story-caption-body"] { font-size: 0.88rem !important; line-height: 1.35 !important; max-width: 92% !important; margin-left: auto !important; margin-right: auto !important; margin-bottom: 14px !important; } nav a[href="/"], nav [data-testid="nav-content"] > a { color: #000000 !important; } nav button[aria-label*="menu" i], nav [data-testid="nav-content"] button { color: #000000 !important; } nav button[aria-label*="menu" i] span, nav [data-testid="nav-content"] button span { background-color: #000000 !important; } nav button[aria-label*="menu" i] svg, nav [data-testid="nav-content"] button svg { stroke: #000000 !important; color: #000000 !important; } } [data-site-section-id="details"], a[href*="cordially.io"] { display: none !important; } #wedding-timeline-section, #dress-code-section, #entourage-section, #rsvp-callout-section, #wedding-gifts-section { scroll-margin-top: 80px; } #rsvp-callout-section, #rsvp-section-wrapper, #wedding-rsvp-form { opacity: 1 !important; visibility: visible !important; display: block !important; } #attendance-options { display: grid !important; gap: 14px !important; } .rsvp-radio-card { display: flex !important; align-items: center !important; padding: 16px 20px !important; cursor: pointer !important; } .rsvp-radio-circle { margin-right: 18px !important; flex-shrink: 0 !important; width: 22px !important; height: 22px !important; min-width: 22px !important; min-height: 22px !important; border-radius: 9999px !important; } input[type="radio"], input[type="radio"]:focus, input[type="radio"]:checked { accent-color: #8a5a2b !important; outline: none !important; } [data-site-section-id="storyIntro"] em, [data-site-section-id="storyIntro"] [data-vision-word="true"]:nth-of-type(6) { font-style: italic !important; } [data-site-section-id="hero"] [data-hero-headline-shell], [data-testid="hero-headline"] { fill: #f7efe2 !important; color: #f7efe2 !important; filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.45)) !important; stroke: none !important; -webkit-text-stroke: 0 !important; } [data-site-section-id="hero"] .bg-black\\/20 { display: none !important; } [data-testid="hero-foreground"] { background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.15) 70%, rgba(0,0,0,0.45) 85%, rgba(0,0,0,0.65) 100%) !important; } [data-site-section-id="hero"] [data-hero-headline-container] { bottom: 4.5rem !important; } [data-site-section-id="hero"] img { object-position: center center !important; } [data-testid="hero-scroll-prompt"] { filter: none !important; } [data-testid="hero-divider"] { display: none !important; opacity: 0 !important; visibility: hidden !important; } @keyframes eqBar1 { 0%, 100% { height: 4px; } 50% { height: 14px; } } @keyframes eqBar2 { 0%, 100% { height: 14px; } 50% { height: 6px; } } @keyframes eqBar3 { 0%, 100% { height: 7px; } 50% { height: 13px; } } .music-playing .music-bar-1 { animation: eqBar1 0.9s ease-in-out infinite !important; } .music-playing .music-bar-2 { animation: eqBar2 0.75s ease-in-out infinite 0.15s !important; } .music-playing .music-bar-3 { animation: eqBar3 0.85s ease-in-out infinite 0.3s !important; } .music-paused .music-bar { animation: none !important; height: 3px !important; opacity: 0.5 !important; }</style></head>']
 ];
 
 function replaceInfo(content) {
@@ -891,17 +891,24 @@ app.use(createProxyMiddleware({
     document.querySelectorAll('[data-marketing-demo-notice="true"], aside:has([data-marketing-demo-notice])').forEach(function(el) { el.remove(); });
 
     // 0b. Reliable Envelope Wipe Animation & Scroll Unlock
-    function openEnvelope() {
+    window.openEnvelope = function() {
       var env = document.querySelector('[data-testid="envelope-introduction"]');
       var btn = document.querySelector('[data-testid="wordmark-wipe-envelope-button"]');
       if (!env || env.__opened) return;
       env.__opened = true;
 
+      // Animate envelope wipe up immediately
       if (btn) {
-        btn.style.transition = 'transform 750ms cubic-bezier(0.76, 0, 0.24, 1)';
-        btn.style.transform = 'translateY(-100%)';
+        btn.style.setProperty('transition', 'transform 750ms cubic-bezier(0.76, 0, 0.24, 1)', 'important');
+        btn.style.setProperty('transform', 'translateY(-100%)', 'important');
       }
+      env.style.setProperty('pointer-events', 'none', 'important');
 
+      // Immediately unlock body scrolling
+      document.body.style.setProperty('overflow-y', 'auto', 'important');
+      document.documentElement.style.setProperty('overflow-y', 'auto', 'important');
+
+      // Start background music
       var bgAudio = document.getElementById('wedding-bg-audio');
       if (bgAudio && bgAudio.paused) {
         bgAudio.volume = 0.5;
@@ -910,23 +917,40 @@ app.use(createProxyMiddleware({
         }).catch(function() {});
       }
 
+      // Ensure headline & nav are visible
+      document.querySelectorAll('[data-hero-headline-shell], [data-testid="hero-headline"]').forEach(function(el) {
+        el.style.setProperty('opacity', '1', 'important');
+        el.style.setProperty('visibility', 'visible', 'important');
+      });
+
       setTimeout(function() {
         if (env) {
-          env.style.display = 'none';
+          env.style.setProperty('display', 'none', 'important');
           env.setAttribute('data-state', 'open');
         }
-        document.body.style.overflow = '';
-        document.documentElement.style.overflow = '';
         window.dispatchEvent(new Event('resize'));
         window.dispatchEvent(new Event('scroll'));
       }, 750);
-    }
+    };
 
-    var env = document.querySelector('[data-testid="envelope-introduction"]');
-    if (env && !env.__boundClick) {
-      env.__boundClick = true;
-      env.addEventListener('click', openEnvelope);
-      env.addEventListener('touchstart', openEnvelope, { passive: true });
+    if (!window.__boundEnvelopeListeners) {
+      window.__boundEnvelopeListeners = true;
+      document.addEventListener('click', function(e) {
+        var env = document.querySelector('[data-testid="envelope-introduction"]');
+        if (env && env.style.display !== 'none' && !env.__opened) {
+          if (e.target.closest('[data-testid="envelope-introduction"]') || e.target.closest('[data-testid="wordmark-wipe-envelope-button"]') || e.target.closest('[data-testid="envelope-entry-prompt"]')) {
+            window.openEnvelope();
+          }
+        }
+      }, true);
+      document.addEventListener('touchstart', function(e) {
+        var env = document.querySelector('[data-testid="envelope-introduction"]');
+        if (env && env.style.display !== 'none' && !env.__opened) {
+          if (e.target.closest('[data-testid="envelope-introduction"]') || e.target.closest('[data-testid="wordmark-wipe-envelope-button"]') || e.target.closest('[data-testid="envelope-entry-prompt"]')) {
+            window.openEnvelope();
+          }
+        }
+      }, { capture: true, passive: true });
     }
 
     // 1. Insert Entourage section right before Venue
