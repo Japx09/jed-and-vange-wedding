@@ -621,6 +621,9 @@ app.use(createProxyMiddleware({
     proxyRes: responseInterceptor(async (responseBuffer, proxyRes, req, res) => {
       delete proxyRes.headers['content-security-policy'];
       delete proxyRes.headers['x-frame-options'];
+      proxyRes.headers['cache-control'] = 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0';
+      proxyRes.headers['pragma'] = 'no-cache';
+      proxyRes.headers['expires'] = '0';
 
       if (proxyRes.headers['location']) {
         proxyRes.headers['location'] = proxyRes.headers['location']
@@ -654,6 +657,10 @@ app.use(createProxyMiddleware({
 
           const giftsPath = resolveFilePath('wedding-gifts-section.html');
           const giftsHtml = fs.existsSync(giftsPath) ? fs.readFileSync(giftsPath, 'utf8') : '';
+
+          // Strip Cordially envelope roadblock and demo notices from initial HTML
+          text = text.replace(/<div[^>]*data-testid="envelope-introduction"[\s\S]*?<\/div>\s*<\/div>/, '');
+          text = text.replace(/<aside[^>]*data-marketing-demo-notice[\s\S]*?<\/aside>/, '');
 
           // 1. Server-side initial render injection
           const entourageWrapper = `<div data-scroll-section="" data-scroll-section-kind="content" data-site-section-id="entourage">${entourageHtml}</div>`;
@@ -1066,6 +1073,27 @@ app.use(createProxyMiddleware({
     document.addEventListener('DOMContentLoaded', insertCustomSections);
   }
   window.addEventListener('load', insertCustomSections);
+
+  try {
+    var observer = new MutationObserver(function() {
+      var needsInsert = !document.getElementById('entourage-section') ||
+                         !document.getElementById('wedding-timeline-section') ||
+                         !document.getElementById('dress-code-section') ||
+                         !document.getElementById('wedding-gifts-section') ||
+                         !document.getElementById('wedding-rsvp-form') ||
+                         document.querySelector('[data-marketing-demo-notice="true"], [data-testid="envelope-introduction"]');
+      if (needsInsert) {
+        insertCustomSections();
+      }
+    });
+    if (document.body) {
+      observer.observe(document.body, { childList: true, subtree: true });
+    } else {
+      document.addEventListener('DOMContentLoaded', function() {
+        if (document.body) observer.observe(document.body, { childList: true, subtree: true });
+      });
+    }
+  } catch (e) {}
 
   var pollCount = 0;
   var pollTimer = setInterval(function() {
