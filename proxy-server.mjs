@@ -442,6 +442,9 @@ const newVisionText = "In His time, grace upon grace. What began as two separate
 // Clean token replacements for information only
 const replacements = [
   // Names & Monogram
+  ['Jim + Pam', 'Jed & Vanj — Wedding Celebration'],
+  ['Jim \\u002B Pam', 'Jed \\u0026 Vanj'],
+  ['Jim \\\\u002B Pam', 'Jed \\\\u0026 Vanj'],
   ['Jim \\\\u0026 Pam', 'Jed \\\\u0026 Vanj'],
   ['Jim \\u0026 Pam', 'Jed \\u0026 Vanj'],
   ['Jim &amp; Pam', 'Jed &amp; Vanj'],
@@ -452,6 +455,13 @@ const replacements = [
   ['J\\\\u0026P', 'J\\\\u0026V'],
   ['J\\u0026P', 'J\\u0026V'],
   ['J&P', 'J&V'],
+  ['https://jim-pam.cordially.io/icon.svg', '/favicon.png'],
+  ['https://jim-pam.cordially.io', 'https://jed-and-vange-wedding.vercel.app'],
+  ['/icon.svg', '/favicon.png'],
+  ['"sampleGuestName":"Alex Morgan"', '"sampleGuestName":""'],
+  ['Alex Morgan', ''],
+  ['This is a sample wedding. Try RSVP with', ''],
+  ['Practice responses are saved in this demo.', ''],
   ['Demo Wedding Website | Cordially', 'Jed & Vanj — Wedding Website'],
   ['Jed &amp; Vange', 'Jed &amp; Vanj'],
   ['Jed & Vange', 'Jed & Vanj'],
@@ -471,7 +481,15 @@ const replacements = [
   ['august 20, 2027', 'october 30, 2026'],
   ['August 20, 2027', 'October 30, 2026'],
 
-  // Venue
+  // Venue RSC JSON fields & Address
+  ['"city":"Vancouver"', '"city":"Kabankalan City"'],
+  ['"province":"British Columbia"', '"province":"Negros Occidental"'],
+  ['"country":"Canada"', '"country":"Philippines"'],
+  ['"streetAddress":"6251 Cecil Green Park Rd"', '"streetAddress":"Kabankalan City"'],
+  ['"locationLine":"Vancouver, BC"', '"locationLine":"Kabankalan City, Negros Occidental"'],
+  ['"locationLine":"Vancouver, British Columbia"', '"locationLine":"Kabankalan City, Negros Occidental"'],
+  ['"timeZone":"America/Vancouver"', '"timeZone":"Asia/Manila"'],
+  ['"venueAddress":"6251 Cecil Green Park Rd, Vancouver, British Columbia, Canada"', '"venueAddress":"Kabankalan City, Negros Occidental"'],
   ['Cecil Green Park House', 'Zaycoland Resort and Hotel'],
   ['6251 Cecil Green Park Rd, Vancouver, British Columbia, Canada', 'Kabankalan City, Negros Occidental'],
   ['6251 Cecil Green Park Rd, Vancouver, BC', 'Kabankalan City, Negros Occidental'],
@@ -479,9 +497,13 @@ const replacements = [
   ['6251 Cecil Green Park Rd', 'Kabankalan City'],
   ['Vancouver, British Columbia — Zaycoland Resort and Hotel', 'Kabankalan City — Zaycoland Resort and Hotel'],
   ['Vancouver, British Columbia', 'Kabankalan City, Negros Occidental'],
+  ['Vancouver, BC', 'Kabankalan City, Negros Occidental'],
+  ['Vancouver', 'Kabankalan City'],
+  ['British Columbia', 'Negros Occidental'],
   ['https://maps.google.com/?q=Cecil%20Green%20Park%20House%2C%206251%20Cecil%20Green%20Park%20Rd%2C%20Vancouver%2C%20British%20Columbia%2C%20Canada', 'https://share.google/hZBElWZSFrunPhIBL'],
   ['https://maps.google.com/?q=6251+Cecil+Green+Park+Rd+Vancouver+BC', 'https://share.google/hZBElWZSFrunPhIBL'],
   ['https://maps.google.com/?q=Zaycoland+Resort+and+Hotel+Kabankalan+City+Negros+Occidental', 'https://share.google/hZBElWZSFrunPhIBL'],
+  ['https://maps.google.com/?q=Cecil%20Green%20Park%20House%2C%20Kabankalan%20City%2C%20Negros%20Occidental', 'https://share.google/hZBElWZSFrunPhIBL'],
   ['>Kabankalan City, Negros Occidental</a>', '>Kabankalan City, Negros Occidental</a><div id="venue-location-btn" class="mt-6 flex justify-center"><a href="https://share.google/hZBElWZSFrunPhIBL" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-xs sm:text-sm font-medium tracking-wide shadow-sm transition-transform hover:scale-105" style="background-color: #8a5a2b; color: #fff9f1; box-shadow: 0 4px 14px rgba(138, 90, 43, 0.28); text-decoration: none;"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg><span>View on Google Maps</span></a></div>'],
 
   // Chapter 1
@@ -687,6 +709,7 @@ app.use(createProxyMiddleware({
           const ogUrl = 'https://jed-and-vange-wedding.vercel.app/';
           const ogImageUrl = 'https://jed-and-vange-wedding.vercel.app/og-image.jpg';
 
+          text = text.replace(/<link[^>]*rel="(shortcut )?icon"[^>]*>/gi, '');
           text = text.replace(/<title>[^<]*<\/title>/i, `<title>${ogTitle}</title>`);
           text = text.replace(/<meta property="og:title" content="[^"]*"\/>/i, `<meta property="og:title" content="${ogTitle}"/>`);
           text = text.replace(/<meta name="twitter:title" content="[^"]*"\/>/i, `<meta name="twitter:title" content="${ogTitle}"/>`);
@@ -887,26 +910,41 @@ app.use(createProxyMiddleware({
   };
 
   function insertCustomSections() {
-    // 0. Remove Cordially demo notice while preserving envelope introduction
-    document.querySelectorAll('[data-marketing-demo-notice="true"], aside:has([data-marketing-demo-notice])').forEach(function(el) { el.remove(); });
+    // 0a. Reliable Title & Favicon Enforcer
+    if (document.title !== 'Jed & Vanj — Wedding Celebration') {
+      document.title = 'Jed & Vanj — Wedding Celebration';
+    }
+    document.querySelectorAll('link[rel*="icon"]').forEach(function(l) {
+      if (!l.href.includes('/favicon.png') && !l.href.includes('/favicon.ico')) {
+        l.href = '/favicon.png';
+      }
+    });
 
-    // 0b. Reliable Envelope Wipe Animation & Scroll Unlock
+    // 0b. Remove Cordially demo notice while preserving envelope introduction
+    document.querySelectorAll('[data-marketing-demo-notice="true"], [class*="MarketingDemoNotice"], aside:has([data-marketing-demo-notice])').forEach(function(el) { el.remove(); });
+
+    // 0c. Reliable Envelope Wipe Animation & Scroll Unlock
     window.openEnvelope = function() {
       var env = document.querySelector('[data-testid="envelope-introduction"]');
       var btn = document.querySelector('[data-testid="wordmark-wipe-envelope-button"]');
       if (!env || env.__opened) return;
       env.__opened = true;
 
-      // Animate envelope wipe up immediately
+      // Also trigger button click so any internal framework listener fires
       if (btn) {
+        try { btn.click(); } catch(e) {}
         btn.style.setProperty('transition', 'transform 750ms cubic-bezier(0.76, 0, 0.24, 1)', 'important');
         btn.style.setProperty('transform', 'translateY(-100%)', 'important');
       }
       env.style.setProperty('pointer-events', 'none', 'important');
+      env.style.setProperty('transition', 'opacity 750ms ease, transform 750ms cubic-bezier(0.76, 0, 0.24, 1)', 'important');
+      env.style.setProperty('transform', 'translateY(-100%)', 'important');
 
       // Immediately unlock body scrolling
       document.body.style.setProperty('overflow-y', 'auto', 'important');
+      document.body.style.setProperty('overflow', 'auto', 'important');
       document.documentElement.style.setProperty('overflow-y', 'auto', 'important');
+      document.documentElement.style.setProperty('overflow', 'auto', 'important');
 
       // Start background music
       var bgAudio = document.getElementById('wedding-bg-audio');
@@ -935,22 +973,17 @@ app.use(createProxyMiddleware({
 
     if (!window.__boundEnvelopeListeners) {
       window.__boundEnvelopeListeners = true;
-      document.addEventListener('click', function(e) {
+      function tryOpen() {
         var env = document.querySelector('[data-testid="envelope-introduction"]');
         if (env && env.style.display !== 'none' && !env.__opened) {
-          if (e.target.closest('[data-testid="envelope-introduction"]') || e.target.closest('[data-testid="wordmark-wipe-envelope-button"]') || e.target.closest('[data-testid="envelope-entry-prompt"]')) {
-            window.openEnvelope();
-          }
+          window.openEnvelope();
         }
-      }, true);
-      document.addEventListener('touchstart', function(e) {
-        var env = document.querySelector('[data-testid="envelope-introduction"]');
-        if (env && env.style.display !== 'none' && !env.__opened) {
-          if (e.target.closest('[data-testid="envelope-introduction"]') || e.target.closest('[data-testid="wordmark-wipe-envelope-button"]') || e.target.closest('[data-testid="envelope-entry-prompt"]')) {
-            window.openEnvelope();
-          }
-        }
-      }, { capture: true, passive: true });
+      }
+      document.addEventListener('click', tryOpen, true);
+      document.addEventListener('touchstart', tryOpen, { capture: true, passive: true });
+      document.addEventListener('wheel', function(e) {
+        if (e.deltaY > 10) tryOpen();
+      }, { passive: true });
     }
 
     // 1. Insert Entourage section right before Venue
@@ -1017,10 +1050,22 @@ app.use(createProxyMiddleware({
     }
 
     // 5. Ensure Venue Location button exists and points to share.google link
-    var venueAddr = document.querySelector('[data-site-section-id="venue"] a[href*="google"], [data-site-section-id="venue"] a[href*="share.google"]');
-    if (venueAddr) {
-      venueAddr.setAttribute('href', 'https://share.google/hZBElWZSFrunPhIBL');
-      if (!document.getElementById('venue-location-btn')) {
+    var venueSection = document.querySelector('[data-site-section-id="venue"]') || document.getElementById('venue-section');
+    if (venueSection) {
+      venueSection.querySelectorAll('a').forEach(function(a) {
+        if (a.textContent.includes('Vancouver') || a.textContent.includes('Cecil Green') || a.textContent.includes('British Columbia') || a.textContent.includes('Canada')) {
+          a.textContent = 'Kabankalan City, Negros Occidental';
+        }
+        if (a.href && (a.href.includes('maps.google.com') || a.href.includes('share.google'))) {
+          a.href = 'https://share.google/hZBElWZSFrunPhIBL';
+        }
+      });
+      var venueNameEl = venueSection.querySelector('[data-testid="venue-name"]');
+      if (venueNameEl && (venueNameEl.textContent.includes('Cecil Green') || !venueNameEl.textContent.includes('Zaycoland'))) {
+        venueNameEl.textContent = 'Zaycoland Resort and Hotel';
+      }
+      var venueAddr = venueSection.querySelector('a[href*="google"], a[href*="share.google"]');
+      if (venueAddr && !document.getElementById('venue-location-btn')) {
         var btnDiv = document.createElement('div');
         btnDiv.id = 'venue-location-btn';
         btnDiv.className = 'mt-6 flex justify-center';
@@ -1143,7 +1188,8 @@ app.use(createProxyMiddleware({
                          !document.getElementById('dress-code-section') ||
                          !document.getElementById('wedding-gifts-section') ||
                          !document.getElementById('wedding-rsvp-form') ||
-                         document.querySelector('[data-marketing-demo-notice="true"]');
+                         document.querySelector('[data-marketing-demo-notice="true"]') ||
+                         document.title !== 'Jed & Vanj — Wedding Celebration';
       if (needsInsert) {
         insertCustomSections();
       }
@@ -1156,6 +1202,17 @@ app.use(createProxyMiddleware({
       });
     }
   } catch (e) {}
+
+  setInterval(function() {
+    if (document.title !== 'Jed & Vanj — Wedding Celebration') {
+      document.title = 'Jed & Vanj — Wedding Celebration';
+    }
+    document.querySelectorAll('link[rel*="icon"]').forEach(function(l) {
+      if (!l.href.includes('/favicon.png') && !l.href.includes('/favicon.ico')) {
+        l.href = '/favicon.png';
+      }
+    });
+  }, 250);
 
   var pollCount = 0;
   var pollTimer = setInterval(function() {
