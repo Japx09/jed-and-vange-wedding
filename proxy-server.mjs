@@ -315,10 +315,7 @@ app.get(['/demo', '/demo/'], (req, res, next) => {
 
 // Favicon and tab logo routes
 app.get('/favicon.ico', (req, res) => serveFile(FAVICON_ICO_PATH, res));
-app.get('/favicon.png', (req, res) => serveFile(FAVICON_PATH, res));
-app.get('/icon.svg', (req, res) => serveFile(ICON_SVG_PATH, res));
-app.get('/apple-touch-icon.png', (req, res) => serveFile(APPLE_TOUCH_ICON_PATH, res));
-app.get('/apple-touch-icon-precomposed.png', (req, res) => serveFile(APPLE_TOUCH_ICON_PATH, res));
+app.get(['/favicon.png', '/icon.svg', '/icon.png', '/apple-touch-icon.png', '/apple-touch-icon-precomposed.png'], (req, res) => serveFile(FAVICON_PATH, res));
 app.get('/qr.jpg', (req, res) => serveFile(QR_PATH, res));
 app.get('/qr.png', (req, res) => serveFile(QR_PATH, res));
 app.get('/og-image.jpg', (req, res) => serveFile(OG_IMAGE_PATH, res));
@@ -613,10 +610,6 @@ const replacements = [
   ['href="#dress-code-section">Dress Code</a></li><li><a class="template-font-accent block py-2 pe-2 text-lg transition-opacity duration-200 hover:opacity-100" style="color:#2f241b;opacity:0.85" href="#faq">FAQ</a>', 'href="#dress-code-section">Dress Code</a></li><li><a class="template-font-accent block py-2 pe-2 text-lg transition-opacity duration-200 hover:opacity-100" style="color:#2f241b;opacity:0.85" href="#wedding-gifts-section">Wedding Gifts</a></li><li><a class="template-font-accent block py-2 pe-2 text-lg transition-opacity duration-200 hover:opacity-100" style="color:#2f241b;opacity:0.85" href="#faq">FAQ</a>'],
   ['{\\"label\\":\\"Travel\\",\\"targetId\\":\\"details\\"', '{\\"label\\":\\"Entourage\\",\\"targetId\\":\\"entourage-section\\"'],
   ['{\\"label\\":\\"Registry\\",\\"targetId\\":\\"details\\"', '{\\"label\\":\\"Timeline\\",\\"targetId\\":\\"wedding-timeline-section\\"'],
-  ['{"label":"Travel","targetId":"details","isVisible":true,"overlayCardId":"travel"},{"label":"Registry","targetId":"details","isVisible":true,"overlayCardId":"registry"},{"label":"FAQ","targetId":"faq","isVisible":true,"overlayCardId":""}', '{"label":"Entourage","targetId":"entourage-section","isVisible":true,"overlayCardId":""},{"label":"Timeline","targetId":"wedding-timeline-section","isVisible":true,"overlayCardId":""},{"label":"Dress Code","targetId":"dress-code-section","isVisible":true,"overlayCardId":""},{"label":"Wedding Gifts","targetId":"wedding-gifts-section","isVisible":true,"overlayCardId":""},{"label":"FAQ","targetId":"faq","isVisible":true,"overlayCardId":""}'],
-  ['{"label":"Travel","targetId":"details","overlayCardId":"travel","isVisible":true},{"label":"Registry","targetId":"details","overlayCardId":"registry","isVisible":true},{"label":"FAQ","targetId":"faq","overlayCardId":"","isVisible":true}', '{"label":"Entourage","targetId":"entourage-section","overlayCardId":"","isVisible":true},{"label":"Timeline","targetId":"wedding-timeline-section","overlayCardId":"","isVisible":true},{"label":"Dress Code","targetId":"dress-code-section","overlayCardId":"","isVisible":true},{"label":"Wedding Gifts","targetId":"wedding-gifts-section","overlayCardId":"","isVisible":true},{"label":"FAQ","targetId":"faq","overlayCardId":"","isVisible":true}'],
-  ['{\\"label\\":\\"Travel\\",\\"targetId\\":\\"details\\",\\"isVisible\\":true,\\"overlayCardId\\":\\"travel\\"},{\\"label\\":\\"Registry\\",\\"targetId\\":\\"details\\",\\"isVisible\\":true,\\"overlayCardId\\":\\"registry\\"},{\\"label\\":\\"FAQ\\",\\"targetId\\":\\"faq\\",\\"isVisible\\":true,\\"overlayCardId\\":\\"\\"}', '{\\"label\\":\\"Entourage\\",\\"targetId\\":\\"entourage-section\\",\\"isVisible\\":true,\\"overlayCardId\\":\\"\\"},{\\"label\\":\\"Timeline\\",\\"targetId\\":\\"wedding-timeline-section\\",\\"isVisible\\":true,\\"overlayCardId\\":\\"\\"},{\\"label\\":\\"Dress Code\\",\\"targetId\\":\\"dress-code-section\\",\\"isVisible\\":true,\\"overlayCardId\\":\\"\\"},{\\"label\\":\\"Wedding Gifts\\",\\"targetId\\":\\"wedding-gifts-section\\",\\"isVisible\\":true,\\"overlayCardId\\":\\"\\"},{\\"label\\":\\"FAQ\\",\\"targetId\\":\\"faq\\",\\"isVisible\\":true,\\"overlayCardId\\":\\"\\"}'],
-  ['{\\"label\\":\\"Travel\\",\\"targetId\\":\\"details\\",\\"overlayCardId\\":\\"travel\\",\\"isVisible\\":true},{\\"label\\":\\"Registry\\",\\"targetId\\":\\"details\\",\\"overlayCardId\\":\\"registry\\",\\"isVisible\\":true},{\\"label\\":\\"FAQ\\",\\"targetId\\":\\"faq\\",\\"overlayCardId\\":\\"\\",\\"isVisible\\":true}', '{\\"label\\":\\"Entourage\\",\\"targetId\\":\\"entourage-section\\",\\"overlayCardId\\":\\"\\",\\"isVisible\\":true},{\\"label\\":\\"Timeline\\",\\"targetId\\":\\"wedding-timeline-section\\",\\"overlayCardId\\":\\"\\",\\"isVisible\\":true},{\\"label\\":\\"Dress Code\\",\\"targetId\\":\\"dress-code-section\\",\\"overlayCardId\\":\\"\\",\\"isVisible\\":true},{\\"label\\":\\"Wedding Gifts\\",\\"targetId\\":\\"wedding-gifts-section\\",\\"overlayCardId\\":\\"\\",\\"isVisible\\":true},{\\"label\\":\\"FAQ\\",\\"targetId\\":\\"faq\\",\\"overlayCardId\\":\\"\\",\\"isVisible\\":true}'],
   ['href="/demo/rsvp"', 'href="#rsvp-callout-section"'],
   ['href="https://jim-pam.cordially.io/rsvp" target="_blank"', 'href="#rsvp-callout-section" target="_self"'],
   ['href="https://jim-pam.cordially.io/rsvp"', 'href="#rsvp-callout-section"'],
@@ -627,9 +620,6 @@ const replacements = [
   ['href="/rsvp" target="_blank"', 'href="#rsvp-callout-section" target="_self"'],
   ['href="/rsvp"', 'href="#rsvp-callout-section"'],
   ['/rsvp', '#rsvp-callout-section'],
-  ['>Travel Logistics<', '>Entourage<'],
-  ['>Travel<', '>Entourage<'],
-  ['>Registry<', '>Timeline<'],
   ['{\\"label\\":\\"RSVP\\",\\"targetId\\":\\"rsvp\\"', '{\\"label\\":\\"RSVP\\",\\"targetId\\":\\"rsvp-callout-section\\"'],
   ['https://jim-pam.cordially.io', 'https://jed-and-vange-wedding.vercel.app'],
 
@@ -669,7 +659,7 @@ const replacements = [
   ['style="fill:#ffffff;--template-fitted-font-size:140px;', 'style="fill:#f7efe2;--template-fitted-font-size:140px;'],
 
   // Preserve line breaks cleanly in footer quote and story captions & hide old details container & anchor offsets & responsive mobile story adjustments & minimal hero bottom gradient & mobile black burger/J&V & brown radio styling & italic grace & text-wrap balance & lowered hero headline & tab favicon & remove hero divider line
-  ['</head>', '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Montserrat:wght@300;400;500;600&display=swap"><link rel="icon" type="image/png" sizes="192x192" href="/favicon.png"><link rel="shortcut icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><style>.envelope-opened [data-testid="envelope-introduction"], [data-testid="envelope-introduction"].envelope-dismissed, [data-testid="envelope-introduction"][data-state="open"] { display: none !important; opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; transform: translateY(-100%) !important; } [data-marketing-demo-notice="true"], [class*="MarketingDemoNotice"], aside, [data-testid="language-selector"], div:has(> [data-marketing-demo-notice]) { display: none !important; opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; } [data-testid="footer-quote"], [data-story-caption-group] p, [data-testid="mobile-story-caption-body"] { white-space: pre-line !important; line-height: 1.4 !important; text-wrap: balance !important; } @media (max-width: 768px) { [data-story-caption-group] p, [data-testid="mobile-story-caption-body"] { font-size: 0.88rem !important; line-height: 1.35 !important; max-width: 92% !important; margin-left: auto !important; margin-right: auto !important; margin-bottom: 14px !important; } nav a[href="/"], nav [data-testid="nav-content"] > a { color: #000000 !important; } nav button[aria-label*="menu" i], nav [data-testid="nav-content"] button { color: #000000 !important; } nav button[aria-label*="menu" i] span, nav [data-testid="nav-content"] button span { background-color: #000000 !important; } nav button[aria-label*="menu" i] svg, nav [data-testid="nav-content"] button svg { stroke: #000000 !important; color: #000000 !important; } } [data-site-section-id="details"], a[href*="cordially.io"] { display: none !important; } #wedding-timeline-section, #dress-code-section, #entourage-section, #rsvp-callout-section, #wedding-gifts-section { scroll-margin-top: 80px; } #rsvp-callout-section, #rsvp-section-wrapper, #wedding-rsvp-form { opacity: 1 !important; visibility: visible !important; display: block !important; } #attendance-options { display: grid !important; gap: 14px !important; } .rsvp-radio-card { display: flex !important; align-items: center !important; padding: 16px 20px !important; cursor: pointer !important; } .rsvp-radio-circle { margin-right: 18px !important; flex-shrink: 0 !important; width: 22px !important; height: 22px !important; min-width: 22px !important; min-height: 22px !important; border-radius: 9999px !important; } input[type="radio"], input[type="radio"]:focus, input[type="radio"]:checked { accent-color: #8a5a2b !important; outline: none !important; } [data-site-section-id="storyIntro"] em, [data-site-section-id="storyIntro"] [data-vision-word="true"]:nth-of-type(6) { font-style: italic !important; } [data-site-section-id="hero"] [data-hero-headline-shell], [data-testid="hero-headline"] { fill: #f7efe2 !important; color: #f7efe2 !important; filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.45)) !important; stroke: none !important; -webkit-text-stroke: 0 !important; } [data-site-section-id="hero"] .bg-black\\/20 { display: none !important; } [data-testid="hero-foreground"] { background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.15) 70%, rgba(0,0,0,0.45) 85%, rgba(0,0,0,0.65) 100%) !important; } [data-site-section-id="hero"] [data-hero-headline-container] { bottom: 4.5rem !important; } [data-site-section-id="hero"] img { object-position: center center !important; } [data-testid="hero-scroll-prompt"] { filter: none !important; } [data-testid="hero-divider"] { display: none !important; opacity: 0 !important; visibility: hidden !important; } @keyframes eqBar1 { 0%, 100% { height: 4px; } 50% { height: 14px; } } @keyframes eqBar2 { 0%, 100% { height: 14px; } 50% { height: 6px; } } @keyframes eqBar3 { 0%, 100% { height: 7px; } 50% { height: 13px; } } .music-playing .music-bar-1 { animation: eqBar1 0.9s ease-in-out infinite !important; } .music-playing .music-bar-2 { animation: eqBar2 0.75s ease-in-out infinite 0.15s !important; } .music-playing .music-bar-3 { animation: eqBar3 0.85s ease-in-out infinite 0.3s !important; } .music-paused .music-bar { animation: none !important; height: 3px !important; opacity: 0.5 !important; }</style></head>']
+  ['</head>', '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Montserrat:wght@300;400;500;600&display=swap"><link rel="icon" type="image/png" sizes="192x192" href="/favicon.png"><link rel="shortcut icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><style>.envelope-opened [data-testid="envelope-introduction"] { display: none !important; opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; transform: translateY(-100%) !important; } [data-marketing-demo-notice="true"], [class*="MarketingDemoNotice"], [data-testid="language-selector"] { display: none !important; opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; } [data-testid="footer-quote"], [data-story-caption-group] p, [data-testid="mobile-story-caption-body"] { white-space: pre-line !important; line-height: 1.4 !important; text-wrap: balance !important; } @media (max-width: 768px) { [data-story-caption-group] p, [data-testid="mobile-story-caption-body"] { font-size: 0.88rem !important; line-height: 1.35 !important; max-width: 92% !important; margin-left: auto !important; margin-right: auto !important; margin-bottom: 14px !important; } nav a[href="/"], nav [data-testid="nav-content"] > a { color: #000000 !important; } nav button[aria-label*="menu" i], nav [data-testid="nav-content"] button { color: #000000 !important; } nav button[aria-label*="menu" i] span, nav [data-testid="nav-content"] button span { background-color: #000000 !important; } nav button[aria-label*="menu" i] svg, nav [data-testid="nav-content"] button svg { stroke: #000000 !important; color: #000000 !important; } } [data-site-section-id="details"], a[href*="cordially.io"] { display: none !important; } #wedding-timeline-section, #dress-code-section, #entourage-section, #rsvp-callout-section, #wedding-gifts-section { scroll-margin-top: 80px; } #rsvp-callout-section, #rsvp-section-wrapper, #wedding-rsvp-form { opacity: 1 !important; visibility: visible !important; display: block !important; } #attendance-options { display: grid !important; gap: 14px !important; } .rsvp-radio-card { display: flex !important; align-items: center !important; padding: 16px 20px !important; cursor: pointer !important; } .rsvp-radio-circle { margin-right: 18px !important; flex-shrink: 0 !important; width: 22px !important; height: 22px !important; min-width: 22px !important; min-height: 22px !important; border-radius: 9999px !important; } input[type="radio"], input[type="radio"]:focus, input[type="radio"]:checked { accent-color: #8a5a2b !important; outline: none !important; } [data-site-section-id="storyIntro"] em, [data-site-section-id="storyIntro"] [data-vision-word="true"]:nth-of-type(6) { font-style: italic !important; } [data-site-section-id="hero"] [data-hero-headline-shell], [data-testid="hero-headline"] { fill: #f7efe2 !important; color: #f7efe2 !important; filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.45)) !important; stroke: none !important; -webkit-text-stroke: 0 !important; } [data-site-section-id="hero"] .bg-black\\/20 { display: none !important; } [data-testid="hero-foreground"] { background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.15) 70%, rgba(0,0,0,0.45) 85%, rgba(0,0,0,0.65) 100%) !important; } [data-site-section-id="hero"] [data-hero-headline-container] { bottom: 4.5rem !important; } [data-site-section-id="hero"] img { object-position: center center !important; } [data-testid="hero-scroll-prompt"] { filter: none !important; } [data-testid="hero-divider"] { display: none !important; opacity: 0 !important; visibility: hidden !important; } @keyframes eqBar1 { 0%, 100% { height: 4px; } 50% { height: 14px; } } @keyframes eqBar2 { 0%, 100% { height: 14px; } 50% { height: 6px; } } @keyframes eqBar3 { 0%, 100% { height: 7px; } 50% { height: 13px; } } .music-playing .music-bar-1 { animation: eqBar1 0.9s ease-in-out infinite !important; } .music-playing .music-bar-2 { animation: eqBar2 0.75s ease-in-out infinite 0.15s !important; } .music-playing .music-bar-3 { animation: eqBar3 0.85s ease-in-out infinite 0.3s !important; } .music-paused .music-bar { animation: none !important; height: 3px !important; opacity: 0.5 !important; }</style></head>']
 ];
 
 function replaceInfo(content) {
@@ -739,19 +729,7 @@ app.use(createProxyMiddleware({
           const dressCodeWrapper = `<div data-scroll-section="" data-scroll-section-kind="content" data-site-section-id="dress-code">${dressCodeHtml}</div>`;
           const giftsWrapper = `<div data-scroll-section="" data-scroll-section-kind="content" data-site-section-id="wedding-gifts">${giftsHtml}</div>`;
 
-          let rsvpBlock = '';
-          const rsvpStart = text.indexOf('<div data-design-anchor="rsvp"');
-          const rsvpEnd = text.indexOf('<div data-design-anchor="details"', rsvpStart);
-          if (rsvpStart !== -1 && rsvpEnd !== -1) {
-            rsvpBlock = text.substring(rsvpStart, rsvpEnd);
-            text = text.substring(0, rsvpStart) + text.substring(rsvpEnd);
-            if (rsvpHtml) {
-              rsvpBlock = rsvpBlock.replace(
-                /<section id="rsvp-callout-section"[\s\S]*?<\/section>/,
-                `<section id="rsvp-callout-section" class="relative z-30 w-full" style="scroll-margin-top: 80px;">${rsvpHtml}</section>`
-              );
-            }
-          } else if (rsvpHtml && text.includes('id="rsvp-callout-section"')) {
+          if (rsvpHtml && text.includes('id="rsvp-callout-section"')) {
             text = text.replace(
               /<section id="rsvp-callout-section"[\s\S]*?<\/section>/,
               `<section id="rsvp-callout-section" class="relative z-30 w-full" style="scroll-margin-top: 80px;">${rsvpHtml}</section>`
@@ -762,7 +740,7 @@ app.use(createProxyMiddleware({
             text = text.replace('<div data-design-anchor="venue"', entourageWrapper + '<div data-design-anchor="venue"');
           }
           if (text.includes('data-design-anchor="faq"')) {
-            text = text.replace('<div data-design-anchor="faq"', timelineWrapper + dressCodeWrapper + giftsWrapper + rsvpBlock + '<div data-design-anchor="faq"');
+            text = text.replace('<div data-design-anchor="faq"', timelineWrapper + dressCodeWrapper + giftsWrapper + '<div data-design-anchor="faq"');
           }
 
           // Open Graph & Social Share Link Embed Meta Tags
@@ -984,93 +962,28 @@ app.use(createProxyMiddleware({
 
     // 0b. Remove Cordially demo notice while preserving envelope introduction
     document.querySelectorAll('[data-marketing-demo-notice="true"], [class*="MarketingDemoNotice"]').forEach(function(el) { el.remove(); });
-    document.querySelectorAll('aside, div').forEach(function(el) {
-      if (el.textContent && (el.textContent.includes('sample wedding') || el.textContent.includes('Alex Morgan'))) {
-        el.style.setProperty('display', 'none', 'important');
-      }
-    });
 
-    // 0c. Enforce Navbar Labels, Links, and Items in DOM
-    document.querySelectorAll('nav a, header a, #primary-menu a, [data-testid="nav-container"] a').forEach(function(link) {
-      var txt = (link.textContent || '').trim();
-      if (txt === 'Travel' || txt === 'Travel Logistics' || txt.includes('Travel')) {
-        link.textContent = 'Entourage';
-        link.setAttribute('href', '#entourage-section');
-      } else if (txt === 'Registry' || txt.includes('Registry')) {
-        link.textContent = 'Timeline';
-        link.setAttribute('href', '#wedding-timeline-section');
-      }
-    });
-
-    var navList = document.querySelector('[data-testid="nav-list"]');
-    if (navList && !document.getElementById('nav-item-entourage')) {
-      var entourageLi = document.createElement('li');
-      entourageLi.id = 'nav-item-entourage';
-      entourageLi.innerHTML = '<a class="template-font-accent whitespace-nowrap transition-all duration-300 hover:opacity-70" href="#entourage-section" style="font-size: 18px;">Entourage</a>';
-      var timelineLi = document.createElement('li');
-      timelineLi.id = 'nav-item-timeline';
-      timelineLi.innerHTML = '<a class="template-font-accent whitespace-nowrap transition-all duration-300 hover:opacity-70" href="#wedding-timeline-section" style="font-size: 18px;">Timeline</a>';
-      var dcLi = document.createElement('li');
-      dcLi.id = 'nav-item-dress-code';
-      dcLi.innerHTML = '<a class="template-font-accent whitespace-nowrap transition-all duration-300 hover:opacity-70" href="#dress-code-section" style="font-size: 18px;">Dress Code</a>';
-      var giftsLi = document.createElement('li');
-      giftsLi.id = 'nav-item-gifts';
-      giftsLi.innerHTML = '<a class="template-font-accent whitespace-nowrap transition-all duration-300 hover:opacity-70" href="#wedding-gifts-section" style="font-size: 18px;">Wedding Gifts</a>';
-      
-      var faqLi = navList.querySelector('a[href*="faq"]')?.closest('li');
-      var rsvpItem = navList.querySelector('a[href*="rsvp"]')?.closest('li');
-      var insertBeforeTarget = faqLi || rsvpItem;
-      if (insertBeforeTarget) {
-        navList.insertBefore(entourageLi, insertBeforeTarget);
-        navList.insertBefore(timelineLi, insertBeforeTarget);
-        navList.insertBefore(dcLi, insertBeforeTarget);
-        navList.insertBefore(giftsLi, insertBeforeTarget);
-      }
-    }
-
-    document.querySelectorAll('a, button').forEach(function(el) {
-      var txt = (el.textContent || '').trim().toLowerCase();
-      var href = el.getAttribute('href') || '';
-      if (txt === 'submit rsvp' || href.includes('rsvp')) {
-        el.setAttribute('href', '#rsvp-callout-section');
-        el.removeAttribute('target');
-        if (!el.__rsvpBound) {
-          el.__rsvpBound = true;
-          el.addEventListener('click', function(e) {
-            e.preventDefault();
-            var target = document.getElementById('rsvp-callout-section');
-            if (target) {
-              target.scrollIntoView({ behavior: 'smooth' });
-            }
-          });
-        }
-      }
-    });
-
-    // 0d. Reliable Envelope Wipe Animation & Scroll Unlock
+    // 0c. Reliable Envelope Wipe Animation & Scroll Unlock
     window.openEnvelope = function() {
-      document.documentElement.classList.add('envelope-opened');
-      document.body.classList.add('envelope-opened');
       var env = document.querySelector('[data-testid="envelope-introduction"]');
       var btn = document.querySelector('[data-testid="wordmark-wipe-envelope-button"]');
       if (env) {
         if (env.__opened) return;
         env.__opened = true;
-        env.classList.add('envelope-dismissed');
         env.setAttribute('data-state', 'open');
-        env.style.setProperty('pointer-events', 'none', 'important');
-        env.style.setProperty('transition', 'opacity 650ms ease, transform 650ms cubic-bezier(0.76, 0, 0.24, 1)', 'important');
+        env.style.setProperty('transition', 'opacity 700ms ease, transform 700ms cubic-bezier(0.76, 0, 0.24, 1)', 'important');
         env.style.setProperty('transform', 'translateY(-100%)', 'important');
+        env.style.setProperty('pointer-events', 'none', 'important');
       }
 
-      // Also trigger button click so any internal framework listener fires
+      // Also trigger button click so internal framework listeners fire
       if (btn) {
         try { btn.click(); } catch(e) {}
-        btn.style.setProperty('transition', 'transform 650ms cubic-bezier(0.76, 0, 0.24, 1)', 'important');
+        btn.style.setProperty('transition', 'transform 700ms cubic-bezier(0.76, 0, 0.24, 1)', 'important');
         btn.style.setProperty('transform', 'translateY(-100%)', 'important');
       }
 
-      // Start background music
+      // Start background music at 50% volume
       var bgAudio = document.getElementById('wedding-bg-audio');
       if (bgAudio && bgAudio.paused) {
         bgAudio.volume = 0.5;
@@ -1089,24 +1002,25 @@ app.use(createProxyMiddleware({
         if (env) {
           env.style.setProperty('display', 'none', 'important');
         }
+        document.documentElement.classList.add('envelope-opened');
+        document.body.classList.add('envelope-opened');
         window.dispatchEvent(new Event('resize'));
         window.dispatchEvent(new Event('scroll'));
-      }, 700);
+      }, 750);
     };
 
     if (!window.__boundEnvelopeListeners) {
       window.__boundEnvelopeListeners = true;
-      function tryOpen() {
+      function onEnvelopeClick(e) {
         var env = document.querySelector('[data-testid="envelope-introduction"]');
-        if (env && env.style.display !== 'none' && !env.__opened) {
-          window.openEnvelope();
+        if (env && !env.__opened) {
+          if (e.target.closest('[data-testid="envelope-introduction"]') || e.target.closest('[data-testid="wordmark-wipe-envelope-button"]')) {
+            window.openEnvelope();
+          }
         }
       }
-      document.addEventListener('click', tryOpen, true);
-      document.addEventListener('touchstart', tryOpen, { capture: true, passive: true });
-      document.addEventListener('wheel', function(e) {
-        if (e.deltaY > 10) tryOpen();
-      }, { passive: true });
+      document.addEventListener('click', onEnvelopeClick, true);
+      document.addEventListener('touchstart', onEnvelopeClick, { capture: true, passive: true });
     }
 
     // 1. Insert Entourage section right before Venue
@@ -1206,22 +1120,12 @@ app.use(createProxyMiddleware({
       }
     }
 
-    // 6. Populate and place RSVP section form AFTER Wedding Gifts
+    // 6. Populate or preserve RSVP section form
     var rsvpSec = document.getElementById('rsvp-callout-section');
-    if (rsvpSec) {
-      if (!document.getElementById('wedding-rsvp-form')) {
-        rsvpSec.innerHTML = ${safeRsvpJson};
-        rsvpSec.style.padding = '0';
-        rsvpSec.style.opacity = '1';
-      }
-      var giftsSec = document.getElementById('wedding-gifts-section');
-      if (giftsSec) {
-        var giftsTarget = giftsSec.closest('[data-scroll-section]') || giftsSec;
-        var rsvpTarget = rsvpSec.closest('[data-scroll-section]') || rsvpSec;
-        if (giftsTarget && rsvpTarget && giftsTarget.parentNode && (rsvpTarget.compareDocumentPosition(giftsTarget) & Node.DOCUMENT_POSITION_FOLLOWING)) {
-          giftsTarget.parentNode.insertBefore(rsvpTarget, giftsTarget.nextSibling);
-        }
-      }
+    if (rsvpSec && !document.getElementById('wedding-rsvp-form')) {
+      rsvpSec.innerHTML = ${safeRsvpJson};
+      rsvpSec.style.padding = '0';
+      rsvpSec.style.opacity = '1';
     }
 
     // 7. Ensure 'grace' in transition line stays italicized
